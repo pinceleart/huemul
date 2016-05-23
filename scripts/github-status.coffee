@@ -39,16 +39,14 @@ status = (msg) ->
       now = new Date()
       date = new Date(json['last_updated'])
       secondsAgo = Math.round((now.getTime() - date.getTime()) / 1000)
-      msg.send "Status: #{json['status']} (#{secondsAgo} seconds ago)"
+      msg.send ":octocat: Status: *#{json['status']}* _(#{secondsAgo} seconds ago)_"
 
 lastMessage = (msg) ->
   msg.http('https://status.github.com/api/last-message.json')
     .get() (err, res, body) ->
       json = JSON.parse(body)
       date = new Date(json['created_on'])
-      msg.send "Status: #{json['status']}\n" +
-               "Message: #{formatString(json['body'])}\n" +
-               "Date: #{date.toLocaleString()}"
+      msg.send ":octocat: *[#{json['status']}]* #{formatString(json['body'])} _(#{date.toLocaleString()})_"
 
 statusMessages = (msg) ->
   msg.http('https://status.github.com/api/messages.json')
@@ -56,5 +54,5 @@ statusMessages = (msg) ->
       json = JSON.parse(body)
       buildMessage = (message) ->
         date = new Date(message['created_on'])
-        "[#{message['status']}] #{formatString(message['body'])} (#{date.toLocaleString()})"
+        ":octocat: *[#{message['status']}]* #{formatString(message['body'])} _(#{date.toLocaleString()})_"
       msg.send (buildMessage message for message in json).join('\n')
