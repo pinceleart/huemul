@@ -22,6 +22,7 @@ module.exports = (robot) ->
     thisUser = response.message.user
     targetToken = response.match[1].trim()
     return if not targetToken
+    return if not robot.adapter.client.getChannelGroupOrDMByName(response.envelope.room).is_channel
     targetUser = userForToken targetToken, response
     return if not targetUser
     return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser is targetUser
@@ -30,7 +31,11 @@ module.exports = (robot) ->
     if Number.isFinite(limit)
       response.send "¡No abuses! Intenta en " + limit + " minutos"
       return
-    targetUser.karma += if op is "++" then 1 else -1
+    modifyingKarma = if op is "++" then 1 else -1
+    targetUser.karma += modifyingKarma
+    karmaLog = robot.brain.get('karmaLog') or []
+    karmaLog.push("#{thisUser.name} le ha dado #{modifyingKarma} karma a #{targetUser.name} - #{new Date().toJSON()}")
+    robot.brain.set 'karmaLog', karmaLog
     robot.brain.save()
     response.send "#{getCleanName(targetUser.name)} ahora tiene #{targetUser.karma} puntos de karma."
 
@@ -73,6 +78,15 @@ module.exports = (robot) ->
     msg = "Karma de todos:\n
           <ul>
           <li>#{list.join '</li><li>'}</li>
+          </ul>"
+    res.setHeader 'content-type', 'text/html'
+    res.end msg
+
+  robot.router.get "/#{robot.name}/karma/log", (req, res) ->
+    karmaLog = robot.brain.get('karmaLog') or []
+    msg = "Karmalog:\n
+          <ul>
+          <li>#{karmaLog.join '</li><li>'}</li>
           </ul>"
     res.setHeader 'content-type', 'text/html'
     res.end msg
