@@ -34,5 +34,6 @@
   "hubot-minions",
   "hubot-ascii-art",
   "hubot-onemi",
-  "hubot-mrrobot"
+  "hubot-mrrobot",
+  "hubot-what3words"
 ]
