@@ -13,6 +13,11 @@
 var cheerio = require('cheerio');
 
 module.exports = function(robot) {
+  var sendAttachment = function(attachments, res) {
+    var data = {attachments: attachments, channel: res.message.room};
+    robot.emit("slack.attachment", data);
+  }
+
   robot.respond(/torrent (.*)/i, function(msg) {
 
     msg.send('Esperando respuesta de Torrent Project... :clock930:');
@@ -29,20 +34,22 @@ module.exports = function(robot) {
         var title = $(this).find('a').text();
         var link = $(this).find('a').attr('href');
 
-        resultados.push( title + ' | ' + link );
+        resultados.push( '<' + link + '|' + title + '>' );
       });
 
       if(resultados.length > 0) {
         var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
         var plural = resultados.length > 1 ? ['n','s'] : ['',''];
-        msg.send('Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1]);
+        var text = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1] + '\n';
         for (var i=0; i < limiteResultados; i++) {
           var conteo = i + 1;
-          msg.send(conteo + ': ' + resultados[i]);
+          text += conteo + ': ' + resultados[i] + '\n';
         }
         if(resultados.length > limiteResultados) {
-          msg.send('Otros resultados en: '+ url);
+          text += 'Otros resultados en: <'+ url + '|torrentproject>\n';
         }
+        var attachments = {fallback: text, text: text};
+        sendAttachment(attachments, msg);
       } else {
         msg.send('No se han encontrado resultados sobre '+ busqueda);
       }
