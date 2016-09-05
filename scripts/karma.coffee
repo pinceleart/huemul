@@ -22,7 +22,7 @@ module.exports = (robot) ->
     thisUser = response.message.user
     targetToken = response.match[1].trim()
     return if not targetToken
-    return if not robot.adapter.client.getChannelGroupOrDMByName(response.envelope.room).is_channel
+    return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
     targetUser = userForToken targetToken, response
     return if not targetUser
     return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser is targetUser
