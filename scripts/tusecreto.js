@@ -19,14 +19,16 @@ module.exports = function(robot) {
 		var secreto = msg.match[1];
 
 		var words = ['@here', '@channel', '@group', '@everyone'];
+    var randomChannel = robot.adapter.client.rtm.dataStore.getChannelByName('#random')
+    if (!randomChannel) return;
 
 		for (var i = 0; i < words.length; i++) {
 			if (secreto.indexOf(words[i]) !== -1) {
-				return robot.messageRoom('#random', "El tonto de " + msg.message.user.name + " trató de usar @");
+				return robot.messageRoom(randomChannel.id, "El tonto de " + msg.message.user.name + " trató de usar @");
 			}
 		}
 
-		return robot.messageRoom('#random', ":speak_no_evil: *Un secreto:* " + secreto);
+		return robot.messageRoom(randomChannel.id, ":speak_no_evil: *Un secreto:* " + secreto);
 	});
 };
 

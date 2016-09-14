@@ -25,7 +25,7 @@ module.exports = (robot) ->
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
     targetUser = userForToken targetToken, response
     return if not targetUser
-    return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser is targetUser
+    return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser.name is targetUser.name
     op = response.match[2]
     limit = canUpvote(thisUser, targetUser)
     if Number.isFinite(limit)
@@ -34,7 +34,14 @@ module.exports = (robot) ->
     modifyingKarma = if op is "++" then 1 else -1
     targetUser.karma += modifyingKarma
     karmaLog = robot.brain.get('karmaLog') or []
-    karmaLog.push("#{thisUser.name} le ha dado #{modifyingKarma} karma a #{targetUser.name} - #{new Date().toJSON()}")
+    karmaLog.push({
+      name: thisUser.name,
+      id: thisUser.id,
+      karma: modifyingKarma,
+      targetName: targetUser.name,
+      targetId: targetUser.id,
+      date: Date.now()
+    })
     robot.brain.set 'karmaLog', karmaLog
     robot.brain.save()
     response.send "#{getCleanName(targetUser.name)} ahora tiene #{targetUser.karma} puntos de karma."
@@ -84,9 +91,13 @@ module.exports = (robot) ->
 
   robot.router.get "/#{robot.name}/karma/log", (req, res) ->
     karmaLog = robot.brain.get('karmaLog') or []
+    processedKarmaLog = karmaLog.map (line) ->
+                          if typeof line != 'string'
+                            line = "#{line.name} le ha dado #{line.karma} karma a #{line.targetName} - #{new Date(line.date).toJSON()}"
+                          return line
     msg = "Karmalog:\n
           <ul>
-          <li>#{karmaLog.join '</li><li>'}</li>
+          <li>#{processedKarmaLog.join '</li><li>'}</li>
           </ul>"
     res.setHeader 'content-type', 'text/html'
     res.end msg
