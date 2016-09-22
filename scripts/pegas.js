@@ -22,9 +22,6 @@ module.exports = function(robot) {
     var domain = 'https://www.getonbrd.cl/empleos-';
     var url = domain + busqueda.split(' ').join('%20');
 
-    console.log('busqueda: ' + busqueda);
-    console.log('url: ' + url);
-
     msg.robot.http(url).get()(function(err, res, body) {
 
       var $ = cheerio.load(body);
@@ -34,11 +31,10 @@ module.exports = function(robot) {
         var title = $(this).find('a').attr('title');
         var link = $(this).find('a').attr('href');
 
-        resultados.push( title + ' | ' + link );
+        resultados.push( '<' + link + '|' + title + '>' );
       });
 
       if(resultados.length > 0) {
-        msg.send('(es lento, culpa de ellos)');
         var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
         var plural = resultados.length > 1 ? ['n','s'] : ['',''];
         var text = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1] + '\n';
@@ -51,7 +47,6 @@ module.exports = function(robot) {
         }
         msg.send(text);
       } else {
-        console.log('no hay')
         msg.send('No se han encontrado resultados sobre '+ busqueda);
       }
 
