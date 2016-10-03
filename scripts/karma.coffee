@@ -40,7 +40,8 @@ module.exports = (robot) ->
       karma: modifyingKarma,
       targetName: targetUser.name,
       targetId: targetUser.id,
-      date: Date.now()
+      date: Date.now(),
+      msg: response.envelope.message.text
     })
     robot.brain.set 'karmaLog', karmaLog
     robot.brain.save()
@@ -70,7 +71,8 @@ module.exports = (robot) ->
     else
       targetUser = userForToken targetToken, response
       return if not targetUser
-      msg = "#{getCleanName(targetUser.name)} tiene #{targetUser.karma} puntos de karma."
+      msg = "#{getCleanName(targetUser.name)} tiene #{targetUser.karma} puntos de karma.
+            Más detalles en: #{hubotWebSite}/karma/log/#{targetUser.name}"
     robot.brain.save()
     response.send msg
 
@@ -99,6 +101,23 @@ module.exports = (robot) ->
           <ul>
           <li>#{processedKarmaLog.join '</li><li>'}</li>
           </ul>"
+    res.setHeader 'content-type', 'text/html'
+    res.end msg
+
+  robot.router.get "/#{robot.name}/karma/log/:user", (req, res) ->
+    karmaLog = robot.brain.get('karmaLog') or []
+    filteredKarmaLog = karmaLog.filter (log) ->
+                          if typeof log != 'string' && log.msg
+                            return log.targetName == req.params.user
+    processedKarmaLog = filteredKarmaLog.map (log) ->
+                          return "#{new Date(log.date).toJSON()} - #{log.name}: #{log.msg}"
+    if filteredKarmaLog.length > 0
+      msg = "Karmalog:
+            <ul>
+              <li>#{processedKarmaLog.join '</li><li>'}</li>
+            </ul>"
+    else
+      msg = "No hay detalles sobre el karma de #{req.params.user}"
     res.setHeader 'content-type', 'text/html'
     res.end msg
 
