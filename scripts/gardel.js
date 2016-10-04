@@ -25,10 +25,11 @@ module.exports = function gardel(robot) {
 
   robot.respond(/gardel|cu[aá]ndo pagan/, function(msg) {
     var message = '';
+    var plural = dayCount > 1 ? ['n','s'] : ['',''];
     if (dayCount === 0) {
       message = `:tada: Hoy pagan :tada:`;
     } else {
-      message = `Faltan ${dayCount} días para que paguen. Este mes pagan el ${lastBusinessDay}, que cae ${nameLastDay} :tired_face:`;
+      message = `Falta${plural[0]} ${dayCount} día${plural[1]} para que paguen. Este mes pagan el ${lastBusinessDay}, que cae ${nameLastDay} :tired_face:`;
     }
     return msg.send(message);
   });
