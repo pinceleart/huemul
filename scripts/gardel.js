@@ -23,7 +23,7 @@ module.exports = function gardel(robot) {
   var nameLastDay = moment().locale('es').endOf('month').isBusinessDay() ? moment().locale('es').endOf('month').format('dddd') : moment().locale('es').endOf('month').prevBusinessDay().format('dddd');
   var dayCount = lastBusinessDay - today;
 
-  robot.respond(/(gardel)/, function(msg) {
+  robot.respond(/gardel|cu[aá]ndo pagan/, function(msg) {
     var message = '';
     if (dayCount === 0) {
       message = `:tada: Hoy pagan :tada:`;
