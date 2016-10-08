@@ -4,12 +4,15 @@ html
     img#agencias-preview(src='', width='320')
     br
     span#agencias-message
+    if token === ''
+      a(href=`https://id.heroku.com/oauth/authorize?client_id=${clientId}&response_type=code&scope=${scope}&state=${state}`) Login con heroku
     ul
       for link in agencias
         li
           span= link
           button.agencias-show(data-src=link) Ver
-          button.agencias-delete(data-src=link) Borrar
+          if token !== ''
+            button.agencias-delete(data-src=link, data-token=token) Borrar
           if /^http\:\/\/giphy\.com\/gifs\//.test(link)
             button.agencias-fix(data-src=link) Corregir
 
