@@ -3,9 +3,12 @@
 #
 # Dependencies:
 #   express
+#   uuid
 #
 # Configuration:
-#   None
+#   HUBOT_USERS
+#   HEROKU_OAUTH_ID
+#   HEROKU_OAUTH_SECRET
 #
 # Commands:
 #   hubot agencias add <url> -> Add new gif to agencias
@@ -15,6 +18,8 @@
 
 express = require "express"
 path = require "path"
+uuid = require "uuid"
+querystring = require "querystring"
 
 images = [
   'http://i.imgur.com/IW6O268.gif'
@@ -61,24 +66,40 @@ module.exports = (robot) ->
   robot.router.set("views", path.join(__dirname, "..", "views"))
   robot.router.set("view engine", "pug")
 
-  robot.router.get '/agencias/all', (req, res) ->
+  robot.router.get "/agencias/all", (req, res) ->
     agencias = robot.brain.get("agencias")
     agencias = "[]" if agencias is null
     agencias = JSON.parse(agencias)
-    res.render("agencias", {agencias: agencias})
+    state = uuid.v4()
+    if /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(req.query.token)
+      token = req.query.token
+    else
+      token = ""
+    res.render("agencias", {
+      agencias: agencias,
+      clientId: process.env.HEROKU_OAUTH_ID,
+      scope: "identity",
+      state: state,
+      token: token
+    })
 
-  robot.router.get '/agencias/delete', (req, res) ->
+  robot.router.get "/agencias/delete", (req, res) ->
     agencias = robot.brain.get("agencias")
-    agencias = "[]" if agencias is null
-    agencias = JSON.parse(agencias)
-    agencias = agencias.filter((x) -> x isnt req.query.link)
-    robot.brain.set("agencias", JSON.stringify(agencias))
-    res.redirect("/agencias/all")
+    users = process.env.HUBOT_USERS or ""
+    users = users.split(",")
+    getUser req.query.token, (err, user) ->
+      return res.redirect("/agencias/all") if err
+      return res.redirect("/agencias/all?token=#{req.query.token}") if user.email not in users
+      agencias = "[]" if agencias is null
+      agencias = JSON.parse(agencias)
+      agencias = agencias.filter((x) -> x isnt req.query.link)
+      robot.brain.set("agencias", JSON.stringify(agencias))
+      res.redirect("/agencias/all?token=#{req.query.token}")
 
   fix = (url) ->
-    url.replace(giphyPattern, 'http://i.giphy.com/$1.gif')
+    url.replace(giphyPattern, "http://i.giphy.com/$1.gif")
 
-  robot.router.get '/agencias/fix', (req, res) ->
+  robot.router.get "/agencias/fix", (req, res) ->
     agencias = robot.brain.get("agencias")
     agencias = "[]" if agencias is null
     agencias = JSON.parse(agencias)
@@ -86,3 +107,24 @@ module.exports = (robot) ->
     agencias.push(fix(req.query.link))
     robot.brain.set("agencias", JSON.stringify(agencias))
     res.redirect("/agencias/all")
+
+  robot.router.get "/auth/callback", (req, res) ->
+    data = querystring.stringify({
+      grant_type: "authorization_code",
+      code: req.query.code,
+      client_secret: process.env.HEROKU_OAUTH_SECRET
+    })
+    robot.http("https://id.heroku.com/oauth/token")
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .post(data) (err, resp, body) ->
+        return res.redirect("/agencias/all") if err
+        body = JSON.parse(body)
+        res.redirect("/agencias/all?token=#{body.access_token}")
+
+  getUser = (token, cb) ->
+    robot.http("https://api.heroku.com/account")
+      .header("Authorization", "Bearer #{token}")
+      .header("Accept", "application/vnd.heroku+json; version=3")
+      .get() (err, resp, body) ->
+        return cb(err) if err
+        cb(null, JSON.parse(body))
