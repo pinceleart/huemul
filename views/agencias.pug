@@ -1,0 +1,17 @@
+html
+  body
+    h1 Agencias
+    img#agencias-preview(src='', width='320')
+    br
+    span#agencias-message
+    ul
+      for link in agencias
+        li
+          span= link
+          button.agencias-show(data-src=link) Ver
+          button.agencias-delete(data-src=link) Borrar
+          if /^http\:\/\/giphy\.com\/gifs\//.test(link)
+            button.agencias-fix(data-src=link) Corregir
+
+    script(src='https://code.jquery.com/jquery-2.2.4.min.js')
+    script(src='/js/agencias.js')
