@@ -2,7 +2,7 @@
 #   muestra un gif relacionado con la asombrosa experiencia de trabajar en agencia
 #
 # Dependencies:
-#   None
+#   express
 #
 # Configuration:
 #   None
@@ -12,6 +12,9 @@
 #
 # Author:
 #   @jorgeepunan
+
+express = require "express"
+path = require "path"
 
 images = [
   'http://i.imgur.com/IW6O268.gif'
@@ -28,8 +31,11 @@ images = [
   'http://www.gif-king.com/files/uSers/gif-king-e60d7560ccdde09ca0bee3ec54807731.gif'
   'https://i.uploadly.com/2x4tok3k.gif'
 ]
+giphyPattern = /^http\:\/\/giphy\.com\/gifs\/(\w+)/
 
 module.exports = (robot) ->
+  hubotHost = process.env.HEROKU_URL or process.env.HUBOT_URL or "http://localhost:8080"
+
   robot.hear /#agencia|#agencias (.*)/gi, (msg) ->
     msg.send 'agencias... :point_down::skin-tone-4:'
     agencias = robot.brain.get("agencias")
@@ -43,6 +49,40 @@ module.exports = (robot) ->
     agencias = robot.brain.get("agencias")
     agencias = "[]" if agencias is null
     agencias = JSON.parse(agencias)
+    uri = fix(uri) if giphyPattern.test(uri)
     agencias.push(uri)
     robot.brain.set("agencias", JSON.stringify(agencias))
     res.send("New image saved :ok_hand:")
+
+  robot.respond /agencias all/, (res) ->
+    res.send("Go to #{hubotHost}/agencias/all")
+
+  robot.router.use(express.static(path.join(__dirname, "..", "public")))
+  robot.router.set("views", path.join(__dirname, "..", "views"))
+  robot.router.set("view engine", "pug")
+
+  robot.router.get '/agencias/all', (req, res) ->
+    agencias = robot.brain.get("agencias")
+    agencias = "[]" if agencias is null
+    agencias = JSON.parse(agencias)
+    res.render("agencias", {agencias: agencias})
+
+  robot.router.get '/agencias/delete', (req, res) ->
+    agencias = robot.brain.get("agencias")
+    agencias = "[]" if agencias is null
+    agencias = JSON.parse(agencias)
+    agencias = agencias.filter((x) -> x isnt req.query.link)
+    robot.brain.set("agencias", JSON.stringify(agencias))
+    res.redirect("/agencias/all")
+
+  fix = (url) ->
+    url.replace(giphyPattern, 'http://i.giphy.com/$1.gif')
+
+  robot.router.get '/agencias/fix', (req, res) ->
+    agencias = robot.brain.get("agencias")
+    agencias = "[]" if agencias is null
+    agencias = JSON.parse(agencias)
+    agencias = agencias.filter((x) -> x isnt req.query.link)
+    agencias.push(fix(req.query.link))
+    robot.brain.set("agencias", JSON.stringify(agencias))
+    res.redirect("/agencias/all")
