@@ -21,9 +21,10 @@ $(document).ready(function() {
   });
   $('.agencias-delete').click(function() {
     var src = $(this).data('src');
+    var token = $(this).data('token');
     var result = window.confirm('¿Esta seguro que desea eliminar la imagen?');
     if (result) {
-      window.location.href = `/agencias/delete?link=${src}`
+      window.location.href = `/agencias/delete?link=${src}&token=${token}`
     }
   });
   $('.agencias-fix').click(function() {
