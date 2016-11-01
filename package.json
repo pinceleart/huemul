@@ -24,6 +24,7 @@
     "hubot-fmg": "0.0.1",
     "hubot-google-images": "^0.2.6",
     "hubot-help-private": "^1.0.0",
+    "hubot-heroku-deploy-hook": "0.0.1",
     "hubot-heroku-keepalive": "^1.0.2",
     "hubot-hesidohackeado": "0.0.5",
     "hubot-info-rut": "^2.0.0",
