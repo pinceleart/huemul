@@ -67,8 +67,17 @@ button.btn {
   color: #2980B9;
   border-color: #2980B9;
 }
+button.btn.agencias-delete {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
 .login-heroku {
   margin: 1em auto;
+}
+.agencias-listado {
+  max-height: 500px;
+  overflow: hidden;
+  overflow-y: auto;
 }
 .agencias-listado li {
 }
@@ -81,7 +90,11 @@ button.btn {
 }
 .agencias-preview {
   display: none;
+  text-align: center;
 }
+  .agencias-preview img {
+    max-width: 100%;
+  }
   .agencias-preview p {
     text-align: center;
   }
