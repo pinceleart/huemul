@@ -1,5 +1,5 @@
 # Description:
-#   Display pictures of pinceleart girlfriend.
+#   Display pictures of pinceleart's girlfriend.
 #
 # Dependencies:
 #   None
