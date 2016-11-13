@@ -23,6 +23,8 @@
 #   @rotvulpix
 
 moment = require("moment");
+intentos = 0
+
 format_date = (date, no_slashes = false) ->
   if no_slashes
     date.format 'YYYYMMDD'
@@ -30,13 +32,18 @@ format_date = (date, no_slashes = false) ->
     date.format 'YYYY/MM/DD'
 
 get_portada = (msg, diario, days_past = 0) ->
-  fecha = moment().subtract(days_past, 'days')
-  test_url = diario.url.replace("#DATE#", format_date(fecha, diario.no_slashes))
-  msg.http(test_url).get() (err, res, body) ->
-    if res.statusCode == 404
-      get_portada(msg, diario, days_past + 1)
-    else
-      msg.send test_url
+  if intentos > 5
+    msg.send "No existe portada de este diario por los últimos 5 días."
+  else
+    intentos = intentos + 1
+
+    fecha = moment().subtract(days_past, 'days')
+    test_url = diario.url.replace("#DATE#", format_date(fecha, diario.no_slashes))
+    msg.http(test_url).get() (err, res, body) ->
+      if res.statusCode == 404
+        get_portada(msg, diario, days_past + 1)
+      else
+        msg.send test_url
 
 module.exports = (robot) ->
   robot.respond /portada (.*)/i, (msg) ->
