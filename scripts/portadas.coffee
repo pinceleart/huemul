@@ -46,8 +46,8 @@ module.exports = (robot) ->
       when "tercera" then { url: "http://cache-img1.pressdisplay.com/pressdisplay/docserver/getimage.aspx?file=2044#DATE#00000000001001&page=1", no_slashes: true }
       when "cuarta" then { url: "http://www.portadaschilenas.com/#DATE#/Lacuarta_grande.jpg", no_slashes: false }
       when "publimetro" then { url: "http://www.portadaschilenas.com/#DATE#/pm_grande.jpg", no_slashes: false }
-      when "mercurio" then { url: "http://webmedia.newseum.org/newseum-multimedia/dfp/jpg12/lg/CHIL_EM.jpg", no_slashes: false }
-      when "ultimasnoticias" then { url: "http://webmedia.newseum.org/newseum-multimedia/dfp/jpg12/lg/CHIL_LUN.jpg", no_slashes: false }
-      when "lun" then { url: "http://webmedia.newseum.org/newseum-multimedia/dfp/jpg12/lg/CHIL_LUN.jpg", no_slashes: false }
+      when "mercurio" then { url: "http://www.portadaschilenas.com/#DATE#/Emol_grande.jpg", no_slashes: false }
+      when "ultimasnoticias" then { url: "http://www.portadaschilenas.com/#DATE#/Lun_grande.jpg", no_slashes: false }
+      when "lun" then { url: "http://www.portadaschilenas.com/#DATE#/Lun_grande.jpg", no_slashes: false }
 
     get_portada(msg, diario)
