@@ -25,5 +25,5 @@ images = [
 ]
 
 module.exports = (robot) ->
-  robot.hear /anna/gi, (msg) ->
+  robot.respond /anna/gi, (msg) ->
     msg.send msg.random images
