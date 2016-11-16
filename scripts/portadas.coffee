@@ -21,6 +21,9 @@
 #   ((las)? ultimas noticias)|lun
 #   publimetro
 #
+# Uruguay:*
+#   (el)? pais (uruguay|uru)
+#
 # Brasil:
 #   (o)? globo
 #
@@ -62,6 +65,8 @@ lista_portadas = (msg) ->
     (el)? mercurio
     ((las)? ultimas noticias)|lun
     publimetro
+  *Uruguay:*
+    (el)? pais (uruguay|uru)
   *Brasil:*
     (o)? globo
   *Colombia:*
@@ -119,6 +124,10 @@ module.exports = (robot) ->
 
       # Colombia
       when "tiempo" then {url: "http://img.kiosko.net/#DATE#/co/co_eltiempo.750.jpg", no_slashes: false}
+
+      # Uruguay
+      when "paisuruguay" then {url: "http://www.elpais.com.uy/printed-home/#DATE#/portada_impresa.jpg", no_slashes: true}
+      when "paisuru" then {url: "http://www.elpais.com.uy/printed-home/#DATE#/portada_impresa.jpg", no_slashes: true}
 
       # Mexico
       when "financiero" then {url: "http://img.kiosko.net/#DATE#/mx/mx_financiero.750.jpg", no_slashes: false}
