@@ -22,7 +22,7 @@ module.exports = function(robot) {
     var url = domain + '?q=' + busqueda.split(' ').join('+');
 
     msg.robot.http(url).get()(function(err, res, body) {
-      
+
       if (err) {
         console.log('Ocurrió un error :(');
       } else {
@@ -39,14 +39,9 @@ module.exports = function(robot) {
 
         if(resNum.length) {
           var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
-          msg.send(resNum);
-          for (var i=0; i < limiteResultados; i++) {
-            var conteo = i + 1;
-            msg.send(conteo + ': ' + resultados[i]);
-          }
-          if(resultados.length > limiteResultados) {
-            msg.send('Otros resultados en: '+ url);
-          }
+          const resetas = resultados.slice(0, limiteResultados).map((v, i) => `${i + 1}: ${v}`).join('\n');
+          const more = resultados.length > limiteResultados ? `\nOtros resultados en: ${url}` : '';
+          msg.send(`${resNum}\n${resetas}${more}`);
         } else {
           msg.send('No se han encontrado resultados sobre '+ busqueda + '. Intenta con otro ingrediente.');
         }
@@ -56,4 +51,4 @@ module.exports = function(robot) {
     });
 
   });
-};  
+};
