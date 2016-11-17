@@ -22,7 +22,7 @@
 #   publimetro
 #
 # Uruguay:*
-#   (el)? pais (uruguay|uru)
+#   (el)? pais (uruguay|uru|uy)
 #
 # Brasil:
 #   (o)? globo
@@ -66,7 +66,7 @@ lista_portadas = (msg) ->
     ((las)? ultimas noticias)|lun
     publimetro
   *Uruguay:*
-    (el)? pais (uruguay|uru)
+    (el)? pais (uruguay|uru|uy)
   *Brasil:*
     (o)? globo
   *Colombia:*
@@ -99,7 +99,6 @@ get_portada = (msg, diario, days_past = 0) ->
   else
     fecha = moment().subtract(days_past, 'days')
     test_url = diario.url.replace("#DATE#", format_date(fecha, diario.no_slashes))
-    console.log test_url
     msg.http(test_url).get() (err, res, body) ->
       if res.statusCode == 404
         get_portada(msg, diario, days_past + 1)
@@ -128,6 +127,7 @@ module.exports = (robot) ->
       # Uruguay
       when "paisuruguay" then {url: "http://www.elpais.com.uy/printed-home/#DATE#/portada_impresa.jpg", no_slashes: true}
       when "paisuru" then {url: "http://www.elpais.com.uy/printed-home/#DATE#/portada_impresa.jpg", no_slashes: true}
+      when "paisuy" then {url: "http://www.elpais.com.uy/printed-home/#DATE#/portada_impresa.jpg", no_slashes: true}
 
       # Mexico
       when "financiero" then {url: "http://img.kiosko.net/#DATE#/mx/mx_financiero.750.jpg", no_slashes: false}
