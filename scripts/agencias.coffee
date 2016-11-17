@@ -42,12 +42,12 @@ module.exports = (robot) ->
   hubotHost = process.env.HEROKU_URL or process.env.HUBOT_URL or "http://localhost:8080"
 
   robot.hear /#agencia|#agencias (.*)/gi, (msg) ->
-    msg.send 'agencias... :point_down::skin-tone-4:'
     agencias = robot.brain.get("agencias")
     agencias = "[]" if agencias is null
     agencias = JSON.parse(agencias)
     agencias = agencias.concat(images)
-    msg.send(msg.random(agencias))
+    message = "agencias... :point_down::skin-tone-4:\n#{msg.random(agencias)}"
+    msg.send(message)
 
   robot.respond /agencias add ((https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?)/, (res) ->
     uri = res.match[1]
