@@ -24,7 +24,7 @@ module.exports = function(robot) {
     msg.robot.http(url).get()(function(err, res, body) {
 
       if (err) {
-        console.log('Ocurrió un error :(');
+        robot.emit('error', err);
       } else {
         var $ = cheerio.load(body);
         var resultados  = [];
