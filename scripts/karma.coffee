@@ -121,6 +121,40 @@ module.exports = (robot) ->
     res.setHeader 'content-type', 'text/html'
     res.end msg
 
+  robot.enter (res) ->
+    robot.adapter.client.web.users.list().then (users) ->
+      user1 = users.find (x) -> x.id is res.message.user.id
+      user2 = robot.brain.users.find (x) -> x.id is res.message.user.id
+      unless user2?
+        loaclUsers = robot.brain.users()
+        loaclUsers[user1.id] =
+          id: user1.id
+          name: user1.name
+          real_name: user1.real_name
+          email_address: user1.profile.email
+          slack:
+            id: user1.id
+            team_id: user1.team_id
+            name: user1.name
+            deleted: user1.deleted
+            status: user1.status
+            color: user1.color
+            real_name: user1.real_name
+            tz: user1.tz
+            tz_label: user1.tz_label
+            tz_offset: user1.tz_offset
+            profile: user1.profile
+            is_admin: user1.is_admin
+            is_owner: user1.is_owner
+            is_primary_owner: user1.is_primary_owner
+            is_restricted: user1.is_restricted
+            is_ultra_restricted: user1.is_ultra_restricted
+            is_bot: user1.is_bot
+            presence: res.message.user.presence or "active"
+          room: "random"
+          karma: 0
+        robot.brain.save()
+
   userForToken = (token, response) ->
     users = usersForToken token
     if users.length is 1
