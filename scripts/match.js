@@ -13,25 +13,24 @@
 // Author:
 //   @jorgeepunan
 
-const request = require('request');
-const url     = 'https://randomuser.me/api/?inc=picture&noinfo&gender=';
-const apikey  = '';
+var request = require('request');
+var url     = 'https://randomuser.me/api/?inc=picture&noinfo&gender=';
 
 module.exports = function(robot) {
 
   robot.respond(/match\s?(.*)/i, function(res) {
 
-    let sexo    = res.match[1];
+    var sexo    = res.match[1];
     if( sexo.match(/male|female/) ) {
 
-      const fullURL = url + sexo;
+      var fullURL = url + sexo;
 
       request(fullURL, function (error, response, body) {
 
         if (!error && response.statusCode == 200) {
 
-          let data = JSON.parse(body);
-          res.send( `¿Match? :point_down: ${data.results[0].picture.large} `);
+          var data = JSON.parse(body);
+          res.send('¿Match? :point_down: ' + data.results[0].picture.large);
 
         } else {
           res.send(':facepalm: Error: ', error);
