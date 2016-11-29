@@ -14,10 +14,15 @@
 //   @jorgeepunan
 
 var request = require('request');
-var url     = 'https://randomuser.me/api/?inc=picture,name&noinfo&gender=';
+var moment  = require('moment');
+var url     = 'https://randomuser.me/api/?inc=picture,name,dob&noinfo&gender=';
 
 function capitalize(string){
   return string[0].toUpperCase() + string.slice(1);
+}
+
+function age(dob) {
+  return moment().diff(dob, 'years');
 }
 
 module.exports = function(robot) {
@@ -34,7 +39,8 @@ module.exports = function(robot) {
         if (!error && response.statusCode == 200) {
 
           var data = JSON.parse(body);
-          res.send('¿Match con ' + capitalize(data.results[0].name.first) + '? :point_down: ' + data.results[0].picture.large);
+
+          res.send('¿Match con ' + capitalize(data.results[0].name.first) + ' (' + age(data.results[0].dob) + ') ? :point_down: ' + data.results[0].picture.large);
 
         } else {
           res.send(':facepalm: Error: ', error);
