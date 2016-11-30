@@ -38,13 +38,12 @@ module.exports = (robot) ->
 
   robot.respond /fin votador/i, (msg) ->
     if robot.voting.votes?
-      console.log robot.voting.votes
 
       results = tallyVotes()
 
       response = "Resultados votación..."
       for choice, index in robot.voting.choices
-        response += "\n#{choice}: #{results[index]}"
+        response += "\n - Opción #{index}: #{choice} -- #{results[index]} votos"
 
       msg.send response
 
@@ -78,13 +77,11 @@ Finalizar votación: `hubot fin votador`"
     else
       choice = robot.voting.choices.indexOf msg.match[2]
 
-    console.log choice
-
     sender = robot.brain.usersForFuzzyName(msg.message.user['name'])[0].name
 
     if validChoice choice
       robot.voting.votes[sender] = choice
-      msg.send "#{sender} vota por #{robot.voting.choices[choice]}"
+      msg.send "#{sender} vota por opción #{choice}: #{robot.voting.choices[choice]}"
     else
       msg.send "#{sender}: esa no es una opción válida"
 
@@ -96,9 +93,9 @@ Finalizar votación: `hubot fin votador`"
     if robot.voting.choices?
       response = ""
       for choice, index in robot.voting.choices
-        response += "#{index}: #{choice}"
+        response += " - Opción #{index}: #{choice}"
         if results?
-          response += " -- Total Votos: #{results[index]}"
+          response += " -- Total votos: #{results[index]}"
         response += "\n" unless index == robot.voting.choices.length - 1
     else
       msg.send "No existe votación vigente"
