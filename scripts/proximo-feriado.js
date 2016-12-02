@@ -8,14 +8,17 @@
 //   none
 
 // Commands:
-//   hubot proximo feriado - Retorna la cantidad de días y la fecha del próximo feriado en Chile
+//   hubot pr(o|ó)ximo feriado - Retorna la cantidad de días, la fecha y el motivo del próximo feriado en Chile
 
 // Author:
 //   @victorsanmartin
 
+// Co-Author:
+//   @jorgeepunan
+
 module.exports = function (robot) {
 
-  robot.respond(/proximo feriado/i, function (msg) {
+  robot.respond(/pr(o|ó)ximo feriado/i, function (msg) {
 
     var today = new Date([
           new Date().getFullYear(),
@@ -42,13 +45,13 @@ module.exports = function (robot) {
               ].join('-'), holiday.date);
 
               if (dias == 0) {
-                msg.send('*HOY* es feriado!! Disfrutalo!');
+                msg.send('¡*HOY* es feriado, disfrútalo!');
               }
               else {
                 msg.send("El próximo feriado es en *" + dias + "* días.");
               }
 
-              msg.send(holiday.title + " [_" + holiday.extra + "_]");
+              msg.send(holiday.date + ': ' + holiday.title + " (_" + holiday.extra.toLowerCase() + "_) ");
             }
           });
 
