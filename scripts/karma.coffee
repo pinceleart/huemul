@@ -23,35 +23,39 @@ module.exports = (robot) ->
     targetToken = response.match[1].trim()
     return if not targetToken
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
-    targetUser = userForToken targetToken, response
-    return if not targetUser
-    return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser.name is targetUser.name
-    op = response.match[2]
-    limit = canUpvote(thisUser, targetUser)
-    if Number.isFinite(limit)
-      response.send "¡No abuses! Intenta en " + limit + " minutos"
-      return
-    modifyingKarma = if op is "++" then 1 else -1
-    targetUser.karma += modifyingKarma
-    karmaLog = robot.brain.get('karmaLog') or []
-    karmaLog.push({
-      name: thisUser.name,
-      id: thisUser.id,
-      karma: modifyingKarma,
-      targetName: targetUser.name,
-      targetId: targetUser.id,
-      date: Date.now(),
-      msg: response.envelope.message.text
-    })
-    robot.brain.set 'karmaLog', karmaLog
-    robot.brain.save()
-    response.send "#{getCleanName(targetUser.name)} ahora tiene #{targetUser.karma} puntos de karma."
+    userForToken(targetToken, response)
+      .then (targetUser) ->
+        return if not targetUser
+        return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser.name is targetUser.name
+        op = response.match[2]
+        limit = canUpvote(thisUser, targetUser)
+        if Number.isFinite(limit)
+          response.send "¡No abuses! Intenta en " + limit + " minutos"
+          return
+        modifyingKarma = if op is "++" then 1 else -1
+        targetUser.karma += modifyingKarma
+        karmaLog = robot.brain.get('karmaLog') or []
+        karmaLog.push({
+          name: thisUser.name,
+          id: thisUser.id,
+          karma: modifyingKarma,
+          targetName: targetUser.name,
+          targetId: targetUser.id,
+          date: Date.now(),
+          msg: response.envelope.message.text
+        })
+        robot.brain.set 'karmaLog', karmaLog
+        robot.brain.save()
+        response.send "#{getCleanName(targetUser.name)} ahora tiene #{targetUser.karma} puntos de karma."
+    .catch (err) ->
+      console.log(err)
 
   robot.hear /^karma(?:\s+@?(.*))?$/, (response) ->
     targetToken = response.match[1]?.trim()
     return if not targetToken
     if targetToken.toLowerCase() in ["todos", "all"]
       msg = "Karma de todos: #{hubotWebSite}/karma/todos"
+      response.send msg
     else if targetToken.toLowerCase().split(' ')[0] == 'reset'
       thisUser = response.message.user
       if thisUser.name.toLowerCase() != "hector"
@@ -64,17 +68,20 @@ module.exports = (robot) ->
         list = Object.keys(users)
           .map((k) -> users[k].karma = 0)
         msg = "Todo el mundo ha quedado libre de toda bendición o pecado."
+        response.send msg
+        robot.brain.save()
       else
-        targetUser = userForToken resetCommand, response
-        targetUser.karma = 0
-        msg = "#{getCleanName(targetUser.name)} ha quedado libre de toda bendición o pecado."
+        userForToken(resetCommand, response).then (targetUser) ->
+          targetUser.karma = 0
+          msg = "#{getCleanName(targetUser.name)} ha quedado libre de toda bendición o pecado."
+          response.send msg
+          robot.brain.save()
     else
-      targetUser = userForToken targetToken, response
-      return if not targetUser
-      msg = "#{getCleanName(targetUser.name)} tiene #{targetUser.karma} puntos de karma.
-            Más detalles en: #{hubotWebSite}/karma/log/#{targetUser.name}"
-    robot.brain.save()
-    response.send msg
+      userForToken(targetToken, response).then (targetUser) ->
+        return if not targetUser
+        msg = "#{getCleanName(targetUser.name)} tiene #{targetUser.karma} puntos de karma.
+              Más detalles en: #{hubotWebSite}/karma/log/#{targetUser.name}"
+        response.send msg
 
   robot.router.get "/#{robot.name}/karma/todos", (req, res) ->
     users = robot.brain.users()
@@ -121,57 +128,32 @@ module.exports = (robot) ->
     res.setHeader 'content-type', 'text/html'
     res.end msg
 
-  robot.enter (res) ->
-    robot.adapter.client.web.users.list().then (users) ->
-      user1 = users.find (x) -> x.id is res.message.user.id
-      user2 = robot.brain.users.find (x) -> x.id is res.message.user.id
-      unless user2?
-        loaclUsers = robot.brain.users()
-        loaclUsers[user1.id] =
-          id: user1.id
-          name: user1.name
-          real_name: user1.real_name
-          email_address: user1.profile.email
-          slack:
-            id: user1.id
-            team_id: user1.team_id
-            name: user1.name
-            deleted: user1.deleted
-            status: user1.status
-            color: user1.color
-            real_name: user1.real_name
-            tz: user1.tz
-            tz_label: user1.tz_label
-            tz_offset: user1.tz_offset
-            profile: user1.profile
-            is_admin: user1.is_admin
-            is_owner: user1.is_owner
-            is_primary_owner: user1.is_primary_owner
-            is_restricted: user1.is_restricted
-            is_ultra_restricted: user1.is_ultra_restricted
-            is_bot: user1.is_bot
-            presence: res.message.user.presence or "active"
-          room: "random"
-          karma: 0
-        robot.brain.save()
-
   userForToken = (token, response) ->
-    users = usersForToken token
-    if users.length is 1
-      user = users[0]
-      user.karma ?= 0
-    else if users.length > 1
-      response.send "Se más específico, Hay #{users.length} personas que se parecen a: #{(getCleanName(u.name) for u in users).join ", "}."
-    else
-      response.send "Chaucha, no encuentro al usuario '#{token}'."
-    user
+    return usersForToken(token)
+      .then (users) ->
+        if users.length is 1
+          user = users[0]
+          user.karma ?= 0
+        else if users.length > 1
+          response.send "Se más específico, Hay #{users.length} personas que se parecen a: #{(getCleanName(u.name) for u in users).join ", "}."
+        else
+          response.send "Chaucha, no encuentro al usuario '#{token}'."
+        user
 
   usersForToken = (token) ->
-    user = robot.brain.userForName token
-    return [user] if user
-    user = userForMentionName token
-    return [user] if user
-    robot.brain.usersForFuzzyName token
+    userPromise = new Promise((resolve, reject) ->
+      if user = robot.brain.userForName(token)
+        return resolve([user])
+      if user = userForMentionName(token)
+        return resolve([user])
+      userFromWeb(token).then (webUser) ->
+        if webUser
+          return resolve [webUser] if webUser
+        else
+          user = robot.brain.usersForFuzzyName(token)
+          return resolve(user)
+    )
+    return userPromise
 
   userForMentionName = (mentionName) ->
     for id, user of robot.brain.users()
@@ -196,3 +178,40 @@ module.exports = (robot) ->
 
   getCleanName = (name) ->
     return name[0] + '.' + name.substr(1)
+
+  userFromWeb = (token) ->
+    return robot.adapter.client.web.users.list().then (users) ->
+      localUsers = robot.brain.users()
+      user1 = users.members.find (x) -> x.name is token
+      return unless user1
+      user2 = localUsers[user1.id]
+      unless user2?
+        localUsers[user1.id] =
+          id: user1.id
+          name: user1.name
+          real_name: user1.real_name
+          email_address: user1.profile.email
+          slack:
+            id: user1.id
+            team_id: user1.team_id
+            name: user1.name
+            deleted: user1.deleted
+            status: user1.status
+            color: user1.color
+            real_name: user1.real_name
+            tz: user1.tz
+            tz_label: user1.tz_label
+            tz_offset: user1.tz_offset
+            profile: user1.profile
+            is_admin: user1.is_admin
+            is_owner: user1.is_owner
+            is_primary_owner: user1.is_primary_owner
+            is_restricted: user1.is_restricted
+            is_ultra_restricted: user1.is_ultra_restricted
+            is_bot: user1.is_bot
+            presence: "active"
+          room: "random"
+          karma: 0
+        robot.brain.save()
+      localUsers[user1.id]
+
