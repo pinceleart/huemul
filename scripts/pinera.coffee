@@ -22,6 +22,7 @@ images = [
   "http://4.bp.blogspot.com/-WyfG_qQpTUw/TiEP7kXi3lI/AAAAAAAAFKE/6bmDrjjdfZY/s1600/4.jpg",
   "http://img.emol.com/2011/03/08/File_201138135519.jpg",
   "http://www.australvaldivia.cl/prontus3_fotos/site/artic/20050910/imag/FOTO4220050910232209.jpg"
+  "https://pbs.twimg.com/media/Cy7cN3QWIAAP7pR.jpg"
 ]
 
 module.exports = (robot) ->
