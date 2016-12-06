@@ -93,7 +93,8 @@ module.exports = function(robot) {
           if(resultados.length > limiteResultados) {
             text += 'Otros resultados en: <'+ url + '|knasta>\n';
           }
-          msg.send(text);
+          var options = {unfurl_links: false, as_user: true};
+          robot.adapter.client.web.chat.postMessage(res.message.room, text, options);
         } else {
           msg.send('No se han encontrado resultados sobre '+ busqueda);
         }
