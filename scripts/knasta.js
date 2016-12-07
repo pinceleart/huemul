@@ -3,7 +3,7 @@
 //
 //  Dependencies:
 //    phantom
-//    Q
+//    q
 //    cheerio
 //
 // Commands:
@@ -76,13 +76,18 @@ module.exports = function(robot) {
         var resultados = [];
 
         $('.item.linio.panel.panel-default').each(function() {
+
             var title = $(this).find('.title').text();
+            var price = $(this).find('.item-price').text();
+            var discount = $(this).find('.perc.minus').text();
             var link = 'http://knasta.cl' + $(this).find('a').attr('href');
 
-            resultados.push( '<' + link + '|' + title + '>' );
+            resultados.push( '<' + link + '|' + title + ': ' + price + ' (' + discount +')>' );
+            
         });
 
         if(resultados.length > 0) {
+
           var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
           var plural = resultados.length > 1 ? ['n','s'] : ['',''];
           var text = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1] + '\n';
@@ -91,16 +96,20 @@ module.exports = function(robot) {
             text += conteo + ': ' + resultados[i] + '\n';
           }
           if(resultados.length > limiteResultados) {
-            text += 'Otros resultados en: <'+ url + '|knasta>\n';
+            text += 'Otros resultados en: *<'+ url + '|knasta>*\n';
           }
           var options = {unfurl_links: false, as_user: true};
           robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+
         } else {
-          msg.send('No se han encontrado resultados sobre '+ busqueda);
+
+          msg.send('No se han encontrado resultados sobre _'+ busqueda + '_');
+
         }
 
         _page.close();
         _ph.exit();
+
       }).catch(e => console.log(e));
 
     });
