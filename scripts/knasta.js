@@ -94,7 +94,7 @@ module.exports = function(robot) {
             text += 'Otros resultados en: <'+ url + '|knasta>\n';
           }
           var options = {unfurl_links: false, as_user: true};
-          robot.adapter.client.web.chat.postMessage(res.message.room, text, options);
+          robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
         } else {
           msg.send('No se han encontrado resultados sobre '+ busqueda);
         }
