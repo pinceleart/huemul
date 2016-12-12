@@ -75,31 +75,41 @@ module.exports = function(robot) {
         var $ = cheerio.load(content);
         var resultados = [];
 
-        $('.item.linio.panel.panel-default').each(function() {
+        if( !$('.fa-meh-o').length ) {
 
-            var title = $(this).find('.title').text();
-            var price = $(this).find('.item-price').text();
-            var discount = $(this).find('.perc.minus').text();
-            var link = 'http://knasta.cl' + $(this).find('a').attr('href');
+          $('.item.linio.panel.panel-default').each(function() {
 
-            resultados.push( '<' + link + '|' + title + ': ' + price + ' (' + discount +')>' );
-            
-        });
+              var title = $(this).find('.title').text();
+              var price = $(this).find('.item-price').text();
+              var discount = $(this).find('.perc.minus').text();
+              var link = 'http://knasta.cl' + $(this).find('a').attr('href');
 
-        if(resultados.length > 0) {
+              resultados.push( '<' + link + '|' + title + ': ' + price + ' (' + discount +')>' );
+              
+          });
 
-          var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
-          var plural = resultados.length > 1 ? ['n','s'] : ['',''];
-          var text = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1] + '\n';
-          for (var i=0; i < limiteResultados; i++) {
-            var conteo = i + 1;
-            text += conteo + ': ' + resultados[i] + '\n';
+          if(resultados.length > 0) {
+
+            var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
+            var plural = resultados.length > 1 ? ['n','s'] : ['',''];
+            var text = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1] + '\n';
+            for (var i=0; i < limiteResultados; i++) {
+              var conteo = i + 1;
+              text += conteo + ': ' + resultados[i] + '\n';
+            }
+            if(resultados.length > limiteResultados) {
+              text += 'Otros resultados en: *<'+ url + '|knasta>*\n';
+            }
+
+            //msg.send(text); // test local, descomentar y comentar las siguientes 2 líneas
+            var options = {unfurl_links: false, as_user: true};
+            robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+
+          } else {
+
+            msg.send('No se han encontrado resultados sobre _'+ busqueda + '_');
+
           }
-          if(resultados.length > limiteResultados) {
-            text += 'Otros resultados en: *<'+ url + '|knasta>*\n';
-          }
-          var options = {unfurl_links: false, as_user: true};
-          robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
 
         } else {
 
