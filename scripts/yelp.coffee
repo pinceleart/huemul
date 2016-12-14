@@ -18,18 +18,10 @@
 # Author:
 #   @jorgeepunan
 
-consumer_key = "II7ox9sqSUe1qo6QzXphxQ"
+consumer_key    = "II7ox9sqSUe1qo6QzXphxQ"
 consumer_secret = "Fwj7DmhtjnS_0fGEfKSWvBxqjBY"
-token = "ek4LtD0_QwbKSxs8go1MNgP_o1Kpne_g"
-token_secret = "731n3orAZfXl2iP1AK3TF2gxKPw"
-
-respuestas = [
-  ":huemul: ¡Ya sé!"
-  ":huemul: ¡Lo tengo!"
-  ":huemul: Intenta: "
-  ":huemul: Mira :point_down::skin-tone-3:"
-  ":huemul: ¿Te tinca?"
-]
+token           = "ek4LtD0_QwbKSxs8go1MNgP_o1Kpne_g"
+token_secret    = "731n3orAZfXl2iP1AK3TF2gxKPw"
 
 Yelp = require("yelp")
 yelp = new Yelp
@@ -46,13 +38,14 @@ module.exports = (robot) ->
       location: "#{msg.match[4]}, Chile"
     yelp.search(query).then (data) ->
       if data.businesses.length > 0
-        business = msg.random data.businesses
-        template = "#{business.name} que queda en " +
-        "#{business.location.address} y tiene calificación de " +
-        "#{business.rating}/5 por #{business.review_count} personas. " +
-        "Categoría: #{business.categories.join(",")}."
-        msg.send msg.random respuestas
-        msg.send template
+        limiteResultados = 3
+        i = 0
+        while i < limiteResultados
+          business = msg.random data.businesses
+          template = "- " + "#{business.name} que queda en " + "#{business.location.address}, #{business.location.city}.\n    Calificación: " + "#{business.rating}/5 por #{business.review_count} personas.\n" + "    Categoría: #{business.categories.map((value, index) -> value[0] ).join(', ').toLowerCase()}."
+          msg.send template
+          i++
+
       else
         msg.send ":huemul: algo pasó y no sé qué fue. Intenta de nuevo."
     .catch (err) ->
