@@ -18,10 +18,11 @@
 # Author:
 #   @jorgeepunan
 
-consumer_key    = "II7ox9sqSUe1qo6QzXphxQ"
-consumer_secret = "Fwj7DmhtjnS_0fGEfKSWvBxqjBY"
-token           = "ek4LtD0_QwbKSxs8go1MNgP_o1Kpne_g"
-token_secret    = "731n3orAZfXl2iP1AK3TF2gxKPw"
+consumer_key    = process.env.YELP_CONSUMER_KEY
+consumer_secret = process.env.YELP_CONSUMER_SECRET
+token           = process.env.YELP_TOKEN
+token_secret    = process.env.YELP_TOKEN_SECRET
+
 
 Yelp = require("yelp")
 yelp = new Yelp
