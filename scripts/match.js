@@ -13,7 +13,6 @@
 // Author:
 //   @jorgeepunan
 
-var request = require('request');
 var url     = 'https://randomuser.me/api/?inc=picture,name,dob&noinfo&gender=';
 
 function capitalize(string){
@@ -29,7 +28,7 @@ module.exports = function(robot) {
 
       var fullURL = url + sexo;
 
-      request(fullURL, function (error, response, body) {
+      robot.http(fullURL).get()(function (error, response, body) {
 
         if (!error && response.statusCode == 200) {
 
