@@ -3,7 +3,6 @@
 //
 //  Dependencies:
 //    cheerio
-//    string
 //
 // Commands:
 //   hubot receta <ingrediente>
@@ -12,7 +11,6 @@
 //   @jorgeepunan
 
 var cheerio = require('cheerio');
-var S       = require('string');
 
 module.exports = function(robot) {
   robot.respond(/(receta|recetas) (.*)/i, function(msg) {
