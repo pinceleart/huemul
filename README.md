@@ -2,11 +2,11 @@
 
 Este un bot basado en [Hubot](https://hubot.github.com/) para [devsChile](http://www.devschile.cl) ([canal en Slack](http://devschile.slack.com)).
 
-Posee todas las funciones básicas de Hubot y varios aportes de esforzados desarrolladores y amantes del *Open Source*.
+Posee todas las funciones básicas de Hubot y varios aportes de [esforzados desarrolladores](https://github.com/devschile/huemul/graphs/contributors) y amantes del *Open Source*.
 
 ## ¿Qué comandos sabe?
 
-Para consultar cuáles son las cosas que trae, puedes hablarle públicamente así: `@huemul help`, si quieres preguntarle en privado, debes ir a *direct messages*, escribirle a **@huemul** y simplemente decir: `help`.  Normalmente es muy rápido, a menos que esté ocupado en otra cosa.
+Para consultar cuáles son las cosas que trae, puedes escribirle públicamente: `@huemul help`; si quieres preguntarle en privado, debes ir a *direct messages*, escribirle a **@huemul** y simplemente decir: `help`.  Normalmente es muy rápido, a menos que esté ocupado en otra cosa.
 
 ## Contribuir
 
