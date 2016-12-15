@@ -1,9 +1,28 @@
 {
   "name": "Huemul",
   "version": "2.0.0",
-  "private": true,
-  "author": "Huemul",
   "description": "Animal salvaje nivel 20",
+  "main": "bin/hubot",
+  "scripts": {
+    "start": "bin/hubot -a slack",
+    "dev": "bin/hubot"
+  },
+  "engines": {
+    "node": "6.9.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/devschile/huemul.git"
+  },
+  "keywords": [
+    "hubot"
+  ],
+  "author": "Huemul",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/devschile/huemul/issues"
+  },
+  "homepage": "https://github.com/devschile/huemul#readme",
   "dependencies": {
     "cheerio": "^0.22.0",
     "cloudscraper": "^1.4.1",
@@ -63,8 +82,5 @@
     "superheroes": "^1.0.0",
     "uuid": "^3.0.1",
     "yelp": "^1.0.2"
-  },
-  "engines": {
-    "node": "6.9.x"
   }
 }
