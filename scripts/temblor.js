@@ -2,7 +2,7 @@
 //   Muestra los últimos temblores significativos en Chile.
 //
 // Dependencies:
-//   request
+//   None
 //
 // Configuration:
 //   None
@@ -13,13 +13,12 @@
 // Author:
 //   @jorgeepunan
 
-var request = require('request');
 var url = 'http://earthquake-report.com/feeds/recent-eq?json';
 
 module.exports = function(robot) {
   robot.respond(/temblores (.*)/i, function(res) {
     var cual = (res.match[1]).trim().toUpperCase();
-    request(url, function (error, response, body) {
+    robot.http(url).get()(function (error, response, body) {
 
       if (!error && response.statusCode == 200) {
 
