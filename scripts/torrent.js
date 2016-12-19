@@ -34,19 +34,24 @@ module.exports = function(robot) {
           var title = $(this).find('a').text();
           var link = $(this).find('a').attr('href');
 
-          resultados.push( title + ' | ' + domain + link );
+          resultados.push(`<${domain}${link}|${title}>`);
         });
 
         if(resultados.length > 0) {
           var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
           var plural = resultados.length > 1 ? ['n','s'] : ['',''];
-          msg.send('Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1]);
-          for (var i=0; i < limiteResultados; i++) {
-            var conteo = i + 1;
-            msg.send(conteo + ': ' + resultados[i]);
-          }
-          if(resultados.length > limiteResultados) {
-            msg.send('Otros resultados en: '+ url);
+          const resume = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1];
+          const links = resultados
+            .slice(0, limiteResultados)
+            .map((result, index) => `${index + 1}: ${result}`)
+            .join('\n');
+          const more = resultados.length > limiteResultados ? `\n<${url}|Ver más resultados>` : '';
+          const text = `${resume}\n${links}${more}`;
+          if (robot.adapter.constructor.name === 'SlackBot') {
+            const options = {unfurl_links: false, as_user: true};
+            robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+          } else {
+            msg.send(text);
           }
         } else {
           msg.send('No se han encontrado resultados sobre '+ busqueda);
