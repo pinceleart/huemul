@@ -40,15 +40,15 @@ module.exports = function(robot) {
         if(resultados.length > 0) {
           var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
           var plural = resultados.length > 1 ? ['n','s'] : ['',''];
-          const resume = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1];
-          const links = resultados
+          var resume = 'Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1];
+          var links = resultados
             .slice(0, limiteResultados)
             .map((result, index) => `${index + 1}: ${result}`)
             .join('\n');
-          const more = resultados.length > limiteResultados ? `\n<${url}|Ver más resultados>` : '';
-          const text = `${resume}\n${links}${more}`;
+          var more = resultados.length > limiteResultados ? `\n<${url}|Ver más resultados>` : '';
+          var text = `${resume}\n${links}${more}`;
           if (robot.adapter.constructor.name === 'SlackBot') {
-            const options = {unfurl_links: false, as_user: true};
+            var options = {unfurl_links: false, as_user: true};
             robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
           } else {
             msg.send(text);
