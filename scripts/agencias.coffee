@@ -18,7 +18,7 @@
 
 express = require "express"
 path = require "path"
-uuid = require "uuid"
+uuidV4 = require "uuid/v4"
 querystring = require "querystring"
 
 images = [
@@ -70,7 +70,7 @@ module.exports = (robot) ->
     agencias = robot.brain.get("agencias")
     agencias = "[]" if agencias is null
     agencias = JSON.parse(agencias)
-    state = uuid.v4()
+    state = uuidV4()
     if /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(req.query.token)
       token = req.query.token
     else
