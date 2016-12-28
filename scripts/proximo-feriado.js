@@ -70,9 +70,8 @@ module.exports = function (robot) {
 
               if (dias == 0) {
                 msg.send('¡*HOY* es feriado! Se celebra: ' + message + '. ¡Disfrútalo!');
-              }
-              else {
-                msg.send("El próximo feriado es el *" + humanMonth + " de " + humanizeMonth(humanMonth).toLowerCase() + "*, quedan *" + dias + "* días. Se celebra: " + message + ".");
+              } else {
+                msg.send("El próximo feriado es el *" + humanDay + " de " + humanizeMonth(humanMonth).toLowerCase() + "*, quedan *" + dias + "* días. Se celebra: " + message + ".");
               }
             }
           });
