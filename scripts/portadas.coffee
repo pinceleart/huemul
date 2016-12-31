@@ -1,4 +1,3 @@
-
 # Description:
 #   Muestra las portadas de hoy de diversos diarios de Chile.
 #
@@ -6,49 +5,8 @@
 #   moment
 #
 # Configuration:
-#   None
-#
-# Commands:
 #   hubot portada <diario>
-#
-# Diarios Disponibles:
-#
-# Chile:
-#   (la)? segunda
-#   (la)? tercera
-#   (la)? cuarta
-#   (el)? mercurio
-#   ((las)? ultimas noticias)|lun
-#   publimetro
-#
-# Uruguay:*
-#   (el)? pais (uruguay|uru|uy)
-#
-# Brasil:
-#   (o)? globo
-#
-# Colombia:
-#   (el)? tiempo
-#
-# Mexico:
-#   (el)? financiero
-#
-# USA
-#   ((the)? wall street journal)|wsj
-#   (the)? washington post
-#   usa today
-#
-# Francia:
-#   (le)? monde
-#
-# España:
-#   (el)? pais
-#
-# United Kingdom:
-#   (the)? times
-#
-# Italia:
-#   (il)? corriere (della sera)?
+#   hubot portada <lista|help>
 #
 # Author:
 #   @rotvulpix
@@ -108,6 +66,7 @@ get_portada = (msg, diario, days_past = 0) ->
 module.exports = (robot) ->
   robot.respond /portada (.*)/i, (msg) ->
     nombre = msg.match[1].replace(/^(las |la |el |le |the |o |il )/, "").replace(/( )/g, "")
+
     diario = switch(nombre)
       # Chile
       when "segunda" then { url: "http://www.portadaschilenas.com/#DATE#/Lasegunda_grande.jpg", no_slashes: false }
@@ -151,6 +110,7 @@ module.exports = (robot) ->
       # United Kingdom
       when "times" then {url: "http://img.kiosko.net/#DATE#/uk/the_times.750.jpg", no_slashes: false }
 
-      when "lista" then lista_portadas(msg)
+      #lista|help
+      when "lista", "help" then lista_portadas(msg)
 
     get_portada(msg, diario) if diario
