@@ -14,7 +14,7 @@
 //   @jorgeepunan
 
 const url     = 'https://api.larger.io/v1/';
-const apiKey  = 'GPR2QH8O3M6F21WH12PG8E81OHPALS51';
+const apiKey  = process.env.LARGERIO_API_KEY;
 
 module.exports = robot => {
   robot.respond(/larger (.*)/i, res => {
