@@ -13,6 +13,8 @@
 // Author:
 //   @jorgeepunan
 
+'use strict';
+
 const url     = 'https://api.larger.io/v1/';
 const apiKey  = process.env.LARGERIO_API_KEY;
 

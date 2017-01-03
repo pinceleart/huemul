@@ -33,5 +33,6 @@
   "hubot-soon",
   "hubot-tweets",
   "hubot-wikipedia-lang",
-  "hubot-youtube"
+  "hubot-youtube",
+  "hubot-emoji-creator"
 ]
