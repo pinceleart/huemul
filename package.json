@@ -38,6 +38,7 @@
     "hubot-cpf": "^1.0.6",
     "hubot-diagnostics": "0.0.1",
     "hubot-diceware": "^2.0.1",
+    "hubot-emoji-creator": "0.0.1",
     "hubot-google-images": "^0.2.6",
     "hubot-help-private": "^1.0.0",
     "hubot-heroku-deploy-hook": "0.0.2",
