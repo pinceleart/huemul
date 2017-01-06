@@ -15,7 +15,7 @@
 # Author:
 # 	@ravenous
 
-rude = ["¿Era muy difícil? :wntard:","¿En serio no sabías eso? :wntard:","Bienvenido a la Internet :wntard:"]
+rude = ["¿Era muy difícil? :wntard:","¿En serio no sabías eso? :mufasatard:","Bienvenido a la Internet :lol2:"]
 
 module.exports = (robot) ->
 	robot.respond /(?:lmgtfy|google)\s(?:@(\w*))?\s?(.+)/i, (res) ->
