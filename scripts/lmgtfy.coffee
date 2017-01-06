@@ -1,6 +1,6 @@
 # Description:
 # 	Para quienes les da flojera buscar en Google
-# 	Pudú lo hace de la manera menos amable posible
+# 	Huemul lo hace de la manera menos amable posible
 #
 # Dependencies:
 # 	None
@@ -15,7 +15,7 @@
 # Author:
 # 	@ravenous
 
-rude = ["¿Era muy difícil? :gun:","¿En serio no sabías eso? :unamused:","Bienvenido a la Internet :clap:"]
+rude = ["¿Era muy difícil? :wntard:","¿En serio no sabías eso? :wntard:","Bienvenido a la Internet :wntard:"]
 
 module.exports = (robot) ->
 	robot.respond /(?:lmgtfy|google)\s(?:@(\w*))?\s?(.+)/i, (res) ->
