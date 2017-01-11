@@ -34,5 +34,6 @@
   "hubot-tweets",
   "hubot-wikipedia-lang",
   "hubot-youtube",
-  "hubot-emoji-creator"
+  "hubot-emoji-creator",
+  "hubot-chilexpress"
 ]
