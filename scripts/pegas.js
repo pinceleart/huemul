@@ -29,7 +29,7 @@ module.exports = function(robot) {
 
       $('.job-list .job').each(function() {
         var title = $(this).find('h4').text().replace(/\n|\r/g, ' ');
-        var link = $(this).find('a').attr('href');
+        var link = 'https://www.getonbrd.cl' + $(this).find('a').attr('href');
 
         resultados.push( '<' + link + '|' + title + '>' );
       });
