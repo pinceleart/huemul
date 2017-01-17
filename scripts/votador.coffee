@@ -33,7 +33,7 @@ module.exports = (robot) ->
       robot.voting.votes = {}
       createChoices msg.match[1]
 
-      msg.send "Comienza votación"
+      msg.send "Comienza votación. Recuerda que para votar tienes que escribir `hubot voto [opción].`"
       sendChoices(msg)
 
   robot.respond /fin votador/i, (msg) ->
