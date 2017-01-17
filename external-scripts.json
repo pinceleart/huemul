@@ -35,5 +35,6 @@
   "hubot-wikipedia-lang",
   "hubot-youtube",
   "hubot-emoji-creator",
-  "hubot-chilexpress"
+  "hubot-chilexpress",
+  "hubot-mercadolibre_cl"
 ]
