@@ -47,7 +47,7 @@ module.exports = function(robot) {
         if( $('.fa-bell').length ) {
           msg.send('Este sitio no existe. Intenta con otro.')
         } else {
-          msg.send(':monea: ' + $('title').text().trim().split('-')[0])
+          msg.send(':monea: ' + $('title').text().trim().split(' - ')[0])
         }
 
       });
