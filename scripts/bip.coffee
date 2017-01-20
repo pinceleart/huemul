@@ -25,7 +25,7 @@ module.exports = (robot) ->
       msg.send 'El identificador de tu BIP! son sólo números.'
       msg.send 'No sea leso, no se crea hacker. máZnáátèdííghó óèzíí'
     else
-      url = 'http://www.psep.cl/api/Bip.php?&numberBip=' + indicador
+      url = 'http://bip-servicio.herokuapp.com/api/v1/solicitudes.json?bip=' + indicador
 
       msg.http(url).get() (err, res, body) ->
         if err
