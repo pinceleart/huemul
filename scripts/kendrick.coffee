@@ -15,13 +15,13 @@
 #   @pinceleart
 
 images = [
-  "http://i.giphy.com/aUQcF83As9ah2.gif",
-  "http://i.giphy.com/17ieqEyGhWgSI.gif",
-  "http://i.giphy.com/MrOy8tFZ1CZt6.gif",
-  "http://i.giphy.com/9wVT49DL0m8lq.gif",
-  "https://media1.popsugar-assets.com/files/thumbor/L7fOIS9RN57NDmOEY84wSHb6isQ/fit-in/1024x1024/filters:format_auto-!!-:strip_icc-!!-/2014/01/30/843/n/1922398/21c2a90c1ab9aed8_tumblr_mfhfonwf671rg1b79o1_500/i/general-she-supercandid-relatable.gif",
-  "http://i.imgur.com/OcBuB.gif",
-  "http://k33.kn3.net/taringa/2/D/6/F/0/7/AnnaKendrick/58F.gif"
+  "http://i.giphy.com/bZkQ55qlfrwgE.gif",
+  "http://i.giphy.com/26BRwtfB9qBN4znm8.gif",
+  "http://i.giphy.com/bG3ISgJnyZxbW.gif",
+  "http://i.giphy.com/12MCPAmEP4JCRq.gif",
+  "http://i.giphy.com/RyvoPaWNe8Xte.gif",
+  "http://i.giphy.com/kFgQqnEgOIuCk.gif",
+  "http://i.giphy.com/pPp1lfcrOOIQ8.gif"
 ]
 
 module.exports = (robot) ->
