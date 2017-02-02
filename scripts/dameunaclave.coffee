@@ -2,7 +2,7 @@
 #   Entrega una clave autogenerada
 #
 # Dependencies:
-#   cheerio
+#   password-generator
 #
 # Configuration:
 #   None
@@ -25,6 +25,6 @@ module.exports = (robot) ->
       length = parseInt(msg.match[2], 10)
 
     password = generatePassword(length, false)
-    resp = ":passport_control: Clave `#{password}`"
+    resp = ":passport_control: Tu clave: `#{password}`"
 
     robot.send {room: msg.message.user.name}, resp
