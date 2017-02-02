@@ -27,4 +27,4 @@ module.exports = (robot) ->
     password = generatePassword(length, false)
     resp = ":passport_control: Tu clave: `#{password}`"
 
-    robot.send {room: msg.message.user.name}, resp
+    robot.send {room: msg.message.user.id}, resp
