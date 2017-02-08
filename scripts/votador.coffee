@@ -42,7 +42,7 @@ module.exports = (robot) ->
 
       results = tallyVotes()
 
-      response = "Resultados votación... #{robot.voting.choices}"
+      response = "Resultados votación..."
       for choice, index in robot.voting.choices
         response += "\n - Opción #{index}: #{choice}: #{results[index]} votos (#{Math.abs(results[index] * 100 / results.reduce (t, s) -> t + s)}%)"
 
