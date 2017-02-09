@@ -44,7 +44,7 @@ module.exports = (robot) ->
 
       response = "Resultados votación..."
       for choice, index in robot.voting.choices
-        response += "\n - Opción #{index}: #{choice}: #{results[index]} votos (#{Math.abs(results[index] * 100 / results.reduce (t, s) -> t + s)}%)"
+        response += "\n - Opción #{index}: #{choice}: #{results[index]} votos (#{Math.round(results[index] * 100 / results.reduce (t, s) -> t + s)}%)"
 
       msg.send response
 
