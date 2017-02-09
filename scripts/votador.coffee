@@ -20,6 +20,7 @@
 #
 # Author:
 #   @antonishen
+#   @juanbrujo
 
 module.exports = (robot) ->
   robot.voting = {}
@@ -43,7 +44,7 @@ module.exports = (robot) ->
 
       response = "Resultados votación..."
       for choice, index in robot.voting.choices
-        response += "\n - Opción #{index}: #{choice} -- #{results[index]} votos"
+        response += "\n - Opción #{index}: #{choice}: #{results[index]} votos (#{Math.abs(results[index] * 100 / results.reduce (t, s) -> t + s)}%)"
 
       msg.send response
 
@@ -86,7 +87,7 @@ Finalizar votación: `hubot fin votador`"
       msg.send "#{sender}: esa no es una opción válida"
 
   createChoices = (rawChoices) ->
-    robot.voting.choices = rawChoices.split(/, /)
+    robot.voting.choices = rawChoices.split(/,/)
 
   sendChoices = (msg, results = null) ->
 
