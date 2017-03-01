@@ -1,15 +1,27 @@
 language: node_js
 node_js:
-  - "6"
-  - "7"
+- '6'
+- '7'
 notifications:
   email: false
   webhooks: http://huemul.herokuapp.com/travis-ci/huemul-devs
 env:
-  - CXX=g++-4.8
+- CXX=g++-4.8
 addons:
+  ssh_known_hosts:
+  - github.com
+  - 104.131.105.95
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
+    - g++-4.8
+before_install:
+- openssl aes-256-cbc -K $encrypted_687768fa4b0e_key -iv $encrypted_687768fa4b0e_iv
+  -in deploy_key.pem.enc -out deploy_key.pem -d
+after_success:
+- eval "$(ssh-agent -s)"
+- chmod 600 deploy_key.pem
+- ssh-add deploy_key.pem
+- git remote add dokku dokku@104.131.105.95:huemul
+- test $TRAVIS_BRANCH == "master" && git push dokku master
