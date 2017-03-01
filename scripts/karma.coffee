@@ -24,7 +24,7 @@ module.exports = (robot) ->
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
 
     for token in tokens
-      opRegex = /\+\+|--/g;
+      opRegex = /\+\+|--{1}/g;
       userToken = token.trim().replace(opRegex,'')
       op = token.match(opRegex)[0]
       applyKarma(userToken, op, response)
