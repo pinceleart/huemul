@@ -11,7 +11,7 @@ const moment = require('moment');
 moment.locale('es');
 
 module.exports = function(robot) {
-
+  robot.brain.hubotTimeouts = robot.brain.hubotTimeouts || {};
   const timeUnitWords = {
     h: 'horas',
     m: 'minutos',
@@ -22,10 +22,9 @@ module.exports = function(robot) {
   }
 
   function isUserPunished(user) {
-    robot.brain.hubotTimeouts = robot.brain.hubotTimeouts || {};
     if (robot.brain.hubotTimeouts[user.id]) {
       const oldDate = robot.brain.hubotTimeouts[user.id];
-      if (moment(oldDate).isSameOrAfter(moment(), 'minutes')) {
+      if (moment().isSameOrAfter(moment(oldDate), 'minutes')) {
         robot.brain.hubotTimeouts[user.id] = undefined;
         robot.brain.save();
       }
@@ -39,9 +38,7 @@ module.exports = function(robot) {
       h: 'hours',
       m: 'minutes',
     };
-
-    robot.brain.hubotTimeouts = robot.brain.hubotTimeouts || {};
-    robot.brain.hubotTimeouts[user.id] = moment().add(time, timeUnitMoment[timeUnit]);
+    robot.brain.hubotTimeouts[user.id] = moment().add(time, timeUnitMoment[timeUnit]).toDate();
     robot.brain.save();
   }
 
@@ -114,9 +111,7 @@ module.exports = function(robot) {
   robot.respond(/ban-info (\w+)/, (res) => {
     getUser(res.match[1]).then(user => {
       if (!user) return;
-      robot.brain.hubotTimeouts = robot.brain.hubotTimeouts || {};
-
-      if (robot.brain.hubotTimeouts[user.id]) {
+      if (isUserPunished(user)) {
         return res.send(`${user.name} me cae mal hasta ${moment(robot.brain.hubotTimeouts[user.id]).calendar()} `);
       } else {
         return res.send(`${user.name} me cae bien.`);
