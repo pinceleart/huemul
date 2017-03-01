@@ -16,13 +16,13 @@
 tipos =
   'piedra':
     'papel': 'Papel envuelve piedra. Perdiste, LOSER.'
-    'tijera': 'Piedra rompe tijera. Ganaste :wink:'
+    'tijera': 'Piedra rompe tijera. ¡Ganaste! :wink:'
   'papel':
-    'piedra': 'Papel envuelve piedra. Weeeena :wink:'
-    'tijera': 'Tijera corta papel. Chuuuuuuu'
+    'piedra': 'Papel envuelve piedra. Weeeena :ql: :wink:'
+    'tijera': 'Tijera corta papel. ¡Chuuuuuuu!'
   'tijera':
     'papel': 'Tijeras cortan papel. ¡Súper! :wink:'
-    'piedra': 'Piedra rompe tijera. ¡Amermelao!'
+    'piedra': 'Piedra rompe tijera. ¡Amermelao :ql: !'
 
 respuestas = (msg, userChoice) ->
   choices = ['piedra','papel','tijera']
@@ -38,8 +38,7 @@ respuestas = (msg, userChoice) ->
 
   resultado = "¡Empate!" if not resultado
 
-  msg.send ":huemul: escoge #{choice}"
-  msg.send resultado
+  msg.send ":huemul: escoge #{choice} #{resultado}"
 
 module.exports = (robot) ->
   robot.respond /cachipun (piedra|papel|tijera)/i, (msg) ->
