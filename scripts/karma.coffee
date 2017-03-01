@@ -18,7 +18,7 @@ module.exports = (robot) ->
 
   hubotWebSite = "http://#{robot.name}.herokuapp.com/#{robot.name}"
 
-  robot.hear /@?(\S*)(\b\+\+|--)(\s|$)/g, (response) ->
+  robot.hear /@?(\S*)(\b\+\+|--{1})(\s|$)/g, (response) ->
     tokens = response.match
     return if not tokens
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
