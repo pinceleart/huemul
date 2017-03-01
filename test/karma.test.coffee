@@ -79,6 +79,16 @@ describe "karma", ->
         ["hubot", "Chaucha, no encuentro al usuario 'd'."]
       ])
 
+  context "Karma sin usuario (0 length)", ->
+    beforeEach (done) ->
+      @room.user.say("user", "++")
+      setTimeout(done, 500)
+
+    it "No Debe aplicar karma", ->
+      expect(@room.messages).to.eql([
+        ["user", "++"]
+      ])
+
   context "Karma con conflicto de nombres", ->
     beforeEach (done) ->
       @room.user.say("user", "leo++")
