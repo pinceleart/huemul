@@ -5,7 +5,8 @@
   "main": "bin/hubot",
   "scripts": {
     "start": "bin/hubot -a slack",
-    "dev": "bin/hubot"
+    "dev": "bin/hubot",
+    "test": "mocha --compilers coffee:coffee-script/register"
   },
   "engines": {
     "node": "6.9.x"
@@ -47,6 +48,7 @@
     "hubot-info-rut": "^2.0.2",
     "hubot-insulter": "^1.0.2",
     "hubot-jobtitles": "0.0.2",
+    "hubot-kitsu": "0.0.1",
     "hubot-maps": "0.0.2",
     "hubot-memegeneration": "^2.2.0",
     "hubot-mercadolibre_cl": "0.0.1",
@@ -58,13 +60,13 @@
     "hubot-paya": "0.0.1",
     "hubot-putear": "^1.5.1",
     "hubot-qr": "0.0.2",
-    "hubot-rae": "^1.0.4",
     "hubot-redis-brain": "0.0.3",
     "hubot-rules": "^0.1.1",
     "hubot-scripts": "^2.17.2",
     "hubot-shipit": "^0.2.0",
-    "hubot-slack": "^4.2.2",
+    "hubot-slack": "^4.3.1",
     "hubot-soon": "^1.0.0",
+    "hubot-travis-ci-hook": "0.0.1",
     "hubot-tweets": "devschile/hubot-tweets",
     "hubot-wikipedia-lang": "^1.0.1",
     "hubot-youtube": "^1.0.2",
@@ -84,5 +86,11 @@
     "superheroes": "^1.0.0",
     "uuid": "^3.0.1",
     "yelp": "^1.0.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coffee-script": "^1.12.4",
+    "hubot-test-helper": "^1.5.1",
+    "mocha": "^3.2.0"
   }
 }
