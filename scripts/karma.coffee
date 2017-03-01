@@ -18,7 +18,7 @@ module.exports = (robot) ->
 
   hubotWebSite = "http://#{robot.name}.herokuapp.com/#{robot.name}"
 
-  robot.hear /@?([^- \+]\S[^- \+]+)(\b\+{2}|-{2})(\s|$)/g, (response) ->
+  robot.hear /@?((?=[^\+\-_])[a-zA-Z0-9-_]+|[^-\s\+]+)(\b\+{2}|-{2})(\s|$)/g, (response) ->
     tokens = response.match
     return if not tokens
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
@@ -113,7 +113,7 @@ module.exports = (robot) ->
       .then (targetUser) ->
         return if not targetUser
         return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser.name is targetUser.name
-        return response.send "Oe no seai pillo, escribe un nombre!" unless targetUser.length
+        return response.send "Oe no seai pillo, escribe un nombre!" if targetUser.length is ''
         limit = canUpvote(thisUser, targetUser)
         if Number.isFinite(limit)
           response.send "¡No abuses! Intenta en " + limit + " minutos"
