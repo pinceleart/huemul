@@ -18,13 +18,13 @@ module.exports = (robot) ->
 
   hubotWebSite = "http://#{robot.name}.herokuapp.com/#{robot.name}"
 
-  robot.hear /@?(\S*)(\b\+\+|--{1})(\s|$)/g, (response) ->
+  robot.hear /@?([^- \+]\S[^- \+]+)(\b\+{2}|-{2})(\s|$)/g, (response) ->
     tokens = response.match
     return if not tokens
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
 
     for token in tokens
-      opRegex = /\+\+|--{1}/g;
+      opRegex = /\+{2}|-{2}/g;
       userToken = token.trim().replace(opRegex,'')
       op = token.match(opRegex)[0]
       applyKarma(userToken, op, response)
@@ -113,6 +113,7 @@ module.exports = (robot) ->
       .then (targetUser) ->
         return if not targetUser
         return response.send "Oe no po, el karma es pa otros no pa ti!" if thisUser.name is targetUser.name
+        return response.send "Oe no seai pillo, escribe un nombre!" unless targetUser.length
         limit = canUpvote(thisUser, targetUser)
         if Number.isFinite(limit)
           response.send "¡No abuses! Intenta en " + limit + " minutos"
