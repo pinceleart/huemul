@@ -38,7 +38,7 @@ respuestas = (msg, userChoice) ->
 
   resultado = "¡Empate!" if not resultado
 
-  msg.send ":huemul: escoge #{choice} " + resultado
+  msg.send ":huemul: escoge #{choice} #{resultado}"
 
 module.exports = (robot) ->
   robot.respond /cachipun (piedra|papel|tijera)/i, (msg) ->
