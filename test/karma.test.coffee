@@ -21,6 +21,8 @@ describe "karma", ->
                 {name: "leonardo"}
                 {name: "leon"}
                 {name: "cata"}
+                {name: "dukuo"}
+                {name: "hector"}
               ]
     @room.robot.brain.userForId "jorgeepunan",
       name: "jorgeepunan"
@@ -35,6 +37,12 @@ describe "karma", ->
       name: "cata"
       id: 4
       karma: -99
+    @room.robot.brain.userForId "dukuo",
+      name: "dukuo"
+      id: 5
+    @room.robot.brain.userForId "hector",
+      name: "hector"
+      id: 6
     @room.robot.brain.karmaLimits =
       user:
         3: new Date()
@@ -70,13 +78,13 @@ describe "karma", ->
 
   context "Karma sin usuario", ->
     beforeEach (done) ->
-      @room.user.say("user", "d++")
+      @room.user.say("user", "t++")
       setTimeout(done, 500)
 
     it "No Debe aplicar karma", ->
       expect(@room.messages).to.eql([
-        ["user", "d++"]
-        ["hubot", "Chaucha, no encuentro al usuario 'd'."]
+        ["user", "t++"]
+        ["hubot", "Chaucha, no encuentro al usuario 't'."]
       ])
 
   context "Karma sin usuario (0 length)", ->
@@ -87,6 +95,21 @@ describe "karma", ->
     it "No Debe aplicar karma", ->
       expect(@room.messages).to.eql([
         ["user", "++"]
+      ])
+
+  context "Limitar karma multiple a 5 usuarios", ->
+    beforeEach (done) ->
+      @room.user.say("user", "leonardo++ jorgeepunan-- hector++ dukuo++ cata-- seis++")
+      setTimeout(done, 500)
+
+    it "Aplica karma sólo a 5 usuarios", ->
+      expect(@room.messages).to.eql([
+        ["user", "leonardo++ jorgeepunan-- hector++ dukuo++ cata-- seis++"]
+        ["hubot", "l.eonardo ahora tiene 1 puntos de karma."]
+        ["hubot", "j.orgeepunan ahora tiene -1 puntos de karma."]
+        ["hubot", "h.ector ahora tiene 1 puntos de karma."]
+        ["hubot", "d.ukuo ahora tiene 1 puntos de karma."]
+        ["hubot", "c.ata ahora tiene -100 puntos de karma."]
       ])
 
   context "Karma con conflicto de nombres", ->
