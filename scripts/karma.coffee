@@ -22,6 +22,7 @@ module.exports = (robot) ->
     tokens = response.match
     return if not tokens
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
+    tokens = tokens.slice(0, 5);
 
     for token in tokens
       opRegex = /\+{2}|-{2}/g;
