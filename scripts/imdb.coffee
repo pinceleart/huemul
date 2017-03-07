@@ -36,18 +36,20 @@ module.exports = (robot) ->
       })
     .get() (err, res, body) ->
       movie = JSON.parse(body)
+      emptyMsg = ['NA', 'N/A']
+
       if movie.Response is 'False'
         msg.send "¿Seguro qué ese es el nombre?\n¡Tienes que elegir una película o serie!"
       else
         info = ":popcorn: *#{movie.Title} (#{movie.Year})*\n\n"
-        info += "IMDb Rating: `#{movie.imdbRating}/10`\n" if movie.imdbRating? and movie.imdbRating isnt 'N/A'
-        info += "Rotten Tomatoes: `#{movie.tomatoMeter}%`\n" if movie.tomatoMeter? and movie.tomatoMeter isnt 'NA'
-        info += ">_#{movie.Plot}_\n" if movie.Plot? and movie.Plot isnt 'N/A'
-        info += "Genre: `#{movie.Genre}`\n" if movie.Genre? and movie.Genre isnt 'N/A'
-        info += "Director: #{movie.Director}\n" if movie.Director? and movie.Director isnt 'N/A'
-        info += "Actors: #{movie.Actors}\n" if movie.Actors? and movie.Actors isnt 'N/A'
-        info += "Awards: #{movie.Awards}\n" if movie.Awards? and movie.Awards isnt 'N/A'
-        info += "URL: www.imdb.com/title/#{movie.imdbID}" if movie.imdbID? and movie.imdbID isnt 'N/A'
+        info += "IMDb Rating: `#{movie.imdbRating}/10`\n" if movie.imdbRating? and emptyMsg.includes(movie.imdbRating) == false
+        info += "Rotten Tomatoes: `#{movie.tomatoMeter}%`\n" if movie.tomatoMeter? and emptyMsg.includes(movie.tomatoMeter) == false
+        info += ">_#{movie.Plot}_\n" if movie.Plot? and emptyMsg.includes(movie.Plot) == false
+        info += "Genre: `#{movie.Genre}`\n" if movie.Genre? and emptyMsg.includes(movie.Genre) == false
+        info += "Director: #{movie.Director}\n" if movie.Director? and emptyMsg.includes(movie.Director) == false
+        info += "Actors: #{movie.Actors}\n" if movie.Actors? and emptyMsg.includes(movie.Actors) == false
+        info += "Awards: #{movie.Awards}\n" if movie.Awards? and emptyMsg.includes(movie.Awards) == false
+        info += "URL: www.imdb.com/title/#{movie.imdbID}" if movie.imdbID? and emptyMsg.includes(movie.imdbID) == false
         msg.send info
 
 
