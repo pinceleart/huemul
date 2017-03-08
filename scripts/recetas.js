@@ -16,7 +16,7 @@ module.exports = function(robot) {
   robot.respond(/(receta|recetas) (.*)/i, function(msg) {
 
     var busqueda = msg.match[2];
-    var domain = 'http://www.recetasgratis.net/busqueda';
+    var domain = 'https://www.recetasgratis.net/busqueda';
     var url = domain + '?q=' + busqueda.split(' ').join('+');
 
     msg.robot.http(url).get()(function(err, res, body) {

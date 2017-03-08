@@ -75,9 +75,7 @@ module.exports = (robot) ->
 
       if data != null and typeof data != 'object'
         data = data.toString().split ',', 1
-        msg.send indicador.toUpperCase() + ': ' + data + date
-        msg.send msg.random mensajes
+        mensaje = msg.random mensajes
+        msg.send indicador.toUpperCase() + ': ' + data + date + '. ' + mensaje
       else
         msg.send "Error, intenta nuevamente *zopenco*."
-
-#FIN
