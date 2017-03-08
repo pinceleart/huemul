@@ -144,7 +144,7 @@ module.exports = (robot) ->
           user = users[0]
           user.karma ?= 0
         else if users.length > 1
-          response.send "Se más específico, Hay #{users.length} personas que se parecen a: #{(getCleanName(u.name) for u in users).join ", "}."
+          robot.messageRoom response.message.user.name, "Se más específico, Hay #{users.length} personas que se parecen a: #{(getCleanName(u.name) for u in users).join ", "}."
         else
           response.send "Chaucha, no encuentro al usuario '#{token}'."
         user
