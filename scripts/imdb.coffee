@@ -1,6 +1,6 @@
 #
 # Description:
-#   Get detailed information of movies or series from IMDb
+#   Get detailed information about movies or series from IMDb
 #
 # Dependencies:
 #   None
@@ -9,72 +9,47 @@
 #   None
 #
 # Commands:
-#   hubot imdb <movie or serie>
-#   hubot movie <movie or serie>
-#   hubot imdb <year|rate|plot|genre|director|actors|url> <movie or serie>
-#   hubot movie <year|rate|plot|genre|director|actors|url> <movie or serie>
-#
-# Notes:
-#   Filter search by year or type (movie or serie) for more accuracy
+#   hubot imdb <movie or serie> <year>
+#   hubot movie <movie or serie> <year>
 #
 # Author:
 #   @ravenous <hello@ravenous.io>
 
 module.exports = (robot) ->
-  robot.respond /(imdb|movie)\s(year|rate|plot|genre|director|actors|url)?\s?(.*)/i, (msg) ->
-    query = msg.match[3]
-    msg.http("http://omdbapi.com/")
-      .query({
-        t: query,
-        tomatoes: true
+  robot.respond /(imdb|movie)\s(.*)/i, (msg) ->
+    str = msg.match[2]
+    year = ''
+
+    # Check if there's a year at the end of the string
+    if str.match(/\d{4}$/i)
+      title = str.slice(0, -5).split(' ').join('+')
+      year = str.slice(-4)
+    else
+      title = str.split(' ').join('+')
+
+    # Send request to the OMDB API
+    msg.http('http://omdbapi.com/')
+    .query({
+      t: title,
+      y: year,
+      tomatoes: true
       })
-      .get() (err, res, body) ->
-        movie = JSON.parse(body)
-        label = msg.match[2] ? 'full'
-        if label is 'year' and movie.Year?
-          msg.send ">*#{movie.Title} (#{movie.Year})*"
-        else if label is 'rate' and movie.imdbRating?
-          if movie.imdbRating isnt 'N/A'
-            msg.send ">IMDb Rating: `#{movie.imdbRating}/10`"
-            msg.send ">Rotten Tomatoes: `#{movie.tomatoMeter}%`" if movie.tomatoMeter? and movie.tomatoMeter isnt "N/A"
-          else
-            msg.send "Nadie la ha calificado aún :disappointed:"
-        else if label is 'plot' and movie.Plot?
-          if movie.Plot isnt 'N/A'
-            msg.send ">_#{movie.Plot}_"
-          else
-            msg.send "No tiene argumento! Ain't nobody got time for that! :gun:"
-        else if label is 'genre' and movie.Genre?
-          if movie.Genre isnt 'N/A'
-            msg.send ">#{movie.Genre}"
-          else
-            msg.send "¿Qué clase de películas ves? :anguished:"
-        else if label is 'director' and movie.Director?
-          if movie.Director isnt 'N/A'
-            msg.send ">#{movie.Director}"
-          else
-            msg.send "Ni Santa Isabel lo conoce! :laughing:"
-        else if label is 'actors' and movie.Actors?
-          if movie.Actors isnt 'N/A'
-            msg.send ">#{movie.Actors}"
-          else
-            msg.send "Son puros extras! :unamused"
-        else if label is 'url' and movie.imdbID?
-          if movie.imdbID isnt 'N/A'
-            msg.send "www.imdb.com/title/#{movie.imdbID}"
-          else
-            msg.send "Google es tu amigo! :ok_hand:"
-        else if label is 'full' and movie.Title?
-          full = ">*#{movie.Title} (#{movie.Year})*\n"
-          full += ">IMDb Rating: `#{movie.imdbRating}/10`\n" if movie.imdbRating? and movie.imdbRating isnt "N/A"
-          full += ">Rotten Tomatoes: `#{movie.tomatoMeter}%`\n" if movie.tomatoMeter? and movie.tomatoMeter isnt "N/A"
-          full += ">_#{movie.Plot}_\n" if movie.Plot? and movie.Plot isnt "N/A"
-          full += ">Genre: `#{movie.Genre}`\n" if movie.Genre? and movie.Genre isnt "N/A"
-          full += ">Director: #{movie.Director}\n" if movie.Director? and movie.Director isnt "N/A"
-          full += ">Actors: #{movie.Actors}\n" if movie.Actors? and movie.Actors isnt "N/A"
-          full += ">URL: www.imdb.com/title/#{movie.imdbID}" if movie.imdbID? and movie.imdbID isnt "N/A"
-          msg.send full
-        else
-          msg.send "¿Seguro qué ese es el nombre?\n¡Tienes que elegir una película o serie!"
+    .get() (err, res, body) ->
+      movie = JSON.parse(body)
+      emptyMsg = ['NA', 'N/A']
+
+      if movie.Response is 'False'
+        msg.send "¿Seguro qué ese es el nombre?\n¡Tienes que elegir una película o serie!"
+      else
+        info = ":popcorn: *#{movie.Title} (#{movie.Year})*\n\n"
+        info += "IMDb Rating: `#{movie.imdbRating}/10`\n" if movie.imdbRating? and emptyMsg.includes(movie.imdbRating) == false
+        info += "Rotten Tomatoes: `#{movie.tomatoMeter}%`\n" if movie.tomatoMeter? and emptyMsg.includes(movie.tomatoMeter) == false
+        info += ">_#{movie.Plot}_\n" if movie.Plot? and emptyMsg.includes(movie.Plot) == false
+        info += "Genre: `#{movie.Genre}`\n" if movie.Genre? and emptyMsg.includes(movie.Genre) == false
+        info += "Director: #{movie.Director}\n" if movie.Director? and emptyMsg.includes(movie.Director) == false
+        info += "Actors: #{movie.Actors}\n" if movie.Actors? and emptyMsg.includes(movie.Actors) == false
+        info += "Awards: #{movie.Awards}\n" if movie.Awards? and emptyMsg.includes(movie.Awards) == false
+        info += "URL: www.imdb.com/title/#{movie.imdbID}" if movie.imdbID? and emptyMsg.includes(movie.imdbID) == false
+        msg.send info
 
 

@@ -15,8 +15,8 @@
 #   @clsource
 
 module.exports = (robot) ->
-
-  hubotWebSite = "http://#{robot.name}.herokuapp.com/#{robot.name}"
+  hubotHost = process.env.HEROKU_URL or process.env.HUBOT_URL or "http://localhost:8080"
+  hubotWebSite = "#{hubotHost}/#{robot.name}"
 
   robot.hear /@?((?=[^\+\-_])[a-zA-Z0-9-_]+|[^-\s\+]+)(\b\+{2}|-{2})(\s|$)/g, (response) ->
     tokens = response.match
@@ -144,7 +144,7 @@ module.exports = (robot) ->
           user = users[0]
           user.karma ?= 0
         else if users.length > 1
-          response.send "Se más específico, Hay #{users.length} personas que se parecen a: #{(getCleanName(u.name) for u in users).join ", "}."
+          robot.messageRoom "@#{response.message.user.name}", "Se más específico, Hay #{users.length} personas que se parecen a: #{(getCleanName(u.name) for u in users).join ", "}."
         else
           response.send "Chaucha, no encuentro al usuario '#{token}'."
         user
