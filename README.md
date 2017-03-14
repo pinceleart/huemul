@@ -1,5 +1,7 @@
 # Huemul
 
+[![Build Status](https://travis-ci.org/devschile/huemul.svg?branch=master)](https://travis-ci.org/devschile/huemul)
+
 Este un bot basado en [Hubot](https://hubot.github.com/) para [devsChile](http://www.devschile.cl) ([canal en Slack](http://devschile.slack.com)).
 
 Posee todas las funciones básicas de Hubot y varios aportes de [esforzados desarrolladores](https://github.com/devschile/huemul/graphs/contributors) y amantes del *Open Source*.
