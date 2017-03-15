@@ -41,7 +41,7 @@ module.exports = robot => {
       robot.brain.set('gold_users', JSON.stringify(goldUsers))
       res.send('Felicidades ya eres :monea: :wink:')
     } else {
-      res.send('No es una clave valida')
+      res.send('No es una clave válida')
     }
     return
   })
