@@ -22,6 +22,6 @@ var beneficios = [
 
 module.exports = function(robot) {
   robot.respond(/un beneficio/gi, function(res) {
-    res.send( beneficios[Math.floor(Math.random() * beneficios.length)] );
+    res.send( res.random(beneficios) );
   });
 };
