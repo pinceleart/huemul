@@ -53,29 +53,29 @@ module.exports = function(robot) {
 
 		// verifica si usuario es uno de los 3 admin. muy rústica la validación, lo sé. prestado de karma.coffee
 		//if( userClean !== 'shell' ) { // localhost test
-		if( userClean !== 'shell' ) {
+		if( userClean !== 'jorgeepunan' ) {
 
-			msg.send('Tienes que ser admin para usar este script.');
+			msg.send('Tienes que ser :jorge: para usar este script.');
 
 		} else {
 
 			if ( opcion === 'txt' ) {
 				// return robot.messageRoom('Shell', "🎉 *¡CONCURSO!* 🎉 " + mensaje); // localhost test
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 ' + mensaje);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 ' + mensaje);
 			}  else if ( opcion === 'inicio' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 \n' + inicio);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 \n' + inicio);
 			} else if ( opcion === 'stickers' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 Reglas:\n' + stickers);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 Reglas:\n' + stickers);
 			} else if ( opcion === 'premio' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 \n' + premio);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 \n' + premio);
 			} else if ( opcion === 'surtidos' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 \n' + surtidos);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 \n' + surtidos);
 			} else if ( opcion === 'reglas' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 Reglas:\n' + reglas.join(''));
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 Reglas:\n' + reglas.join(''));
 			} else if ( opcion === 'ganador' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 :parrot: ¡TENEMOS UN GANADOR! :parrot: \n\n :trophy: :trophy: :trophy: *' + mensaje + '* :trophy: :trophy: :trophy: \n\n ¡ F E L I C I D A D E S !');
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 :parrot: ¡TENEMOS UN GANADOR! :parrot: \n\n :trophy: :trophy: :trophy: *' + mensaje + '* :trophy: :trophy: :trophy: \n\n ¡ F E L I C I D A D E S !');
 			} else if ( opcion === 'fin' ) {
-				return robot.messageRoom('Shell', '🎉 *¡CONCURSO!* 🎉 ' + fin);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 ' + fin);
 			}
 
 		}
