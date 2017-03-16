@@ -21,7 +21,7 @@ module.exports = (robot) ->
 	robot.respond /(?:lmgtfy|google)\s(?:@(\w*))?\s?(.+)/i, (res) ->
 		lmgtfy = "http://lmgtfy.com/?q="
 		if res.match[1]
-			res.send "#{res.match[1]}: " + lmgtfy + "#{escape(res.match[2])}"
+			message = "#{res.match[1]}: " + lmgtfy + "#{escape(res.match[2])}"
 		else
-			res.send lmgtfy + "#{escape(res.match[2])}"
-		res.send res.random rude
+			message = lmgtfy + "#{escape(res.match[2])}"
+		res.send "#{message}\n#{res.random(rude)}"
