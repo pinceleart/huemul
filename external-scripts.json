@@ -10,6 +10,7 @@
   "hubot-cpf",
   "hubot-diagnostics",
   "hubot-diceware",
+  "hubot-dokku-hook",
   "hubot-google-images",
   "hubot-help-private",
   "hubot-info-rut",

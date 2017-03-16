@@ -23,5 +23,6 @@ before_deploy:
 deploy:
   provider: script
   script: git remote add dokku dokku@104.131.105.95:huemul && git push dokku master
+  skip_cleanup: true
   on:
     branch: master
