@@ -74,10 +74,10 @@ module.exports = function(robot) {
 
         var $ = cheerio.load(content);
         var resultados = [];
-
+        
         if( !$('.fa-meh-o').length ) {
 
-          $('.item.linio.panel.panel-default').each(function() {
+          $('.item.panel.panel-default').each(function() {
 
               var title = $(this).find('.title').text();
               var price = $(this).find('.item-price').text();
