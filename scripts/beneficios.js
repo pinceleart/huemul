@@ -17,7 +17,9 @@ var beneficios = [
   'Snacks, café, frutas y bebidas libre todos los días todo el día.',
   'Aguinaldo en septiembre y diciembre.',
   'Bono anual por metas cumplidas.',
-  'Seguro de salud y dental para tí y tu familia.'
+  'Seguro de salud y dental para ti y tu familia.',
+  'Bono anual sólo por ser un :huemul: dev y/o golden :monea:',
+  'Permisos para celebrar y compartir la :beerjs:'
 ];
 
 module.exports = function(robot) {
