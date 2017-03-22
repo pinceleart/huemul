@@ -40,7 +40,7 @@ module.exports = function(robot) {
 '- Si crees saber quién es, debes etiquetar esta publicación (no en las pistas mismas, esta de AQUÍ) el ícono de quién crees que es la persona\n',
 '- El ganador no será el más rápido, sino por un sorteo a través de `huemul-azar` entre todos quienes etiquetaron correctamente\n',
 '- Comienza ahora, *¡ya!*'];
-		var fin 			= 'El ganador envíe ASAP un email a huemul@devschile.cl para reclamar su premio. :huemul: :mailbox_closed: :monea:';
+		var fin 			= 'El ganador envíe ASAP un email a huemul@devschile.cl con sus datos para enviarle su premio por correos. :huemul: :mailbox_closed: :monea:';
 
 		// sanitiza output para evitar abuso de malulos. prestado de karma.coffee
 		var words = ['@here', '@channel', '@group', '@everyone'];
@@ -65,7 +65,7 @@ module.exports = function(robot) {
 			}  else if ( opcion === 'inicio' ) {
 				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 \n' + inicio);
 			} else if ( opcion === 'stickers' ) {
-				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 Reglas:\n' + stickers);
+				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 \n' + stickers);
 			} else if ( opcion === 'premio' ) {
 				return robot.messageRoom(room, '🎉 *¡CONCURSO!* 🎉 \n' + premio);
 			} else if ( opcion === 'surtidos' ) {
