@@ -8,12 +8,12 @@
 #   None
 #
 # Commands:
-#   huemul votador help
-#   huemul inicio votador item1, item2, item3, ...
-#   huemul voto (por) N ~ donde N es el índice de la opción
-#   huemul opciones votador
-#   huemul conteo votador
-#   huemul fin votador
+#   hubot votador help
+#   hubot inicio votador item1, item2, item3, ...
+#   hubot voto (por) N ~ donde N es el índice de la opción
+#   hubot opciones votador
+#   hubot conteo votador
+#   hubot fin votador
 #
 # Notes:
 #   Base: https://github.com/joshingly/hubot-voting/blob/master/src/scripts/voting.coffee
