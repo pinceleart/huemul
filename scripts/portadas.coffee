@@ -22,13 +22,14 @@ lista_portadas = (msg) ->
     (la)? cuarta
     ((las)? ultimas noticias)|lun
     (el)? mercurio$
-    (el)? mercurio ((de)? calama|antofagasta|valparaiso)?
-    (la)? estrella ((del?)? arica|iquique|loa|antofagasta|tocopilla|valparaiso|quillota|concepcion|chiloe)
+    (el)? mercurio ((de)? calama|antofagasta|valparaíso)?
+    (la)? estrella ((del?)? arica|iquique|loa|antofagasta|tocopilla|valparaíso|quillota|concepción|chiloé)
     (el)? sur
     (el)? austral ((de)? temuco|valdivia|osorno)
     (el)? llanquihue
-    (el)? lider (de san antonio)?
+    (el)? líder (de san antonio)?
     (el)? diario (de)? atacama
+    crónica chillán
     hoyxhoy
     publimetro
   *Uruguay:*
