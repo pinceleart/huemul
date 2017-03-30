@@ -74,8 +74,8 @@ get_portada = (msg, diario, days_past = 0) ->
 
 module.exports = (robot) ->
   robot.respond /portada (.*)/i, (msg) ->
-    nombre = msg.match[1].replace(/^(las |la |el |le |the |o |il )/, "").replace(/( de | del | de la )/, "").replace(/( )/g, "");
-    nombre = nombre.replace("antofagasta", "antofa").replace(/valpara(?:í|i)so$/, "valpo").replace("líder", "lider").replace(/concepci(?:ó|o)n$/, "conce").replace("crónica", "cronica").replace("chillán","chillan").replace("losríos", "losrios").replace("chiloé", "chiloe");
+    nombre = msg.match[1].replace(/^(las |la |el |le |the |o |il )/, "").replace(/( de | del | de la )/, "").replace(/( )/g, "")
+    nombre = nombre.replace("antofagasta", "antofa").replace(/valpara(?:í|i)so$/, "valpo").replace("líder", "lider").replace(/concepci(?:ó|o)n$/, "conce").replace("crónica", "cronica").replace("chillán","chillan").replace("losríos", "losrios").replace("chiloé", "chiloe")
     
     diario = switch(nombre)
       # Chile
