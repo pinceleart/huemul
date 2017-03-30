@@ -74,7 +74,8 @@ get_portada = (msg, diario, days_past = 0) ->
 
 module.exports = (robot) ->
   robot.respond /portada (.*)/i, (msg) ->
-    nombre = msg.match[1].replace(/^(las |la |el |le |the |o |il )/, "").replace(/( de | del | de la )/, "").replace(/( )/g, "")
+    nombre = msg.match[1].replace(/^(las |la |el |le |the |o |il )/, "").replace(/( de | del | de la )/, "").replace(/( )/g, "");
+    nombre = nombre.replace("antofagasta", "antofa").replace(/valpara(?:í|i)so$/, "valpo").replace("líder", "lider").replace(/concepci(?:ó|o)n$/, "conce").replace("crónica", "cronica").replace("chillán","chillan").replace("losríos", "losrios").replace("chiloé", "chiloe");
     
     diario = switch(nombre)
       # Chile
@@ -92,38 +93,23 @@ module.exports = (robot) ->
       when "mercuriocalama" then { url: "http://edicionimpresa.soychile.cl/portadas/MercurioCalama/01-1440.jpg", no_slashes: false}
       when "estrellaloa" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaLoa/01-1440.jpg", no_slashes: false}
       when "estrellatocopilla" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaTocopilla/01-1440.jpg", no_slashes: false}
-      when "mercurioantofagasta" then { url: "http://edicionimpresa.soychile.cl/portadas/ElMercuriodeAntofagasta/01-1440.jpg", no_slashes: false}
       when "mercurioantofa" then { url: "http://edicionimpresa.soychile.cl/portadas/ElMercuriodeAntofagasta/01-1440.jpg", no_slashes: false}
-      when "estrellaantofagasta" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaAntofagasta/01-1440.jpg", no_slashes: false}
       when "estrellaantofa" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaAntofagasta/01-1440.jpg", no_slashes: false}
       when "diarioatacama" then { url: "http://edicionimpresa.soychile.cl/portadas/DiarioAtacama/01-1440.jpg", no_slashes: false}
-      when "mercuriovalparaiso" then { url: "http://edicionimpresa.soychile.cl/portadas/MercurioValparaiso/01-1440.jpg", no_slashes: false}
-      when "mercuriovalparaíso" then { url: "http://edicionimpresa.soychile.cl/portadas/MercurioValparaiso/01-1440.jpg", no_slashes: false}
       when "mercuriovalpo" then { url: "http://edicionimpresa.soychile.cl/portadas/MercurioValparaiso/01-1440.jpg", no_slashes: false}
-      when "estrellavalparaiso" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaValparaiso/01-1440.jpg", no_slashes: false}
-      when "estrellavalparaíso" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaValparaiso/01-1440.jpg", no_slashes: false}
       when "estrellavalpo" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaValparaiso/01-1440.jpg", no_slashes: false}
       when "estrellaquillota" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaQuillota/01-1440.jpg", no_slashes: false}
       when "lider" then { url: "http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-1440.jpg", no_slashes: false}
-      when "líder" then { url: "http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-1440.jpg", no_slashes: false}
       when "lidersanantonio" then { url: "http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-1440.jpg", no_slashes: false}
-      when "lídersanantonio" then { url: "http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-1440.jpg", no_slashes: false}
       when "sur" then { url: "http://edicionimpresa.soychile.cl/portadas/ElSur/01-1440.jpg", no_slashes: false}
-      when "estrellaconcepcion" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaConcepcion/01-1440.jpg", no_slashes: false}
-      when "estrellaconcepción" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaConcepcion/01-1440.jpg", no_slashes: false}
       when "estrellaconce" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaConcepcion/01-1440.jpg", no_slashes: false}
       when "cronicachillan" then { url: "http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-1440.jpg", no_slashes: false}
-      when "crónicachillan" then { url: "http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-1440.jpg", no_slashes: false}
-      when "cronicachillán" then { url: "http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-1440.jpg", no_slashes: false}
-      when "crónicachillán" then { url: "http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-1440.jpg", no_slashes: false}
       when "australtemuco" then { url: "http://edicionimpresa.soychile.cl/portadas/AustralTemuco/01-1440.jpg", no_slashes: false}
       when "australlosrios" then { url: "http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-1440.jpg", no_slashes: false}
-      when "australlosríos" then { url: "http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-1440.jpg", no_slashes: false}
       when "australvaldivia" then { url: "http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-1440.jpg", no_slashes: false}
       when "australosorno" then { url: "http://edicionimpresa.soychile.cl/portadas/AustralOsorno/01-1440.jpg", no_slashes: false}
       when "llanquihue" then { url: "http://edicionimpresa.soychile.cl/portadas/Llanquihue/01-1440.jpg", no_slashes: false}
       when "estrellachiloe" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaChiloe/01-1440.jpg", no_slashes: false}
-      when "estrellachiloé" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaChiloe/01-1440.jpg", no_slashes: false}
       when "hoyxhoy" then { url: "http://edicionimpresa.soychile.cl/portadas/HoyxHoy/01-1440.jpg", no_slashes: false}
       when "hxh" then { url: "http://edicionimpresa.soychile.cl/portadas/HoyxHoy/01-1440.jpg", no_slashes: false}
 
