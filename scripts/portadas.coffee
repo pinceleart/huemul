@@ -27,7 +27,7 @@ lista_portadas = (msg) ->
     (el)? sur
     (el)? austral ((de)? temuco|valdivia|osorno)
     (el)? llanquihue
-    (el)? líder (de san antonio)?
+    (el)? l(í|i)der (de san antonio)?
     (el)? diario (de)? atacama
     cr(ó|o)nica chill(á|a)n
     hoyxhoy
