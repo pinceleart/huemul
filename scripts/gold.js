@@ -81,9 +81,21 @@ module.exports = robot => {
       const user = robot.adapter.client.rtm.dataStore.getUserByEmail(req.body.email)
       if (typeof user !== 'undefined') {
         addUser(user.name)
+      } else {
+        const admins = process.env.HUBOT_AUTH_ADMIN
+        if (admins) {
+          let message = `El email ${req.body.email} acaba de donar pero no `
+          message += 'logre determinar que usuario es para agregarlo a los '
+          message += 'golds :monea:.\nEste mensaje fue enviado a todos los '
+          message += 'administradores'
+          admins.split(',').forEach(admin => {
+            robot.send({room: admin}, message)
+          })
+        }
       }
       res.send('Ok')
     } else {
+      robot.emit('error', `Se envio un request invalido con la siguiente email: ${req.body.email}`)
       res.send('Error')
     }
     return
