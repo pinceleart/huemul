@@ -63,7 +63,7 @@ module.exports = robot => {
     goldUsers[user] = {user: user, expire: expire}
     robot.brain.set('gold_users', JSON.stringify(goldUsers))
     const comunidad = robot.adapter.client.rtm.dataStore.getChannelByName('#comunidad')
-    const message = `:clap2: *${name}* donó 1 mes de servidor a :huemul:, se lleva 3 stickers :huemul: y es miembro golden :monea: por 2 meses!`
+    const message = `:clap2: *${user}* donó 1 mes de servidor a :huemul:, se lleva 3 stickers :huemul: y es miembro golden :monea: por 2 meses!`
     robot.send({room: comunidad.id}, message)
   }
 
