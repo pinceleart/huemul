@@ -31,7 +31,7 @@ module.exports = function(robot) {
 
 		// textos
 		var inicio 		= '*¡Nuevo concurso en devsChile!* ​_Adivina Quién_​ y ganarás 1 HuemulCoin gentileza de tu grupo favorito de _Slack_';
-		var stickers 		= '*¡Nuevo concurso en devsChile!* ​_Adivina Quién_​ y ganarás 1 set de 3 _stickers dev surtidos gentileza de tu grupo favorito de _Slack_';
+		var stickers 		= '*¡Nuevo concurso en devsChile!* ​_Adivina Quién_​ y ganarás 1 set de 3 _stickers dev_ surtidos gentileza de tu grupo favorito de _Slack_';
 		var premio = "El ganador se llevará 1 HuemulCoin ℌℭ (`huemul finvox huemulcoin`) pagado mediante PayPal. (Si no tiene PayPal, se consigue uno o aprovecha de sacar una cuenta)";
 		var surtidos = "El ganador se llevará un surtido de 3 _stickers dev_, enviados por correo certificado";
 		var reglas  	= [
