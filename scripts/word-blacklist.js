@@ -48,13 +48,16 @@ module.exports = function(robot) {
   }
 
   function isAuthorized(user) {
+    console.log(user)
     const authorizedUsers = (process.env.HUBOT_AUTH_ADMIN) ? process.env.HUBOT_AUTH_ADMIN.split(',') : [];
 
     return authorizedUsers.indexOf(user.id) !== -1;
   }
 
   robot.listenerMiddleware((context, next, done) => {
-    if (!isUserPunished(context.response.message.user) || isAuthorized(context.response.message.user)) {
+    if (isAuthorized(context.response.message.user)) {
+      next();
+    } else if (!isUserPunished(context.response.message.user)) {
       const command = context.response.message.text
       let forbiddenWords = process.env.HUBOT_BANNED_WORDS || '';
       forbiddenWords = forbiddenWords.split(',').filter(word => word !== '')
