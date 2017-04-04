@@ -15,13 +15,13 @@
 #   @pinceleart
 
 images = [
-  "http://i.giphy.com/bZkQ55qlfrwgE.gif",
-  "http://i.giphy.com/26BRwtfB9qBN4znm8.gif",
-  "http://i.giphy.com/bG3ISgJnyZxbW.gif",
-  "http://i.giphy.com/12MCPAmEP4JCRq.gif",
-  "http://i.giphy.com/RyvoPaWNe8Xte.gif",
-  "http://i.giphy.com/kFgQqnEgOIuCk.gif",
-  "http://i.giphy.com/pPp1lfcrOOIQ8.gif"
+  "https://i.giphy.com/WjVVrMaczJBaU.gif",
+  "https://i.giphy.com/t3E11SO2NwFoY.gif",
+  "https://i.giphy.com/pgfcixtsWrCi4.gif",
+  "https://i.giphy.com/BDOtZlGcMsF32.gif",
+  "https://i.giphy.com/nWaY3QKzEXkoo.gif",
+  "https://i.giphy.com/vsPZNHlnBdz6U.gif",
+  "https://i.giphy.com/QQ3iRObojdrt6.gif"
 ]
 
 module.exports = (robot) ->
