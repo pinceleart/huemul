@@ -39,5 +39,6 @@
   "hubot-emoji-creator",
   "hubot-chilexpress",
   "hubot-mercadolibre_cl",
-  "hubot-command-log"
+  "hubot-command-log",
+  "hubot-librarynames"
 ]
