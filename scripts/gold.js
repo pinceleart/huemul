@@ -36,6 +36,18 @@ module.exports = robot => {
     return
   })
 
+  robot.respond(/gold list/i, res => {
+    const name = res.match[1]
+    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
+    const result = Object.keys(goldUsers)
+    let goldUsersList = [];
+    if (result) {
+      goldUsersList.push(result.data.user)
+    }
+    res.send(goldUsersList.split(',').join(' - '))
+    return
+  })
+
   robot.respond(/gold insert (.*)/i, res => {
     const key = res.match[1]
     const keys = (process.env.GOLD_KEYS || '').split(',')
