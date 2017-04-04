@@ -39,12 +39,13 @@ module.exports = robot => {
   robot.respond(/gold list/i, res => {
     const name = res.match[1]
     const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
-    const result = Object.keys(goldUsers)
-    let goldUsersList = [];
-    if (result) {
-      goldUsersList.push(result.data.user)
+    const users = Object.keys(goldUsers)
+      .map(key => goldUsers[key].user).join(', ')
+    if (users === '') {
+      res.send('No hay usuarios golden :monea:')
+    } else {
+      res.send(users)
     }
-    res.send(goldUsersList.split(',').join(' - '))
     return
   })
 
