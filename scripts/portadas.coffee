@@ -12,6 +12,7 @@
 #   @rotvulpix
 
 moment = require("moment");
+
 intentos = 0
 
 lista_portadas = (msg) ->
@@ -72,6 +73,13 @@ get_portada = (msg, diario, days_past = 0) ->
       else
         msg.send test_url
 
+get_portada_hxh = (msg) ->
+  msg.http("http://www.hoyxhoy.cl/endpoints/for-soy.php?action=get-latest&size=550")
+  .get() (err, res, body) ->
+    datosHxh = eval(body)
+    msg.send datosHxh[0].img
+  null
+
 module.exports = (robot) ->
   robot.respond /portada (.*)/i, (msg) ->
     nombre = msg.match[1].replace(/^(las |la |el |le |the |o |il )/, "").replace(/( de | del | de la )/, "").replace(/( )/g, "")
@@ -101,6 +109,8 @@ module.exports = (robot) ->
       when "estrellaquillota" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaQuillota/01-550.jpg", no_slashes: false}
       when "lider" then { url: "http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-550.jpg", no_slashes: false}
       when "lidersanantonio" then { url: "http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-550.jpg", no_slashes: false}
+      when "hoyxhoy" then get_portada_hxh( msg )
+      when "hxh" then get_portada_hxh( msg )
       when "sur" then { url: "http://edicionimpresa.soychile.cl/portadas/ElSur/01-550.jpg", no_slashes: false}
       when "estrellaconce" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaConcepcion/01-550.jpg", no_slashes: false}
       when "cronicachillan" then { url: "http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-550.jpg", no_slashes: false}
@@ -110,9 +120,7 @@ module.exports = (robot) ->
       when "australosorno" then { url: "http://edicionimpresa.soychile.cl/portadas/AustralOsorno/01-550.jpg", no_slashes: false}
       when "llanquihue" then { url: "http://edicionimpresa.soychile.cl/portadas/Llanquihue/01-550.jpg", no_slashes: false}
       when "estrellachiloe" then { url: "http://edicionimpresa.soychile.cl/portadas/EstrellaChiloe/01-550.jpg", no_slashes: false}
-      when "hoyxhoy" then { url: "http://edicionimpresa.soychile.cl/portadas/HoyxHoy/01-550.jpg", no_slashes: false}
-      when "hxh" then { url: "http://edicionimpresa.soychile.cl/portadas/HoyxHoy/01-550.jpg", no_slashes: false}
-
+      
       # Brasil
       when "globo" then { url: "http://img.kiosko.net/#DATE#/br/br_oglobo.750.jpg", no_slashes: false}
 
