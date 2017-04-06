@@ -6,7 +6,7 @@
   "scripts": {
     "start": "bin/hubot -a slack",
     "dev": "bin/hubot",
-    "test": "mocha --compilers coffee:coffee-script/register"
+    "test": "mocha test/*.js"
   },
   "engines": {
     "node": "6.9.x"
