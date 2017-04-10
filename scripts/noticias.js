@@ -7,17 +7,15 @@
 // Commands:
 //  hubot noticias internacional
 //  hubot noticias nacional
-//  hubot noticia nacionales
-//  hubot noticia de gatos
-//  hubot :newspaper: tendencias
+//  hubot noticias de perros
 //
 // Author:
 //  @jlobitu
 
 const moment = require('moment');
 
-module.exports = robot => robot.respond(/(noticias?|:newspaper:) (.*)/i, msg => {
-  const q = msg.match[2];
+module.exports = robot => robot.respond(/noticias (.*)/i, msg => {
+  const q = msg.match[1];
   const fetch = msg.robot.http(`http://search.24horas.cl/search/?q=${q}`);
 
   fetch.get()((err, res, body) => {
