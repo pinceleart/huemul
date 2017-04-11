@@ -2,7 +2,7 @@
 
 const Helper = require('hubot-test-helper');
 const {expect} = require('chai');
-const helper = new Helper('../scripts/lmgtfy.coffee');
+const helper = new Helper('../scripts/lmgtfy.js');
 
 class NewMockResponse extends Helper.Response {
   random(items) {
