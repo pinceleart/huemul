@@ -1,7 +1,7 @@
 Helper = require("hubot-test-helper")
 expect = require("chai").expect
 
-helper = new Helper("../scripts/alegria.coffee")
+helper = new Helper("../scripts/alegria.js")
 
 class NewMockResponse extends Helper.Response
   random: (items) ->

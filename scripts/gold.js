@@ -1,5 +1,5 @@
 // Description:
-//   Obtener gold con una key valida
+//   Obtener gold con una key válida ó una donación
 //
 // Dependencies:
 //   None
@@ -98,9 +98,9 @@ module.exports = robot => {
         const admins = process.env.HUBOT_AUTH_ADMIN
         if (admins) {
           let message = `El email ${req.body.email} acaba de donar pero no `
-          message += 'logre determinar que usuario es para agregarlo a los '
-          message += 'golds :monea:.\nEste mensaje fue enviado a todos los '
-          message += 'administradores'
+          message += 'logré determinar qué usuario es para agregarlo a los '
+          message += 'golden :monea:.\nEste mensaje fue enviado a todos los '
+          message += 'administradores de DevsChile.'
           admins.split(',').forEach(admin => {
             robot.send({room: admin}, message)
           })
@@ -108,7 +108,7 @@ module.exports = robot => {
       }
       res.send('Ok')
     } else {
-      robot.emit('error', `Se envio un request invalido con la siguiente email: ${req.body.email}`)
+      robot.emit('error', `Se envió un request inválido con el siguiente email: ${req.body.email}`)
       res.send('Error')
     }
     return
