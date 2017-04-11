@@ -1,7 +1,9 @@
 'use strict';
 
+require('coffee-script/register');
+const test = require('ava');
 const Helper = require('hubot-test-helper');
-const {expect} = require('chai');
+
 const helper = new Helper('../scripts/citas.js');
 
 class NewMockResponse extends Helper.Response {
@@ -10,23 +12,19 @@ class NewMockResponse extends Helper.Response {
   };
 }
 
-describe('citas', function() {
-  beforeEach(function() {
-    this.room = helper.createRoom({response: NewMockResponse});
-  });
-  afterEach(function() {
-    this.room.destroy();
-  });
-  context('Pedir una cita', function() {
-    beforeEach(function(done) {
-      this.room.user.say('user', 'hubot una cita');
-      setTimeout(done, 500);
-    });
-    it('Debe entregar una cita', function() {
-      expect(this.room.messages).to.eql([
-        ['user', 'hubot una cita'],
-        ['hubot', '> Lo bien hecho es mejor que lo bien dicho. *-Benjamin Franklin*']
-      ]);
-    });
-  });
+test.beforeEach(t => {
+  t.context.room = helper.createRoom({httpd: false, response: NewMockResponse});
+});
+test.afterEach(t => {
+  t.context.room.destroy();
+});
+test.cb('Debe entregar una cita', t => {
+  t.context.room.user.say('user', 'hubot una cita');
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['user', 'hubot una cita'],
+      ['hubot', '> Lo bien hecho es mejor que lo bien dicho. *-Benjamin Franklin*']
+    ]);
+    t.end();
+  }, 500);
 });

@@ -1,24 +1,24 @@
 'use strict';
 
-require('coffee-script/register')
+require('coffee-script/register');
+const test = require('ava');
 const Helper = require('hubot-test-helper');
-const {expect} = require('chai');
+
 const helper = new Helper('../scripts/NaN.js');
 
-describe('NaN', () => {
-  beforeEach(() => {
-    this.room = helper.createRoom({httpd: false});
-  });
-  afterEach(() => {
-    this.room.destroy();
-  });
-  context('Obtener un imagen random', () => {
-    beforeEach((done) => {
-      this.room.user.say('user', 'NaN');
-      setTimeout(done, 500);
-    });
-    it('Debe entregar una imagen', () => {
-      expect(this.room.messages).to.eql([['user', 'NaN'], ['hubot', 'NaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaN Batman! ~ :huemul:']]);
-    });
-  });
+test.beforeEach(t => {
+  t.context.room = helper.createRoom({httpd: false});
+});
+test.afterEach(t => {
+  t.context.room.destroy();
+});
+test.cb('Debe entregar una imagen', t => {
+  t.context.room.user.say('user', 'hubot NaN');
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['user', 'hubot NaN'],
+      ['hubot', 'NaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaNNaN Batman! ~ :huemul:']
+    ]);
+    t.end();
+  }, 500);
 });

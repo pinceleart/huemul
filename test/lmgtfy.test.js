@@ -1,46 +1,40 @@
 'use strict';
 
+require('coffee-script/register');
+const test = require('ava');
 const Helper = require('hubot-test-helper');
-const {expect} = require('chai');
+
 const helper = new Helper('../scripts/lmgtfy.js');
 
 class NewMockResponse extends Helper.Response {
   random(items) {
     return '¿Era muy difícil? :wntard:';
   };
-};
+}
 
-describe('lmgtfy', function() {
-  beforeEach(function() {
-    this.room = helper.createRoom({
-      response: NewMockResponse
-    });
-  });
-  afterEach(function() {
-    this.room.destroy();
-  });
-  context('Preguntar a google', function() {
-    beforeEach(function(done) {
-      this.room.user.say('user', 'hubot google como testear');
-      setTimeout(done, 500);
-    });
-    it('Debe entregar una sugerencia', function() {
-      expect(this.room.messages).to.eql([
-        ['user', 'hubot google como testear'],
-        ['hubot', 'http://lmgtfy.com/?q=como%20testear\n¿Era muy difícil? :wntard:']
-      ]);
-    });
-  });
-  context('Preguntar a lmgtfy por un usuario', function() {
-    beforeEach(function(done) {
-      this.room.user.say('user', 'hubot lmgtfy @user como testear');
-      setTimeout(done, 500);
-    });
-    it('Debe entregar una sugerencia', function() {
-      expect(this.room.messages).to.eql([
-        ['user', 'hubot lmgtfy @user como testear'],
-        ['hubot', 'user: http://lmgtfy.com/?q=como%20testear\n¿Era muy difícil? :wntard:']
-      ]);
-    });
-  });
+test.beforeEach(t => {
+  t.context.room = helper.createRoom({httpd: false, response: NewMockResponse});
+});
+test.afterEach(t => {
+  t.context.room.destroy();
+});
+test.cb('Debe entregar una sugerencia', t => {
+  t.context.room.user.say('user', 'hubot google como testear');
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['user', 'hubot google como testear'],
+      ['hubot', 'http://lmgtfy.com/?q=como%20testear\n¿Era muy difícil? :wntard:']
+    ]);
+    t.end();
+  }, 500);
+});
+test.cb('Debe entregar una sugerencia', t => {
+  t.context.room.user.say('user', 'hubot lmgtfy @user como testear');
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['user', 'hubot lmgtfy @user como testear'],
+      ['hubot', 'user: http://lmgtfy.com/?q=como%20testear\n¿Era muy difícil? :wntard:']
+    ]);
+    t.end();
+  }, 500);
 });
