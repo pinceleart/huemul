@@ -40,6 +40,7 @@ describe "karma", ->
     @room.robot.brain.userForId "dukuo",
       name: "dukuo"
       id: 5
+      karma: 0
     @room.robot.brain.userForId "hector",
       name: "hector"
       id: 6
@@ -52,6 +53,18 @@ describe "karma", ->
 
   afterEach ->
     @room.destroy()
+
+  context "Strip replace caracteres", ->
+    beforeEach (done) -> 
+      @room.user.say("user", "\"!#$%&/(){}@dukuo++,cata++")
+      setTimeout(done, 500)
+    
+    it "Debe dar un punto borrando todo caracter inválido", ->
+      expect(@room.messages).to.eql([
+        ["user", "\"!#$%&/(){}@dukuo++,cata++"]
+        ["hubot", "d.ukuo ahora tiene 1 puntos de karma."]
+        ["hubot", "c.ata ahora tiene -98 puntos de karma."]
+      ])
 
   context "Karma unico", ->
     beforeEach (done) ->
