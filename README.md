@@ -14,7 +14,7 @@ Para consultar cuáles son las cosas que trae, puedes escribirle públicamente: 
 
 ## Contribuir
 
-El repositorio queda abierto para todos los miembros de [devsChile en GitHub](https://github.com/devschile), si quieres agregar alguna función sigue los pasos en [CONTRIBUTING.md](CONTRIBUTING.md).
+El repositorio queda abierto para todos los miembros de [devsChile en GitHub](https://github.com/devschile), si quieres agregar alguna función sigue los pasos en [CONTRIBUTING](CONTRIBUTING.md).
 
 ---
 
