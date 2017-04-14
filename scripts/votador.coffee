@@ -34,7 +34,7 @@ module.exports = (robot) ->
       robot.voting.votes = {}
       createChoices msg.match[1]
 
-      msg.send "Comienza votación. Recuerda que para votar tienes que escribir `hubot voto [opción].`"
+      msg.send "Comienza votación. Recuerda que para votar tienes que escribir `huemul voto [opción].`"
       sendChoices(msg)
 
   robot.respond /fin votador/i, (msg) ->
@@ -59,11 +59,11 @@ module.exports = (robot) ->
 
   robot.respond /votador help/i, (msg) ->
     msg.send "*Comandos:*"
-    msg.send "Crear votación: `hubot inicio votador item1, item2, item3, ...`\n
-Votar: `hubot voto (por) N` ~ donde N es el índice de la opción\n
-Mostrar Opciones: `hubot opciones votador`\n
-Mostrar conteo de votos actual: `hubot conteo votador`\n
-Finalizar votación: `hubot fin votador`"
+    msg.send "Crear votación: `huemul inicio votador item1, item2, item3, ...`\n
+Votar: `huemul voto (por) N` ~ donde N es el índice de la opción\n
+Mostrar Opciones: `huemul opciones votador`\n
+Mostrar conteo de votos actual: `huemul conteo votador`\n
+Finalizar votación: `huemul fin votador`"
 
   robot.respond /conteo votador/i, (msg) ->
     results = tallyVotes()

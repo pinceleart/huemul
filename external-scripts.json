@@ -5,14 +5,15 @@
   "hubot-beerjs",
   "hubot-bellako",
   "hubot-binario",
+  "hubot-buscandriu",
   "hubot-caniuse",
   "hubot-cne",
   "hubot-cpf",
   "hubot-diagnostics",
   "hubot-diceware",
+  "hubot-dokku-hook",
   "hubot-google-images",
   "hubot-help-private",
-  "hubot-heroku-deploy-hook",
   "hubot-info-rut",
   "hubot-insulter",
   "hubot-jobtitles",
@@ -37,5 +38,7 @@
   "hubot-youtube",
   "hubot-emoji-creator",
   "hubot-chilexpress",
-  "hubot-mercadolibre_cl"
+  "hubot-mercadolibre_cl",
+  "hubot-command-log",
+  "hubot-librarynames"
 ]

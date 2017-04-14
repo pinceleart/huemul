@@ -77,7 +77,7 @@ module.exports = function(robot) {
 
         if( !$('.fa-meh-o').length ) {
 
-          $('.item.linio.panel.panel-default').each(function() {
+          $('.item.panel.panel-default').each(function() {
 
               var title = $(this).find('.title').text();
               var price = $(this).find('.item-price').text();
@@ -85,7 +85,7 @@ module.exports = function(robot) {
               var link = 'http://knasta.cl' + $(this).find('a').attr('href');
 
               resultados.push( '<' + link + '|' + title + ': ' + price + ' (' + discount +')>' );
-              
+
           });
 
           if(resultados.length > 0) {
@@ -120,7 +120,7 @@ module.exports = function(robot) {
         _page.close();
         _ph.exit();
 
-      }).catch(e => console.log(e));
+      }).catch(e => robot.emit('error', e));
 
     });
 

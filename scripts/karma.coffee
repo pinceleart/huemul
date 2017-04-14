@@ -15,8 +15,8 @@
 #   @clsource
 
 module.exports = (robot) ->
-
-  hubotWebSite = "http://#{robot.name}.herokuapp.com/#{robot.name}"
+  hubotHost = process.env.HEROKU_URL or process.env.HUBOT_URL or "http://localhost:8080"
+  hubotWebSite = "#{hubotHost}/#{robot.name}"
 
   robot.hear /([a-zA-Z0-9-_\.]|[^\,\-\s\+$!(){}"'`~%=^:;#°|¡¿?]+?)(\b\+{2}|-{2})([^,]?|\s|$)/g, (response) ->
     stripRegex = /~!@#$`%^&*()|\=?;:'",<>\{\}/gi
@@ -137,7 +137,7 @@ module.exports = (robot) ->
         robot.brain.save()
         response.send "#{getCleanName(targetUser.name)} ahora tiene #{targetUser.karma} puntos de karma."
     .catch (err) ->
-      console.log(err)
+      robot.emit("error", err)
 
   userForToken = (token, response) ->
     return usersForToken(token)
