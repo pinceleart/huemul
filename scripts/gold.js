@@ -84,7 +84,12 @@ module.exports = robot => {
     const isAdmin = robot.auth.isAdmin(res.message.user)
     const hasRole = robot.auth.hasRole(res.message.user, 'gold')
     if (isAdmin || hasRole) {
-      addUser(res.match[1])
+      const user = robot.adapter.client.rtm.dataStore.getUserByName(res.match[1])
+      if (typeof user !== 'undefined') {
+        addUser(user.name)
+      } else {
+        res.reply('el usuario no existe')
+      }
     }
     return
   })
