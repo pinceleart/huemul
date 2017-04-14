@@ -75,7 +75,7 @@ test.cb.serial('Debe añadir karma con @ y comas después del user', t => {
     t.deepEqual(t.context.room.messages, [
       ['user', '@dukuo++, cata++'],
       ['hubot', 'd.ukuo ahora tiene 1 puntos de karma.'],
-      ['hubot', 'c.ata tiene ahora -98 puntos de karma.']
+      ['hubot', 'c.ata ahora tiene -98 puntos de karma.']
     ]);
     t.end();
   }, 500);
