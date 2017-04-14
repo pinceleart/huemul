@@ -24,17 +24,22 @@ module.exports = robot => robot.respond(/noticias (.*)/i, msg => {
     } else {
       const {matches} = JSON.parse(body);
       // Truncate array
-      (matches.length >= 9) && (matches.length = 9);
+      (matches.length > 5) && (matches.length = 5);
 
-      const out = matches.map(({fields}) => {
+      const head = ':huemul: News';
+      const news = matches.map(({fields}, i) => {
         const {value: date} = fields.find(({field}) => field === 'publishtime');
         const {value: title} = fields.find(({field}) => field === 'og-title');
         const {value: url} = fields.find(({field}) => field === 'og-url');
 
-        return `<${url}|${title}> (${moment(date).fromNow()})`;
+        return `${i + 1}: <${url}|${title}> (${moment(date).fromNow()})`;
       }).join('\n');
 
-      msg.send(out || `No se han encontrado noticas sobre *${q}*.`);
+      if (news) {
+        msg.send(`${head}\n${news}\n<http://www.24horas.cl/search/|Sigue buscando en 24horas.cl>`);
+      } else {
+        msg.send(`${head}\nNo se han encontrado noticas sobre *${q}*.`);
+      }
     }
   });
 });
