@@ -18,15 +18,17 @@ module.exports = (robot) ->
   hubotHost = process.env.HEROKU_URL or process.env.HUBOT_URL or "http://localhost:8080"
   hubotWebSite = "#{hubotHost}/#{robot.name}"
 
-  robot.hear /@?((?=[^\+\-_])[a-zA-Z0-9-_]+|[^-\s\+]+)(\b\+{2}|-{2})(\s|$)/g, (response) ->
+  robot.hear /([a-zA-Z0-9-_\.]|[^\,\-\s\+$!(){}"'`~%=^:;#°|¡¿?]+?)(\b\+{2}|-{2})([^,]?|\s|$)/g, (response) ->
+    stripRegex = /~!@#$`%^&*()|\=?;:'",<>\{\}/gi
     tokens = response.match
     return if not tokens
     return if not robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(response.envelope.room).is_channel
     tokens = tokens.slice(0, 5);
 
     for token in tokens
-      opRegex = /\+{2}|-{2}/g;
-      userToken = token.trim().replace(opRegex,'')
+      opRegex = /(\+{2}|-{2})/g;
+      specialChars = /@/;
+      userToken = token.trim().replace(specialChars, '').replace(opRegex,'')
       op = token.match(opRegex)[0]
       applyKarma(userToken, op, response)
 

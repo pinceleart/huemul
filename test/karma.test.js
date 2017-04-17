@@ -69,6 +69,17 @@ test.beforeEach(t => {
 test.afterEach(t => {
   t.context.room.destroy();
 });
+test.cb.serial('Debe añadir karma con @ y comas después del user', t => {
+  t.context.room.user.say('user', '@dukuo++, cata++');
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['user', '@dukuo++, cata++'],
+      ['hubot', 'd.ukuo ahora tiene 1 puntos de karma.'],
+      ['hubot', 'c.ata ahora tiene -98 puntos de karma.']
+    ]);
+    t.end();
+  }, 500);
+});
 test.cb.serial('Debe aplicar a un usuario', t => {
   t.context.room.user.say('user', 'jorgee-- asdf');
   setTimeout(() => {
