@@ -30,7 +30,7 @@ function days_diff(now, date) {
 function humanizeMonth(month){
   var month       = month - 1,
       monthNames  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Sedtiembre','Octubre','Noviembre','Diciembre'];
-  
+
   return monthNames[month];
 }
 
@@ -45,7 +45,6 @@ module.exports = function (robot) {
           ('0' + (new Date().getMonth() + 1)).slice(-2),
           ('0' + (new Date().getDate())).slice(-2)
         ].join('-') + 'T00:00:00-03:00');
-
     msg
       .http("https://raw.githubusercontent.com/quest/feriadosapp/master/holidays.json")
       .get()(function(err, res, body){
@@ -65,7 +64,7 @@ module.exports = function (robot) {
               var dias = days_diff([
                 today.getFullYear(),
                 ('0' + (today.getMonth() + 1)).slice(-2),
-                ('0' + (today.getDate() + 1)).slice(-2)
+                ('0' + (today.getDate())).slice(-2)
               ].join('-'), holiday.date);
 
               if (dias == 0) {
