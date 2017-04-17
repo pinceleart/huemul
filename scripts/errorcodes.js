@@ -15,8 +15,10 @@ const codes = [
 ]
 
 module.exports = robot => {
+
   robot.hear(/error (\d{3})(\b|ing|e?d)/, res => {
-    const code = parseInt(res.match[1], 10)
-    if (codes.includes(code)) res.send('https://http.cat/#{code}')
-  })
+    const code = parseInt(res.match[1], 10);
+    if (codes.includes(code)) res.send(`https://http.cat/${code}`)
+  });
+
 }
