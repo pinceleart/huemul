@@ -85,7 +85,7 @@ test.cb.serial('Debe ignorar karma positivo en user++-----', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'dukuo++--- asdf'],
-    ]);
+    ]); 
     t.end();
   }, 500);
 });
