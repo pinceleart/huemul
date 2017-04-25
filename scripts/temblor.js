@@ -18,7 +18,6 @@ module.exports = robot => {
     const url = 'https://earthquake.usgs.gov/fdsnws/event/1/';
     const country = (res.match[1]).trim().toUpperCase();
     const minMagnitude = 6; // Con un temblor menor a 6 grados ni me muevo de la silla menos de la cama asi q este es el mínimo.
-
     const fetch = robot.http(`${url}query?format=geojson&minmagnitude=${minMagnitude}`);
 
     fetch.get()((error, response, body) => {
