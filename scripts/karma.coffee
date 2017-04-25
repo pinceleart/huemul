@@ -18,7 +18,7 @@ module.exports = (robot) ->
   hubotHost = process.env.HEROKU_URL or process.env.HUBOT_URL or "http://localhost:8080"
   hubotWebSite = "#{hubotHost}/#{robot.name}"
 
-  robot.hear /([a-zA-Z0-9_\.]+?)(\b\+{2}|-{2})([^\,\-\s\+$!(){}"'`~%=^:;#°|¡¿?]?|\s|$)/g, (response) ->
+  robot.hear /([@a-zA-Z0-9_\.]+?)(\b\+{2}|-{2})(|\s|$)/g, (response) ->
     stripRegex = /~!@#$`%^&*()|\=?;:'",<>\{\}/gi
     tokens = response.match
     return if not tokens
