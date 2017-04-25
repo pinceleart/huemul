@@ -4,7 +4,7 @@ require('coffee-script/register');
 const test = require('ava');
 const Helper = require('hubot-test-helper');
 
-const helper = new Helper('../scripts/guruguru.coffee');
+const helper = new Helper('../scripts/guruguru.js');
 
 test.beforeEach(t => {
   t.context.room = helper.createRoom({httpd: false});

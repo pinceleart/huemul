@@ -1,22 +1,22 @@
-# Description:
-#   Cambia el texto a vaporwave
-#   Basado en https://github.com/dokshor/guru_guru
-#
-# Dependencies:
-#   none
-#
-# Configuration:
-#   none
-#
-# Commands:
-#   hubot vapor <texto> - Traduce le texto al vaporwave
-#
-# Author:
-#   @alvaroveliz
+// Description:
+//   Cambia el texto a vaporwave
+//   Basado en https://github.com/dokshor/guru_guru
+//
+// Dependencies:
+//   none
+//
+// Configuration:
+//   none
+//
+// Commands:
+//   hubot vapor <texto> - Traduce le texto al vaporwave
+//
+// Author:
+//   @alvaroveliz
 
-module.exports = (robot) ->
-  robot.respond /vapor (.*)/i, (msg) ->
-
+module.exports = function(robot) {
+  robot.respond(/vapor (.*)/i, function(msg) {
+    var i, len, letter, letters, ref, str;
     letters = {
       "1": "１",
       "2": "２",
@@ -62,20 +62,25 @@ module.exports = (robot) ->
       "y": "ｙ",
       "z": "ｚ",
       " ": "･",
-      ".": "｡"
+      ".": "｡",
       "{": "ﾈ",
       "}": "ﾁ",
       "(": "ｱ",
       ")": "ｶ",
       "-": "ｵ",
       "_": "ﾒ"
+    };
+
+    str = [];
+    ref = msg.match[1].toLowerCase().split("");
+    for (i = 0, len = ref.length; i < len; i++) {
+      letter = ref[i];
+      if (letters[letter] != null) {
+        str.push(letters[letter]);
+      } else {
+        str.push(letter);
+      }
     }
-
-    str = []
-    for letter in msg.match[1].toLowerCase().split("")
-      if letters[letter]?
-        str.push letters[letter]
-      else
-        str.push letter
-
-    msg.send str.join("")
+    msg.send(str.join(""));
+  });
+};
