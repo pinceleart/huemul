@@ -23,11 +23,23 @@ module.exports = robot => robot.respond(/noticias (.*)/i, msg => {
       robot.emit('error', err);
     } else {
       const {matches} = JSON.parse(body);
-      // Truncate array
-      (matches.length > 5) && (matches.length = 5);
 
-      const head = ':huemul: News';
-      const news = matches.map(({fields}, i) => {
+      // Filtrar noticias encontradas para eliminar repeticiones a partir del título.
+      const matchesUniq = matches.filter((n, index, self) => {
+        const {value: title} = n.fields.find(({field}) => field === 'og-title');
+        return (
+          self.findIndex(
+            ({fields}) =>
+              fields.find(({field}) => field === 'og-title').value === title
+          ) === index
+        );
+      });
+
+      // Truncate array
+      (matchesUniq.length > 5) && (matchesUniq.length = 5);
+
+      const head = ':huemul: *News*';
+      const news = matchesUniq.map(({fields}, i) => {
         const {value: date} = fields.find(({field}) => field === 'publishtime');
         const {value: title} = fields.find(({field}) => field === 'og-title');
         const {value: url} = fields.find(({field}) => field === 'og-url');
