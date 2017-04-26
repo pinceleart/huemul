@@ -50,7 +50,7 @@ module.exports = robot => robot.respond(/noticias (.*)/i, msg => {
       if (news) {
         msg.send(`${head}\n${news}\n<http://www.24horas.cl/search/|Sigue buscando en 24horas.cl>`);
       } else {
-        msg.send(`${head}\nNo se han encontrado noticas sobre *${q}*.`);
+        msg.send(`${head}\nNo se han encontrado noticias sobre *${q}*.`);
       }
     }
   });
