@@ -13,42 +13,34 @@
 // Author:
 //   @jorgeepunan
 
-var url = 'http://earthquake-report.com/feeds/recent-eq?json';
+module.exports = robot => {
+  robot.respond(/temblores (.*)/i, res => {
+    const url = 'https://earthquake.usgs.gov/fdsnws/event/1/';
+    const country = (res.match[1]).trim().toUpperCase();
+    const minMagnitude = 6; // Con un temblor menor a 6 grados ni me muevo de la silla menos de la cama asi q este es el mínimo.
+    const fetch = robot.http(`${url}query?format=geojson&minmagnitude=${minMagnitude}`);
 
-module.exports = function(robot) {
-  robot.respond(/temblores (.*)/i, function(res) {
-    var cual = (res.match[1]).trim().toUpperCase();
-    robot.http(url).get()(function (error, response, body) {
+    fetch.get()((error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        const {features: earthquakes} = JSON.parse(body);
 
-      if (!error && response.statusCode == 200) {
-
-        /* Leer el JSON */
-        var data = JSON.parse(body);
-        var magnitudMinima = 6;
-        var chile = [];
-        var mundo = [];
-
-        data.forEach (function(d) {
-          var donde = d.location;
-          var magnitud = d.magnitude;
-          if( parseInt(magnitud) >= magnitudMinima ) {
-            /* con un temblor menos de 6 grados ni me muevo de la silla menos de la cama asi q este es el mínimo */
-            contenedor = (donde.toUpperCase().indexOf('CHILE') > -1)?chile:mundo;
-            contenedor.push(d.title + ": \n- Lugar: " + d.location + "\n- Magnitud: " + d.magnitude + " (richter)\n- Fecha/Hora: " + d.date_time + "\n- Enlace: " + d.link);
-          }
+        // Chile o el resto del mundo
+        const earthquakesFilter = earthquakes.filter(({properties: {place}}) => {
+          return (country.indexOf('CHILE') > -1) ? /chile/i.test(place) : !/chile/i.test(place);
         });
 
-        var mensaje;
-        if(cual == 'CHILE') {
-          mensaje = (chile.length > 0)?chile.join("\n\n"):"Por suerte, ningún temblor mayor a " + magnitudMinima + " grados recientemente en Chile.";
-        } else {
-          mensaje = (mundo.length > 0)?mundo.join("\n\n"):"Por suerte, ningún temblor mayor a " + magnitudMinima + " grados fuera de Chile.";
-        }
-        res.send(mensaje);
-      } else {
-        res.send(":facepalm: Error: ", error);
-      }
+        const message = earthquakesFilter.map(({properties: {place, mag, time, title, url}}) => {
+          return `${title}: \n- Lugar: ${place} \n- Magnitud: ${mag} (richter) \n- Fecha/Hora: ${new Date(time).toString()} \n- Enlace: ${url}`;
+        }).join('\n\n');
 
+        if (country === 'CHILE') {
+          res.send(message || `Por suerte, ningún temblor mayor a ${minMagnitude} grados recientemente en Chile.`);
+        } else {
+          res.send(message || `Por suerte, ningún temblor mayor a ${minMagnitude} grados fuera de Chile.`);
+        }
+      } else {
+        robot.emit('error', error);
+      }
     });
   });
 };
