@@ -32,7 +32,7 @@ module.exports = robot => {
           return `${title}: \n- Lugar: ${place} \n- Magnitud: ${mag} (richter) \n- Fecha/Hora: ${new Date(time).toString()} \n- Enlace: ${url}`;
         }).join('\n\n');
 
-        res.send(message || `Por suerte, ningún temblor mayor a ${minMagnitude} grados en ${country}.`);
+        res.send(message || `Por suerte, ningún temblor mayor a ${minMagnitude} grados en ${country||'todo el mundo'}.`);
       } else {
         robot.emit('error', error);
       }

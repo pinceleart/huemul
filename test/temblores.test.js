@@ -8,7 +8,7 @@ const helper = new Helper('../scripts/temblor.js');
 
 class NewMockResponse extends Helper.Response {
   random(items) {
-    return 'https://pbs.twimg.com/media/Cy7cN3QWIAAP7pR.jpg';
+    return null;
   };
 }
 
@@ -25,6 +25,15 @@ test.cb('Lugar donde no hayan temblores. Nunca.', t => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'hubot temblores enunlugardondenuncatiembla'],
       ['hubot', 'Por suerte, ningún temblor mayor a 6 grados en ENUNLUGARDONDENUNCATIEMBLA.']
+    ]);
+    t.end();
+  }, 500);
+});test.cb('Es imposible que no hayan temblores sobre 6 en el mundo durante un mes.', t => {
+  t.context.room.user.say('user', 'hubot temblores');
+  setTimeout(() => {
+    t.notDeepEqual(t.context.room.messages, [
+      ['user', 'hubot temblores'],
+      ['hubot', 'Por suerte, ningún temblor mayor a 6 grados en todo el mundo.']
     ]);
     t.end();
   }, 500);
