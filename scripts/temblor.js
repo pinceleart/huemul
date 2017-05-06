@@ -45,7 +45,6 @@ module.exports = robot => {
             fallback: text,
             text: text
           }]
-          console.log(res.message.room, null, options)
           return robot.adapter.client.web.chat.postMessage(res.message.room, null, options)
         }
         options.attachments = earthquakesFilter.map(({properties: {place, mag, time, title, url}}) => {
