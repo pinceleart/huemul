@@ -11,8 +11,32 @@
 //   hubot gold status <name>
 //   hubot gold insert <key>
 //   hubot gold add <user>
+//   hubot gold remove <user>
+//   hubot gold list
 
 module.exports = robot => {
+  class Golden {
+    isGold (name) {
+      const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
+      const result = Object.keys(goldUsers)
+        .map(key => ({key: key, data: goldUsers[key]}))
+        .find(result => result.data.user === name)
+      if (result) {
+        const now = new Date()
+        const expireDate = new Date(result.data.expire)
+        if (now <= expireDate) {
+          return true
+        } else {
+          delete goldUsers[name]
+          robot.brain.set('gold_users', JSON.stringify(goldUsers))
+        }
+      }
+      return false
+    }
+  }
+
+  robot.golden = new Golden()
+
   robot.respond(/gold status (.*)/i, res => {
     const name = res.match[1]
     const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
@@ -22,8 +46,8 @@ module.exports = robot => {
     if (result) {
       const now = new Date()
       const expireDate = new Date(result.data.expire)
+      const expire = expireDate.toISOString().split('T').shift()
       if (now <= expireDate) {
-        const expire = expireDate.toISOString().split('T').shift()
         res.send(`${name} es golden :monea: hasta el ${expire}`)
         return
       } else {
@@ -33,11 +57,9 @@ module.exports = robot => {
       }
     }
     res.send(`${name} no es golden :monea:`)
-    return
   })
 
   robot.respond(/gold list/i, res => {
-    const name = res.match[1]
     const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
     const users = Object.keys(goldUsers)
       .map(key => goldUsers[key].user).join(', ')
@@ -46,7 +68,6 @@ module.exports = robot => {
     } else {
       res.send(users)
     }
-    return
   })
 
   robot.respond(/gold insert (.*)/i, res => {
@@ -65,7 +86,6 @@ module.exports = robot => {
     } else {
       res.send('No es una clave válida')
     }
-    return
   })
 
   const addUser = user => {
@@ -91,7 +111,22 @@ module.exports = robot => {
         res.reply('el usuario no existe')
       }
     }
-    return
+  })
+
+  robot.respond(/gold remove (.*)/i, res => {
+    const isAdmin = robot.auth.isAdmin(res.message.user)
+    const hasRole = robot.auth.hasRole(res.message.user, 'gold')
+    if (isAdmin || hasRole) {
+      const user = res.match[1]
+      const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
+      if (Object.keys(goldUsers).includes(user)) {
+        delete goldUsers[user]
+        robot.brain.set('gold_users', JSON.stringify(goldUsers))
+        res.send(`${user} ya no es miembro golden :monea:`)
+      } else {
+        res.reply('el usuario no existe')
+      }
+    }
   })
 
   robot.router.post('/gold/webhook', (req, res) => {
@@ -116,6 +151,5 @@ module.exports = robot => {
       robot.emit('error', `Se envió un request inválido con el siguiente email: ${req.body.email}`)
       res.send('Error')
     }
-    return
   })
 }
