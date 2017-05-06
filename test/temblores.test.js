@@ -8,7 +8,6 @@ const nock = require('nock')
 const helper = new Helper('../scripts/temblor.js')
 
 test.beforeEach(t => {
-  nock.disableNetConnect()
   nock('https://earthquake.usgs.gov')
     .get('/fdsnws/event/1/query')
     .query({format: 'geojson', minmagnitude: 6})
@@ -16,14 +15,13 @@ test.beforeEach(t => {
   t.context.room = helper.createRoom({httpd: false})
 })
 test.afterEach(t => {
-  nock.enableNetConnect()
   t.context.room.destroy()
 })
 
 test.cb.serial('Es imposible que no hayan temblores sobre 6 en el mundo durante un mes.', t => {
   t.context.room.user.say('user', 'hubot temblores')
   setTimeout(() => {
-    t.notDeepEqual(t.context.room.messages, [
+    t.deepEqual(t.context.room.messages, [
       ['user', 'hubot temblores'],
       ['hubot', 'Por suerte, ningún temblor mayor a 6 grados en todo el mundo.']
     ])
