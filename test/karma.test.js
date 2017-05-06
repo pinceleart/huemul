@@ -4,7 +4,7 @@ require('coffee-script/register');
 const test = require('ava');
 const Helper = require('hubot-test-helper');
 
-const helper = new Helper('../scripts/karma.coffee');
+const helper = new Helper('../scripts/karma.js');
 
 test.beforeEach(t => {
   t.context.room = helper.createRoom({httpd: true});
@@ -85,7 +85,7 @@ test.cb.serial('Debe ignorar karma positivo en user++-----', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'dukuo++--- asdf'],
-    ]); 
+    ]);
     t.end();
   }, 500);
 });
