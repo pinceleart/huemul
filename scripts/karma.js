@@ -70,19 +70,22 @@ module.exports = robot => {
     return new Promise((resolve, reject) => {
       let user
       if (user = robot.brain.userForName(token)) {
-        resolve([user])
-      } else if (user = userForMentionName(token)) {
-        resolve([user])
-      } else if (robot.adapter.constructor.name === 'SlackBot') {
+        return resolve([user])
+      }
+      if (user = userForMentionName(token)) {
+        return resolve([user])
+      }
+      if (robot.adapter.constructor.name === 'SlackBot') {
         userFromWeb(token).then(webUser => {
           if (webUser) {
-            resolve([webUser])
+            return resolve([webUser])
           } else {
-            resolve(robot.brain.usersForFuzzyName(token))
+            return resolve(robot.brain.usersForFuzzyName(token))
           }
         }).catch(reject)
       } else {
-        resolve([])
+        user = robot.brain.usersForFuzzyName(token)
+        resolve(user)
       }
     })
   }
@@ -93,11 +96,11 @@ module.exports = robot => {
         let user
         if (users.length === 1) {
           user = users[0]
-          if (user.karma === null) {
+          if (typeof user.karma === 'undefined' || user.karma === null) {
             user.karma = 0
           }
         } else if (users.length > 1) {
-          robot.messageRoom(`@${response.message.user.name}", "Se más específico, Hay ${users.length} personas que se parecen a: ${(users.map(u => getCleanName(u.name))).join(', ')}.`)
+          robot.messageRoom(`@${response.message.user.name}`, `Se más específico, Hay ${users.length} personas que se parecen a: ${users.map(user => user.name).join(', ')}.`)
         } else {
           response.send(`Chaucha, no encuentro al usuario '${token}'.`)
         }
@@ -199,7 +202,7 @@ module.exports = robot => {
     } else {
       userForToken(targetToken, response).then(targetUser => {
         if (!targetUser) return
-        response.send(`${getCleanName(targetUser.name)} tiene ${targetUser.karma} puntos de karma.\nMás detalles en: ${hubotWebSite}/karma/log/${targetUser.name}`)
+        response.send(`${getCleanName(targetUser.name)} tiene ${targetUser.karma} puntos de karma. Más detalles en: ${hubotWebSite}/karma/log/${targetUser.name}`)
       })
     }
   })
@@ -208,9 +211,17 @@ module.exports = robot => {
     const users = robot.brain.users()
     const list = Object.keys(users)
       .sort()
-      .filter(k => users[k].karma)
-      .map(k => [users[k].karma || 0, `<strong>${users[k].name}</strong>`])
-      .sort((line1, line2) => line1[0] < line2[0] ? 1 : line1[0] > line2[0] ? -1 : 0)
+      .filter(id => users[id].karma)
+      .map(id => [users[id].karma || 0, `<strong>${users[id].name}</strong>`])
+      .sort((line1, line2) => {
+        if (line1[0] < line2[0]) {
+          return 1
+        } else if (line1[0] > line2[0]) {
+          return -1
+        } else {
+          return 0
+        }
+      })
       .map(line => line.join(' '))
     res.setHeader('content-type', 'text/html')
     res.end(`Karma de todos:\n<ul><li>${list.join('</li><li>')}</li></ul>`)
