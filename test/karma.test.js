@@ -8,6 +8,9 @@ const helper = new Helper('../scripts/karma.js')
 
 test.beforeEach(t => {
   t.context.room = helper.createRoom({httpd: true})
+  t.context.room.robot.golden = {
+    isGold: () => false
+  }
   t.context.room.robot.adapter.client = {
     rtm: {
       dataStore: {
