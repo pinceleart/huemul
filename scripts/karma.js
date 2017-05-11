@@ -157,7 +157,8 @@ module.exports = robot => {
       }).catch(err => robot.emit('error', err))
   }
 
-  robot.hear(/((?:^|\s)|[@a-zA-Z0-9_.]+?)(\b\+{2}|-{2})(?:[\s]|(?:[,.:;])(?=\s)|$)/g, response => {
+  robot.hear(/([a-zA-Z0-9-_\.]|[^\,\-\s\+$!(){}"'`~%=^:;#°|¡¿?]+?)(\b\+{2}|-{2})([^,]?|\s|$)/g, response => {
+    stripRegex = /~!@#$`%^&*()|\=?;:'",<>\{\}/gi
     const tokens = response.match
     if (!tokens) return
     if (robot.adapter.constructor.name === 'SlackBot') {
@@ -166,7 +167,7 @@ module.exports = robot => {
 
     tokens.slice(0, 5).forEach(token => {
       const opRegex = /(\+{2}|-{2})/g
-      const specialChars = /[~!@#$`%^&*()|=?;:'",<>{}]/gi
+      const specialChars = /@/
       const userToken = token.trim().replace(specialChars, '').replace(opRegex, '')
       const op = token.match(opRegex)[0]
       applyKarma(userToken, op, response)

@@ -80,15 +80,6 @@ test.cb.serial('Debe añadir karma con @ y comas después del user', t => {
     t.end()
   }, 500)
 })
-test.cb.serial('Debe ignorar karma positivo en user++-----', t => {
-  t.context.room.user.say('user', 'dukuo++--- asdf')
-  setTimeout(() => {
-    t.deepEqual(t.context.room.messages, [
-      ['user', 'dukuo++--- asdf']
-    ])
-    t.end()
-  }, 500)
-})
 test.cb.serial('Debe aplicar a un usuario', t => {
   t.context.room.user.say('user', 'jorgee-- asdf')
   setTimeout(() => {
