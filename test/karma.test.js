@@ -140,7 +140,7 @@ test.cb.serial('No Debe aplicar karma', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'leo++'],
-      ['hubot', 'Se más específico, Hay 2 personas que se parecen a: leonardo, leon.']
+      ['hubot', 'Se más específico, hay 2 personas que se parecen a: leonardo, leon.']
     ])
     t.end()
   }, 500)
@@ -150,7 +150,7 @@ test.cb.serial('No Debe aplicar karma', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['leonardo', 'leonardo++'],
-      ['hubot', 'Oe no po, el karma es pa otros no pa ti!']
+      ['hubot', '¡Oe no po, el karma es pa otros no pa ti!']
     ])
     t.end()
   }, 500)
@@ -159,7 +159,7 @@ test.cb.serial('No Debe aplicar karma', t => {
   t.context.room.user.say('user', 'leon++')
   setTimeout(() => {
     t.deepEqual(t.context.room.messages[0], ['user', 'leon++'])
-    t.regex(t.context.room.messages[1][1], /¡No abuses! Intenta en \d+ minutos/)
+    t.regex(t.context.room.messages[1][1], /¡No abuses! Intenta en \d+ minutos./)
     t.end()
   }, 500)
 })
@@ -188,7 +188,7 @@ test.cb.serial('No debe resetar', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'karma reset leonardo'],
-      ['hubot', 'Tienes que ser :hector: para realizar esta función']
+      ['hubot', 'Tienes que ser :hector: para realizar esta función.']
     ])
     t.end()
   }, 500)
