@@ -100,7 +100,7 @@ module.exports = robot => {
             user.karma = 0
           }
         } else if (users.length > 1) {
-          robot.messageRoom(`@${response.message.user.name}`, `Se más específico, Hay ${users.length} personas que se parecen a: ${users.map(user => user.name).join(', ')}.`)
+          robot.messageRoom(`@${response.message.user.name}`, `Se más específico, hay ${users.length} personas que se parecen a: ${users.map(user => user.name).join(', ')}.`)
         } else {
           response.send(`Chaucha, no encuentro al usuario '${token}'.`)
         }
@@ -135,11 +135,11 @@ module.exports = robot => {
     userForToken(userToken, response)
       .then(targetUser => {
         if (!targetUser) return
-        if (thisUser.name === targetUser.name) return response.send('Oe no po, el karma es pa otros no pa ti!')
-        if (targetUser.length === '') return response.send('Oe no seai pillo, escribe un nombre!')
+        if (thisUser.name === targetUser.name) return response.send('¡Oe no po, el karma es pa otros no pa ti!')
+        if (targetUser.length === '') return response.send('¡Oe no seai pillo, escribe un nombre!')
         const limit = canUpvote(thisUser, targetUser)
         if (Number.isFinite(limit)) {
-          return response.send(`¡No abuses! Intenta en ${limit} minutos`)
+          return response.send(`¡No abuses! Intenta en ${limit} minutos.`)
         }
         const modifyingKarma = op === '++' ? 1 : -1
         targetUser.karma += modifyingKarma
