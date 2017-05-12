@@ -184,7 +184,7 @@ module.exports = robot => {
     } else if (targetToken.toLowerCase().split(' ')[0] === 'reset') {
       const thisUser = response.message.user
       if (thisUser.name.toLowerCase() !== 'hector') {
-        return response.send('Tienes que ser :hector: para realizar esta función')
+        return response.send('Tienes que ser :hector: para realizar esta función.')
       }
       const resetCommand = targetToken.toLowerCase().split(' ')[1]
       if (!resetCommand) return
