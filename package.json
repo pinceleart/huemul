@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/devschile/huemul#readme",
   "dependencies": {
+    "async": "^2.4.0",
     "cheerio": "^0.22.0",
     "cloudscraper": "^1.4.1",
     "hubot": "^2.19.0",
