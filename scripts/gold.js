@@ -56,13 +56,24 @@ module.exports = robot => {
         res.send(`${name} ya no eres golden :monea:, expiró el ${expire}`)
       }
     }
-    res.send(`${name} no es golden :monea:`)
   })
 
   robot.respond(/gold list/i, res => {
     const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
     const users = Object.keys(goldUsers)
-      .map(key => goldUsers[key].user).join(', ')
+      .map(key => goldUsers[key])
+      .filter(data => {
+        const now = new Date()
+        const expireDate = new Date(data.expire)
+        if (now <= expireDate) {
+          return true
+        } else {
+          delete goldUsers[name]
+          robot.brain.set('gold_users', JSON.stringify(goldUsers))
+          return false
+        }
+      })
+      .map(data => data.user).join(', ')
     if (users === '') {
       res.send('No hay usuarios golden :monea:')
     } else {
