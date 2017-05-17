@@ -5,31 +5,81 @@
 //   None
 //
 // Configuration:
-//   GOLD_USER_AGENT, GOLD_SECRET, GOLD_KEYS
+//   GOLD_USER_AGENT, GOLD_SECRET, GOLD_KEYS, GOLD_CHANNEL
 //
 // Commands:
-//   hubot gold status <name>
-//   hubot gold insert <key>
-//   hubot gold add <user>
-//   hubot gold remove <user>
-//   hubot gold list
+//   hubot gold status <name> - Verificar si un usuario posee la membresía golden
+//   hubot gold insert <key> - Agregar una golden key para ser un miembro golden
+//   hubot gold add <user> - Dar la membresía golden a un usuario
+//   hubot gold remove <user> - Quitar la membresía golden a un usuario
+//   hubot gold list - Listar todos los miembros golden
 
 module.exports = robot => {
+  /**
+   * Obtener listado de usuarios golden
+   * @return {Array}
+   */
+  const getGoldUsers = () => {
+    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
+    return Object.keys(goldUsers)
+      .map(key => ({key: key, data: goldUsers[key]}))
+  }
+
+  /**
+   * Buscar un usuario golden
+   * @param  {String} name
+   * @return {Object}      En caso de encontrar el usuario retorna un Object, caso contrario null
+   */
+  const getGoldUser = name => getGoldUsers().find(result => result.data.user === name)
+
+  /**
+   * Verifica la expiración de un usuario golden.
+   * En caso de expirar actualiza el robot.brain
+   * @param  {String} key  Key del store del usuario en el brain
+   * @param  {Object} data El Object usuario
+   * @return {Object}      Retorna el estado de expiración y la fecha en formato YYYY-MM-DD
+   */
+  const verifyExpireGold = (key, data) => {
+    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
+    const now = new Date()
+    const expireDate = new Date(data.expire)
+    const expire = expireDate.toISOString().split('T').shift()
+    if (now <= expireDate) {
+      return {expired: false, date: expire}
+    } else {
+      delete goldUsers[key]
+      robot.brain.set('gold_users', JSON.stringify(goldUsers))
+      return {expired: true, date: expire}
+    }
+  }
+
+  /**
+   * Agrega un usuario al store de golden
+   * @param  {String} name
+   * @return {Void}
+   */
+  const addUser = name => {
+    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
+    const now = new Date()
+    const diff = 1000 * 60 * 60 * 24 * 60 // 60 días
+    const expire = new Date(now.getTime() + diff)
+    goldUsers[name] = {user: name, expire: expire}
+    robot.brain.set('gold_users', JSON.stringify(goldUsers))
+    const channel = robot.adapter.client.rtm.dataStore.getChannelByName(process.env.GOLD_CHANNEL || '#random')
+    const message = `:clap2: *${name}* donó 1 mes de servidor a :huemul:, se lleva 3 stickers :huemul: y es miembro golden :monea: por 2 meses!`
+    robot.send({room: channel.id}, message)
+  }
+
   class Golden {
+    /**
+     * Verifica si un determinado usuario es golden
+     * @param  {String}  name
+     * @return {Boolean}
+     */
     isGold (name) {
-      const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
-      const result = Object.keys(goldUsers)
-        .map(key => ({key: key, data: goldUsers[key]}))
-        .find(result => result.data.user === name)
+      const result = getGoldUser(name)
       if (result) {
-        const now = new Date()
-        const expireDate = new Date(result.data.expire)
-        if (now <= expireDate) {
-          return true
-        } else {
-          delete goldUsers[name]
-          robot.brain.set('gold_users', JSON.stringify(goldUsers))
-        }
+        return !verifyExpireGold(result.key, result.data).expired
       }
       return false
     }
@@ -39,41 +89,20 @@ module.exports = robot => {
 
   robot.respond(/gold status (.*)/i, res => {
     const name = res.match[1]
-    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
-    const result = Object.keys(goldUsers)
-      .map(key => ({key: key, data: goldUsers[key]}))
-      .find(result => result.data.user === name)
-    if (result) {
-      const now = new Date()
-      const expireDate = new Date(result.data.expire)
-      const expire = expireDate.toISOString().split('T').shift()
-      if (now <= expireDate) {
-        res.send(`${name} es golden :monea: hasta el ${expire}`)
-        return
-      } else {
-        delete goldUsers[result.key]
-        robot.brain.set('gold_users', JSON.stringify(goldUsers))
-        res.send(`${name} ya no eres golden :monea:, expiró el ${expire}`)
-      }
+    const result = getGoldUser(name)
+    if (!result) return res.send(`${name} no es golden :monea:`)
+    const data = verifyExpireGold(result.key, result.data)
+    if (!data.expired) {
+      res.send(`${name} es golden :monea: hasta el ${data.date}`)
+    } else {
+      res.send(`${name} ya no eres golden :monea:, expiró el ${data.date}`)
     }
   })
 
   robot.respond(/gold list/i, res => {
-    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
-    const users = Object.keys(goldUsers)
-      .map(key => goldUsers[key])
-      .filter(data => {
-        const now = new Date()
-        const expireDate = new Date(data.expire)
-        if (now <= expireDate) {
-          return true
-        } else {
-          delete goldUsers[name]
-          robot.brain.set('gold_users', JSON.stringify(goldUsers))
-          return false
-        }
-      })
-      .map(data => data.user).join(', ')
+    const users = getGoldUsers()
+      .filter(result => !verifyExpireGold(result.key, result.data).expired)
+      .map(result => result.data.user).join(', ')
     if (users === '') {
       res.send('No hay usuarios golden :monea:')
     } else {
@@ -98,18 +127,6 @@ module.exports = robot => {
       res.send('No es una clave válida')
     }
   })
-
-  const addUser = user => {
-    const goldUsers = JSON.parse(robot.brain.get('gold_users') || '{}')
-    const now = new Date()
-    const diff = 1000 * 60 * 60 * 24 * 60 // 60 días
-    const expire = new Date(now.getTime() + diff)
-    goldUsers[user] = {user: user, expire: expire}
-    robot.brain.set('gold_users', JSON.stringify(goldUsers))
-    const comunidad = robot.adapter.client.rtm.dataStore.getChannelByName('#comunidad')
-    const message = `:clap2: *${user}* donó 1 mes de servidor a :huemul:, se lleva 3 stickers :huemul: y es miembro golden :monea: por 2 meses!`
-    robot.send({room: comunidad.id}, message)
-  }
 
   robot.respond(/gold add (.*)/i, res => {
     const isAdmin = robot.auth.isAdmin(res.message.user)
