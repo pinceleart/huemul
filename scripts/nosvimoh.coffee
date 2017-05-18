@@ -21,6 +21,7 @@ images = [
   "https://img.memesuper.com/5eb17d610488ba4e80c2d446df957074_-chao-ctm-negrero-de-mierda-chao-ctm-meme_305-215.jpeg",
   "https://i.giphy.com/VsXhOdCYnpw1q.gif",
   "https://media.tenor.co/images/35cafed5203a17c7a80d2263842752a1/tenor.gif",
+  "http://do0.pslabs.cl/noh-vimo-gil-ql.gif"
 ]
 
 module.exports = (robot) ->
