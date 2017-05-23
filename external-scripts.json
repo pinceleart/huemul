@@ -40,5 +40,6 @@
   "hubot-chilexpress",
   "hubot-mercadolibre_cl",
   "hubot-command-log",
-  "hubot-librarynames"
+  "hubot-librarynames",
+  "hubot-surbtc"
 ]
