@@ -34,5 +34,5 @@ module.exports = robot => {
           res.send(`La empresa con RUT ${rut} posee multas`)
         }
       })
-  }
+  })
 }
