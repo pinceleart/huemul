@@ -2387,9 +2387,9 @@ hubot-travis-ci-hook@0.0.1:
   dependencies:
     parse-ms "^1.0.1"
 
-hubot-tweets@^0.0.1:
+hubot-tweets@devschile/hubot-tweets:
   version "0.0.1"
-  resolved "https://registry.yarnpkg.com/hubot-tweets/-/hubot-tweets-0.0.1.tgz#b88d47e64c527df8e3177fa21b61ba3eb9dd8310"
+  resolved "https://codeload.github.com/devschile/hubot-tweets/tar.gz/434e4005da8d334067fc5021e17a39b3728c2c9d"
   dependencies:
     coffee-script "~1.6"
     twit "1.1.x"
