@@ -12,7 +12,7 @@
 //   @jorgeepunan
 
 var cheerio = require('cheerio');
-var number  = require('numberToCLPFormater').numberToCLPFormater;
+var number  = require('numbertoclpformater').numberToCLPFormater;
 
 module.exports = function(robot) {
   robot.respond(/escorts(.*)/i, function(msg) {
