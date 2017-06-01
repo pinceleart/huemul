@@ -30,7 +30,8 @@ test.beforeEach(t => {
                 {name: 'leon'},
                 {name: 'cata'},
                 {name: 'dukuo'},
-                {name: 'hector'}
+                {name: 'hector'},
+                {name: 'ienc'}
               ]
             })
           })
@@ -55,6 +56,9 @@ test.beforeEach(t => {
   })
   t.context.room.robot.brain.userForId('hector', {
     name: 'hector', id: 6
+  })
+  t.context.room.robot.brain.userForId('ienc', {
+    name: 'ienc', id: 7
   })
   t.context.room.robot.brain.karmaLimits = {
     user: {3: new Date()}
@@ -151,6 +155,16 @@ test.cb.serial('No Debe aplicar karma', t => {
     t.deepEqual(t.context.room.messages, [
       ['leonardo', 'leonardo++'],
       ['hubot', '¡Oe no po, el karma es pa otros no pa ti!']
+    ])
+    t.end()
+  }, 500)
+})
+test.cb.serial('Aplica karma solo si es menos a uno mismo', t => {
+  t.context.room.user.say('ienc', 'ienc--')
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['ienc', 'ienc--'],
+      ['hubot', 'i.enc ahora tiene -1 puntos de karma.'],
     ])
     t.end()
   }, 500)
