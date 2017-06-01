@@ -82,6 +82,7 @@
     "moment-business-days": "0.0.10",
     "moment-countdown": "0.0.3",
     "needle": "^1.6.0",
+    "numbertoclpformater": "^1.0.0",
     "password-generator": "^2.1.0",
     "phantom": "^3.2.1",
     "pug": "^2.0.0-beta6",
