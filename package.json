@@ -77,7 +77,6 @@
     "hubot-wikipedia-lang": "^1.0.2",
     "hubot-youtube": "^1.0.2",
     "jquery": "^3.2.1",
-    "jsdom": "^11.0.0",
     "mathjs": "^3.13.3",
     "moment": "^2.18.1",
     "moment-business-days": "1.0.5",
