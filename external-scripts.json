@@ -41,5 +41,6 @@
   "hubot-mercadolibre_cl",
   "hubot-command-log",
   "hubot-librarynames",
-  "hubot-surbtc"
+  "hubot-surbtc",
+  "hubot-restriccion_scl"
 ]
