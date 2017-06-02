@@ -42,7 +42,7 @@ module.exports = function(robot) {
           tipo = 'Todas las Escort / All Girls';
       }
 
-      msg.send('Buscando en sexo.cl chicas para ti :monea: ');
+      robot.messageRoom('#nsfw', 'Buscando en sexo.cl chicas para ti :monea: ');
 
       msg.robot.http(url).get()(function(err, res, body) {
 
@@ -69,10 +69,10 @@ module.exports = function(robot) {
             .join('\n');
           var more = resultados.length > limiteResultados ? `\n<${baseURL}|Ver más resultados>` : '';
           var text = `${resume}\n${links}${more}`;
-          msg.send(tipo);
+          robot.messageRoom('#nsfw', tipo);
           if (robot.adapter.constructor.name === 'SlackBot') {
             var options = {unfurl_links: false, as_user: true};
-            robot.adapter.client.web.chat.postMessage(msg.message.room, 'Resultados de escorts encontradas se postearon en #nsfw :eyes:');
+            msg.send(msg.message.room, 'Resultados de escorts encontradas se postearon en #nsfw :eyes:');
             robot.adapter.client.web.chat.postMessage('#nsfw', text, options);
           } else {
             robot.messageRoom('#nsfw', text);
