@@ -72,12 +72,13 @@ module.exports = function(robot) {
           msg.send(tipo);
           if (robot.adapter.constructor.name === 'SlackBot') {
             var options = {unfurl_links: false, as_user: true};
-            robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+            robot.adapter.client.web.chat.postMessage(msg.message.room, 'Resultados de escorts encontradas se postearon en #nsfw :eyes:');
+            robot.adapter.client.web.chat.postMessage('#nsfw', text, options);
           } else {
-            msg.send(text);
+            robot.messageRoom('#nsfw', text);
           }
         } else {
-          msg.send('No se han encontrado chicas :monea: intenta otra vez.');
+          robot.messageRoom('#nsfw', 'No se han encontrado chicas :monea: intenta otra vez.');
         }
 
       });
