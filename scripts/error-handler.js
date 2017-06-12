@@ -5,7 +5,7 @@
 //   raven
 //
 // Configuration:
-//   SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_NAME
+//   SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_NAME, SENTRY_CHANNEL
 //
 // Commands:
 //   None
@@ -32,10 +32,9 @@ module.exports = robot => {
           }
         })
       }
-      if (typeof res.reply === 'function') {
-        res.reply(`an error has occurred: \`${err.message}\``)
-      }
     }
+    const room = process.env.SENTRY_CHANNEL || '#random'
+    robot.send({room: room}, `An error has occurred: \`${err.message}\``)
     Raven.captureException(err)
   })
 }
