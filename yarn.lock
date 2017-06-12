@@ -2329,9 +2329,9 @@ hubot-scripts@^2.17.2:
   dependencies:
     redis "0.8.4"
 
-hubot-sentry-integration@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/hubot-sentry-integration/-/hubot-sentry-integration-0.0.1.tgz#47c610d68e572893f71262d73e7f61f2d456b64e"
+hubot-sentry-integration@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/hubot-sentry-integration/-/hubot-sentry-integration-0.0.2.tgz#14ee7639aecfd11f96b6d2cf657d326c1fc5940b"
 
 hubot-shipit@^0.2.0:
   version "0.2.0"
