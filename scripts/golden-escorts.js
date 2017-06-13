@@ -72,7 +72,7 @@ module.exports = function(robot) {
           robot.messageRoom('#nsfw', tipo);
           if (robot.adapter.constructor.name === 'SlackBot') {
             var options = {unfurl_links: false, as_user: true};
-            msg.send(msg.message.room, 'Resultados de escorts encontradas se postearon en #nsfw :eyes:');
+            msg.send('Resultados de escorts encontradas se postearon en #nsfw :eyes:');
             robot.adapter.client.web.chat.postMessage('#nsfw', text, options);
           } else {
             robot.messageRoom('#nsfw', text);
