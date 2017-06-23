@@ -10,6 +10,7 @@
 // Author:
 //   @jorgeepunan
 
+var querystring = require('querystring');
 var cheerio = require('cheerio');
 
 module.exports = function(robot) {
@@ -20,7 +21,7 @@ module.exports = function(robot) {
 
     var busqueda = msg.match[2];
     var domain = 'https://www.getonbrd.cl/empleos-';
-    var url = domain + busqueda.split(' ').join('%20');
+    var url = domain + querystring.escape(busqueda);
 
     robot.http(url).get()(function(err, res, body) {
 
