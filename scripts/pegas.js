@@ -46,7 +46,12 @@ module.exports = function(robot) {
         if(resultados.length > limiteResultados) {
           text += 'Otros resultados en: <'+ url + '|getonbrd>\n';
         }
-        msg.send(text);
+        if (robot.adapter.constructor.name === 'SlackBot') {
+          var options = {unfurl_links: false, as_user: true};
+          robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+        } else {
+          msg.send(text);
+        }
       } else {
         msg.send('No se han encontrado resultados sobre '+ busqueda);
       }
