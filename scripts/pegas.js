@@ -24,7 +24,11 @@ module.exports = function(robot) {
     var url = domain + querystring.escape(busqueda);
 
     robot.http(url).get()(function(err, res, body) {
-
+      if (err || res.statusCode !== 200) {
+        robot.emit('error', err || new Error(`Status code is ${res.statusCode}`), msg);
+        msg.reply(':gob: tiene problemas en el servidor')
+        return
+      }
       var $ = cheerio.load(body);
       var resultados = [];
 
