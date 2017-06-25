@@ -18,7 +18,7 @@ test('Buscando pega fullstack', async t => {
     .get('/empleos-fullstack')
     .replyWithFile(200, path.join(__dirname, 'html', 'pegas-200.html'))
   t.context.room.user.say('user', 'hubot pega fullstack')
-  await sleep(100)
+  await sleep(500)
 
   const user = t.context.room.messages[0]
   const hubotMessage1 = t.context.room.messages[1]
@@ -37,7 +37,7 @@ test('Buscando pega de mecanico', async t => {
     .get('/empleos-mecanico')
     .reply(200, '')
   t.context.room.user.say('user', 'hubot pega mecanico')
-  await sleep(100)
+  await sleep(500)
 
   const user = t.context.room.messages[0]
   const hubotMessage1 = t.context.room.messages[1]
@@ -56,7 +56,7 @@ test('Error en el servidor', async t => {
     .get('/empleos-500')
     .replyWithError('Server error')
   t.context.room.user.say('user', 'hubot pega 500')
-  await sleep(100)
+  await sleep(500)
 
   const user = t.context.room.messages[0]
   const hubotMessage1 = t.context.room.messages[1]
@@ -75,7 +75,7 @@ test('Redirect', async t => {
     .get('/empleos-301')
     .reply(301)
   t.context.room.user.say('user', 'hubot pega 301')
-  await sleep(100)
+  await sleep(500)
 
   const user = t.context.room.messages[0]
   const hubotMessage1 = t.context.room.messages[1]
