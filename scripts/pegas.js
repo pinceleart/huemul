@@ -24,7 +24,11 @@ module.exports = function(robot) {
     var url = domain + querystring.escape(busqueda);
 
     robot.http(url).get()(function(err, res, body) {
-
+      if (err || res.statusCode !== 200) {
+        robot.emit('error', err || new Error(`Status code is ${res.statusCode}`), msg);
+        msg.reply(':gob: tiene problemas en el servidor')
+        return
+      }
       var $ = cheerio.load(body);
       var resultados = [];
 
@@ -46,7 +50,12 @@ module.exports = function(robot) {
         if(resultados.length > limiteResultados) {
           text += 'Otros resultados en: <'+ url + '|getonbrd>\n';
         }
-        msg.send(text);
+        if (robot.adapter.constructor.name === 'SlackBot') {
+          var options = {unfurl_links: false, as_user: true};
+          robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+        } else {
+          msg.send(text);
+        }
       } else {
         msg.send('No se han encontrado resultados sobre '+ busqueda);
       }
