@@ -20,7 +20,6 @@
 // Author:
 //   @jorgeepunan
 
-// process.env.API_URL ||= 'http://mindicador.cl/api' # old, slow and shitty
 const API_URL = process.env.API_URL || 'http://indicadoresdeldia.cl/webservice/indicadores.json'
 const BIT_API_URL = process.env.BIT_API_URL || 'https://blockchain.info/es/ticker'
 const mensajes = [
@@ -43,15 +42,18 @@ module.exports = robot => {
   robot.respond(/finvox (\w+)/i, res => {
     let uri
     const indicador = res.match[1].toLowerCase()
+    const indicadores = ['uf', 'dolar', 'usd', 'euro', 'eur', 'ipc', 'utm', 'getonbrd', 'huemulcoin']
     if (indicador === 'help' || !indicador) {
       res.send('Mis comandos son:\n\n * `finvox dolar|usd`\n * `finvox euro|eur`\n * `finvox bitcoin|btc`\n * `finvox uf`\n * `finvox utm`\n * `finvox ipc`\n * `finvox getonbrd`\n * `finvox huemulcoin`\n')
       return false
     }
-    const indicadors = ['uf', 'dolar', 'usd', 'euro', 'eur', 'ipc', 'utm', 'getonbrd', 'huemulcoin']
-    if (indicadors.includes(indicador)) {
+    if (indicadores.includes(indicador)) {
       uri = API_URL
     } else if (['bitcoin', 'btc'].includes(indicador)) {
       uri = BIT_API_URL
+    } else {
+      res.send('Mis comandos son:\n\n * `finvox dolar|usd`\n * `finvox euro|eur`\n * `finvox bitcoin|btc`\n * `finvox uf`\n * `finvox utm`\n * `finvox ipc`\n * `finvox getonbrd`\n * `finvox huemulcoin`\n')
+      return false
     }
     robot.http(uri).get()((err, response, body) => {
       if (err) {
