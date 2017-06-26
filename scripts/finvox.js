@@ -64,6 +64,9 @@ module.exports = robot => {
       response.setEncoding('utf-8')
       let data = JSON.parse(body)
       let date = ` (${data.date})`
+      if (!data.moneda && ['dolar', 'usd', 'getonbrd', 'euro', 'eur', 'huemulcoin'].includes(indicador)) {
+        return res.send('Sin resultados')
+      }
       if (indicador === 'uf') {
         data = data.indicador.uf
       } else if (['dolar', 'usd'].includes(indicador)) {
