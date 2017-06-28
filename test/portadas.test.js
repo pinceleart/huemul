@@ -9,8 +9,7 @@ const helper = new Helper('../scripts/portadas.js')
 const now = new Date()
 now.setHours(now.getHours() - 3) // UTC to -03:00
 const date = now.toISOString().replace(/(\d{2})(\d{2})-(\d+)-(\d+)T\d+:\d+:\d+.\d+Z/, '$4_$3_$2')
-const img = `http:\/\/impresa.soy-chile.cl\/HoyxHoy\/210617\/hoyxhoy\/${date}_pag_03-550-afba7c.jpg`
-console.log(img)
+const img = `http://impresa.soy-chile.cl/HoyxHoy/210617/hoyxhoy/${date}_pag_03-550-afba7c.jpg`
 
 test.beforeEach(t => {
   nock('http://www.hoyxhoy.cl')
