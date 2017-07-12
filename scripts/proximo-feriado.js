@@ -51,7 +51,7 @@ module.exports = function (robot) {
           ('0' + (new Date().getDate())).slice(-2)
         ].join('-') + 'T00:00:00-03:00');
     robot
-      .http("https://raw.githubusercontent.com/quest/feriadosapp/master/holidays.json")
+      .http("https://www.feriadosapp.com/api/holidays.json")
       .get()(function(err, res, body){
           if (err || res.statusCode !== 200) {
             return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
