@@ -28,6 +28,9 @@ const listaPortadas = () => {
     (el)? diario (de)? atacama
     cr(ó|o)nica chill(á|a)n
     (hoyxhoy|hxh)
+    lun
+    (el)? mercurio
+    (la)? cuarta
   *Uruguay:*
     (el)? pais (uruguay|uru|uy)
   *Brasil:*
@@ -113,6 +116,18 @@ module.exports = robot => {
       .replace(/chiloé$/, 'chiloe')
 
     const diarios = {
+      lun: {
+        url: 'http://img.kiosko.net/#DATE#/cl/cl_ultimas_noticias.750.jpg',
+        noSlashes: false
+      },
+      mercurio: {
+        url: 'http://img.kiosko.net/#DATE#/cl/cl_mercurio.750.jpg',
+        noSlashes: false
+      },
+      cuarta: {
+        url: 'http://img.kiosko.net/#DATE#/cl/cl_cuarta.750.jpg',
+        noSlashes: false
+      },
       estrellaarica: {
         url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaArica/01-550.jpg',
         noSlashes: false
