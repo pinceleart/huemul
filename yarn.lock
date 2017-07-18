@@ -2393,11 +2393,11 @@ hubot-surbtc@0.0.2:
     hippie "^0.5.1"
     numbertoclpformater "^1.0.0"
 
-hubot-test-helper@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/hubot-test-helper/-/hubot-test-helper-1.6.0.tgz#0e702f6b1e0ebea854659e429578b22284ab6403"
+hubot-test-helper@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/hubot-test-helper/-/hubot-test-helper-1.5.1.tgz#a45c06cfde31542ab0dae65e968c2a98493220cc"
   dependencies:
-    hubot ">=2.6.0 <10 || 0.0.0-development"
+    hubot ">= 2.6.0 < 3"
 
 hubot-travis-ci-hook@0.0.1:
   version "0.0.1"
@@ -2422,21 +2422,7 @@ hubot-youtube@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/hubot-youtube/-/hubot-youtube-1.0.2.tgz#6ead1e53b80933eb2a5e55849879ad300876660f"
 
-"hubot@>=2.6.0 <10 || 0.0.0-development":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/hubot/-/hubot-3.0.1.tgz#fe1bca4ece9c4f88f172047d63945b78d3623759"
-  dependencies:
-    async ">=0.1.0 <1.0.0"
-    chalk "^1.0.0"
-    cline "^0.8.2"
-    coffee-script "1.6.3"
-    connect-multiparty "^1.2.5"
-    express "^3.21.2"
-    log "1.4.0"
-    optparse "1.0.4"
-    scoped-http-client "0.11.0"
-
-hubot@^2.19.0:
+"hubot@>= 2.6.0 < 3", hubot@^2.19.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/hubot/-/hubot-2.19.0.tgz#87c572d210fb0d5f89f756177ae0020d49ffba36"
   dependencies:

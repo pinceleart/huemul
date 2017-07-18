@@ -98,7 +98,7 @@
   "devDependencies": {
     "ava": "^0.21.0",
     "coffee-script": "^1.12.7",
-    "hubot-test-helper": "^1.6.0",
+    "hubot-test-helper": "1.5.1",
     "nock": "^9.0.14"
   }
 }
