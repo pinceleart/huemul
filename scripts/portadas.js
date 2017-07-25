@@ -129,56 +129,56 @@ module.exports = robot => {
         noSlashes: false
       },
       estrellaarica: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaArica/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaArica/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellaiquique: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstellaIquique/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstellaIquique/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       mercuriocalama: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/MercurioCalama/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/MercurioCalama/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellaloa: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaLoa/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaLoa/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellatocopilla: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaTocopilla/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaTocopilla/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       mercurioantofa: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/ElMercuriodeAntofagasta/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/ElMercuriodeAntofagasta/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellaantofa: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaAntofagasta/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaAntofagasta/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       diarioatacama: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/DiarioAtacama/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/DiarioAtacama/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       mercuriovalpo: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/MercurioValparaiso/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/MercurioValparaiso/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellavalpo: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaValparaiso/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaValparaiso/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellaquillota: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaQuillota/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaQuillota/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       lider: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       lidersanantonio: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/LiderSanAntonio/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       hoyxhoy: {
         url: endpointHxh,
@@ -189,40 +189,40 @@ module.exports = robot => {
         noSlashes: false
       },
       sur: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/ElSur/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/ElSur/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellaconce: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaConcepcion/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaConcepcion/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       cronicachillan: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/CronicaChillan/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       australtemuco: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/AustralTemuco/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/AustralTemuco/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       australlosrios: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       australvaldivia: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/AustralValdivia/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       australosorno: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/AustralOsorno/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/AustralOsorno/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       llanquihue: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/Llanquihue/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/Llanquihue/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       estrellachiloe: {
-        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaChiloe/01-550.jpg',
-        noSlashes: false
+        url: 'http://edicionimpresa.soychile.cl/portadas/EstrellaChiloe/01-550.jpg?fecha=#DATE#',
+        noSlashes: true
       },
       globo: {
         url: 'http://img.kiosko.net/#DATE#/br/br_oglobo.750.jpg',
