@@ -24,7 +24,7 @@ module.exports = robot => {
     const url = msg.match[2];
 
     if (!checkUrl(url)) {
-      msg.send(`tupo.to solo funciona con url, y ${url} parece no serlo`);
+      msg.send(`tupo.to solo funciona con url y ${url} parece que no lo es.`);
       return;
     }
 
