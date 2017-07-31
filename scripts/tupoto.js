@@ -30,7 +30,7 @@ module.exports = robot => {
 
     const data = JSON.stringify({uri: url});
 
-    robot.http('https://tupo.to/').post(data)
+    robot.http('https://tupo.to/').header('Content-Type', 'application/json').post(data)
     ((err, res, body) => {
       if (err) {
         robot.emit('error', err, msg);
