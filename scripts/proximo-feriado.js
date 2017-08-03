@@ -61,8 +61,8 @@ module.exports = function (robot) {
 
           body.data.forEach(function(holiday, index) {
             var date          = new Date(holiday.date + 'T00:00:00-03:00'),
-                humanDate     = holiday.date.split('-');
-                humanDay      = humanDate[2].replace(/^0+/, '');
+                humanDate     = holiday.date.split('-'),
+                humanDay      = humanDate[2].replace(/^0+/, ''),
                 humanMonth    = humanDate[1],
                 humanWeekDay  = humanizeDay(date.getDay()),
                 message       = holiday.title + " (_" + holiday.extra.toLowerCase() + "_)";
