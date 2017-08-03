@@ -23,7 +23,6 @@ const querystring = require('querystring')
 
 const images = [
   'http://i.imgur.com/IW6O268.gif',
-  'http://data.whicdn.com/images/66984539/large.gif',
   'http://stream1.gifsoup.com/view6/4649173/disaster-movie-chipmunk-rabies-o.gif',
   'https://media.giphy.com/media/x13saNuWqUPPW/giphy.gif',
   'http://i.imgur.com/PimcI7P.gif',
