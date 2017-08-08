@@ -38,48 +38,25 @@ module.exports = (robot) => {
       title = str.split(' ').join('+');
     }
 
-    // Send request to the OMDB API
-    robot.http('http://omdbapi.com/').query({
-      t: title,
-      y: year,
-      tomatoes: true
-    })
+    // Send request to the themoviedb API
+    robot.http(`https://api.themoviedb.org/3/search/movie?api_key=019b7cf328685efc9351fefb7abf3f3d&query=${title}`)
     .get()( (err, res, body) => {
+      
       if (err || res.statusCode !== 200) {
         return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
       }
+
       const movie = JSON.parse(body);
 
-      if (movie.Response === 'False') {
-        msg.send("¿Seguro qué ese es el nombre?\n¡Tienes que elegir una película o serie!");
+      if (movie.total_results === 0) {
+        msg.send("¿Seguro qué ese es el nombre? ¡Tienes que elegir una película o serie! :retard:");
       } else {
 
-        let movieInfo = ":popcorn: *" + movie.Title + " (" + movie.Year + ")*\n\n";
+        let movieInfo = `Resultados para ${str}: :cabrita:\n`;
 
-        if (checkValue(movie.imdbRating)) {
-          movieInfo += "IMDb Rating: `" + movie.imdbRating + "/10`\n";
-        }
-        if (checkValue(movie.tomatoMeter)) {
-          movieInfo += "Rotten Tomatoes: `" + movie.tomatoMeter + "%`\n";
-        }
-        if (checkValue(movie.Plot)) {
-          movieInfo += ">_" + movie.Plot + "_\n";
-        }
-        if (checkValue(movie.Genre)) {
-          movieInfo += "Genre: `" + movie.Genre + "`\n";
-        }
-        if (checkValue(movie.Director)) {
-          movieInfo += "Director: " + movie.Director + "\n";
-        }
-        if (checkValue(movie.Actors)) {
-          movieInfo += "Actors: " + movie.Actors + "\n";
-        }
-        if (checkValue(movie.Awards)) {
-          movieInfo += "Awards: " + movie.Awards + "\n";
-        }
-        if (checkValue(movie.imdbID)) {
-          movieInfo += "URL: www.imdb.com/title/" + movie.imdbID;
-        }
+        movie.results.forEach(function(e){
+          movieInfo += `- ${e.title} (${e.release_date}): ${e.vote_average} puntos\n`
+        });
 
         msg.send(movieInfo);
       }
