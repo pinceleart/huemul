@@ -14,6 +14,8 @@
 // Author:
 //   @ravenous <hello@ravenous.io>
 
+const apiKey  = process.env.THEMOVIEDB_API_KEY;
+
 function checkValue(value) {
   const emptyMsg = ['NA', 'N/A'];
 
@@ -39,7 +41,7 @@ module.exports = (robot) => {
     }
 
     // Send request to the themoviedb API
-    robot.http(`https://api.themoviedb.org/3/search/movie?api_key=019b7cf328685efc9351fefb7abf3f3d&query=${title}`)
+    robot.http(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${title}`)
     .get()( (err, res, body) => {
       
       if (err || res.statusCode !== 200) {
@@ -49,7 +51,7 @@ module.exports = (robot) => {
       const movie = JSON.parse(body);
 
       if (movie.total_results === 0) {
-        msg.send("¿Seguro qué ese es el nombre? ¡Tienes que elegir una película o serie! :retard:");
+        msg.send("¿Seguro que ese es el nombre? ¡Tienes que elegir una película o serie! :retard:");
       } else {
 
         let movieInfo = `Resultados para ${str}: :cabrita:\n`;
