@@ -27,10 +27,22 @@ function checkValue(value) {
 }
 
 module.exports = (robot) => {
+
+  if (!apiKey) {
+    robot.logger.warning("The THEMOVIEDB_API_KEY environment variable not set.");
+  }
+
+
   robot.respond(/(imdb|movie)\s(.*)/i, (msg) => {
     const str = msg.match[2];
     let title = str;
     let year = '';
+
+    if (!apiKey) {
+      msg.reply("unset the THEMOVIEDB_API_KEY " + "environment variables");
+      return;
+    }
+
 
     // Check if there's a year at the end of the string
     if (str.length > 4 && str.match(/\d{4}$/i)) {
