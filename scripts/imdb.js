@@ -8,13 +8,13 @@
 //   None
 //
 // Commands:
-//   hubot imdb <movie or serie> <year>
-//   hubot movie <movie or serie> <year>
+//   huemul movie <title> <year>
+//   huemul serie <title> <year>
 //
 // Author:
 //   @ravenous <hello@ravenous.io>
 
-const apiKey  = process.env.THEMOVIEDB_API_KEY;
+const apiKey  = //process.env.THEMOVIEDB_API_KEY;
 
 function checkValue(value) {
   const emptyMsg = ['NA', 'N/A'];
@@ -32,17 +32,23 @@ module.exports = (robot) => {
     robot.logger.warning("The THEMOVIEDB_API_KEY environment variable not set.");
   }
 
-
-  robot.respond(/(imdb|movie)\s(.*)/i, (msg) => {
+  robot.respond(/(movie|serie)\s(.*)/i, (msg) => {
     const str = msg.match[2];
+    const type = msg.match[1];
     let title = str;
     let year = '';
+    let kind = '';
+
+    if ( type === 'movie' ) {
+      kind = 'movie';
+    } else if ( type === 'serie' ) {
+      kind = 'tv';
+    }
 
     if (!apiKey) {
       msg.reply("unset the THEMOVIEDB_API_KEY " + "environment variables");
       return;
     }
-
 
     // Check if there's a year at the end of the string
     if (str.length > 4 && str.match(/\d{4}$/i)) {
@@ -53,7 +59,7 @@ module.exports = (robot) => {
     }
 
     // Send request to the themoviedb API
-    robot.http(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${title}`)
+    robot.http(`https://api.themoviedb.org/3/search/${kind}?api_key=${apiKey}&query=${title}`)
     .get()( (err, res, body) => {
       
       if (err || res.statusCode !== 200) {
@@ -69,7 +75,13 @@ module.exports = (robot) => {
         let movieInfo = `Resultados para ${str}: :cabrita:\n`;
 
         movie.results.forEach(function(e){
-          movieInfo += `- ${e.title} (${e.release_date}): ${e.vote_average} puntos\n`
+
+          if ( kind === 'movie' ) {
+            movieInfo += `- ${e.title} (${e.release_date}): ${e.vote_average} puntos\n`
+          } else if ( kind === 'tv' ) {
+            movieInfo += `- ${e.name} (${e.first_air_date}): ${e.vote_average} puntos\n`
+          }
+
         });
 
         msg.send(movieInfo);
