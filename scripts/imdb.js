@@ -14,7 +14,7 @@
 // Author:
 //   @ravenous <hello@ravenous.io>
 
-const apiKey  = //process.env.THEMOVIEDB_API_KEY;
+const apiKey  = process.env.THEMOVIEDB_API_KEY;
 
 function checkValue(value) {
   const emptyMsg = ['NA', 'N/A'];
