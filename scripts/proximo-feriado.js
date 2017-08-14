@@ -79,13 +79,9 @@ module.exports = function (robot) {
               if (dias === 0) {
                 msg.send('¡*HOY* es feriado! Se celebra: ' + message + '. ¡Disfrútalo!');
               } else {
-                var quedanTXT = 'quedan',
-                    diasTXT = 'días';
-                if (dias === 1) {
-                  quedanTXT = 'queda',
-                  diasTXT = 'día';
-                }
-                msg.send("El próximo feriado es el *" + humanWeekDay + " " + humanDay + " de " + humanizeMonth(humanMonth) + "*, " + quedanTXT + " *" + dias + "* " + diasTXT + ". Se celebra: " + message + ".");
+                var plural = dias > 1 ? ['n','s'] : ['',''];
+
+                msg.send("El próximo feriado es el *" + humanWeekDay + " " + humanDay + " de " + humanizeMonth(humanMonth) + "*, queda" + plural[0] + " *" + dias + "* día" + plural[1] + ". Se celebra: " + message + ".");
               }
             }
           });
