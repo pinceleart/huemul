@@ -35,7 +35,7 @@ function humanizeMonth(month){
 }
 
 function humanizeDay(day){
-  var dayNames  = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  var dayNames  = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
   return dayNames[day];
 }
@@ -76,10 +76,16 @@ module.exports = function (robot) {
                 ('0' + (today.getDate())).slice(-2)
               ].join('-'), holiday.date);
 
-              if (dias == 0) {
+              if (dias === 0) {
                 msg.send('¡*HOY* es feriado! Se celebra: ' + message + '. ¡Disfrútalo!');
               } else {
-                msg.send("El próximo feriado es el *" + humanWeekDay + " " + humanDay + " de " + humanizeMonth(humanMonth) + "*, quedan *" + dias + "* días. Se celebra: " + message + ".");
+                var quedanTXT = 'quedan',
+                    diasTXT = 'días';
+                if (dias === 1) {
+                  quedanTXT = 'queda',
+                  diasTXT = 'día';
+                }
+                msg.send("El próximo feriado es el *" + humanWeekDay + " " + humanDay + " de " + humanizeMonth(humanMonth) + "*, " + quedanTXT + " *" + dias + "* " + diasTXT + ". Se celebra: " + message + ".");
               }
             }
           });
