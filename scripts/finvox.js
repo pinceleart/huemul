@@ -22,6 +22,7 @@
 
 const API_URL = process.env.API_URL || 'http://indicadoresdeldia.cl/webservice/indicadores.json'
 const BIT_API_URL = process.env.BIT_API_URL || 'https://blockchain.info/es/ticker'
+const SURBTC_ETH_URL = process.env.SURBTC_ETH_URL || 'https://www.surbtc.com/api/v2/markets/eth-clp/ticker'
 const mensajes = [
   'Aunque te esfuerces, seguirás siendo pobre. :poop:',
   'Los políticos ganan más que tú y más encima nos roban. Y no pueden irse presos. ¡Ánimo! :monkey:',
@@ -51,6 +52,8 @@ module.exports = robot => {
       uri = API_URL
     } else if (['bitcoin', 'btc'].includes(indicador)) {
       uri = BIT_API_URL
+    } else if (['ethereum', 'eth'].includes(indicador)) {
+      uri = SURBTC_ETH_URL
     } else {
       res.send('Mis comandos son:\n\n * `finvox dolar|usd`\n * `finvox euro|eur`\n * `finvox bitcoin|btc`\n * `finvox uf`\n * `finvox utm`\n * `finvox ipc`\n * `finvox getonbrd`\n * `finvox huemulcoin`\n')
       return false
@@ -84,6 +87,9 @@ module.exports = robot => {
         date = ''
         const flatNumber = data.CLP.last.toString().split('.')[0]
         data = `$${numberWithCommas(flatNumber)}`
+      } else if (['ethereum', 'eth'].includes(indicador)) {
+        date = ''
+        data = `$${data.ticker.last_price[0]}`
       } else if (indicador === 'huemulcoin') {
         const complexHuemulCoinCalculus = 1000 / parseInt(data.moneda.dolar.split('$')[1])
         data = `1ℌℭ = US$${numberSplitDecimal(complexHuemulCoinCalculus)}`
