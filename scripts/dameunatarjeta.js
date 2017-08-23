@@ -18,6 +18,20 @@
 
 const {load} = require('cheerio');
 
+const fixExpireDate = (date) => {
+  const [ month, year ] = date.split('/');
+  const currentDate = new Date();
+  const expireDate = new Date(year, month);
+  const isDateExpired = currentDate > expireDate;
+
+  if (!isDateExpired) return date;
+
+  // When the credit card date is expire, fix it returning
+  // the same month with a current year plus 1
+  const fixedYear = currentDate.getFullYear() + 1;
+  return `${month}/${fixedYear}`;
+};
+
 module.exports = robot => {
   robot.respond(/dame una (visa|mastercard|discover|american express)/i, msg => {
     const quequiere = msg.match[1].toLowerCase();
@@ -46,7 +60,7 @@ module.exports = robot => {
         const expireDate = dom(section.find('p.centrado em').get(1)).html().split(': ')[1];
 
         msg.send(
-          `Nº: ${creditCardNumber}, CVV2/VCV2: ${cvv}, Vence: ${expireDate}`
+          `Nº: ${creditCardNumber}, CVV2/VCV2: ${cvv}, Vence: ${fixExpireDate(expireDate)}`
         );
       }
     });
