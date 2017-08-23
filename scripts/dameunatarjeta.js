@@ -41,9 +41,12 @@ module.exports = robot => {
       } else {
         const dom = load(body);
         const section = dom(dom('section').get(3));
+        const creditCardNumber = section.find('p.resalta').html();
+        const cvv = dom(section.find('p.centrado em').get(0)).html().split(': ')[1];
+        const expireDate = dom(section.find('p.centrado em').get(1)).html().split(': ')[1];
 
         msg.send(
-          `Nº: ${section.find('p.resalta').html()}, CVV2/VCV2: ${dom(section.find('p.centrado em').get(0)).html().split(': ')[1]}, Vence: ${dom(section.find('p.centrado em').get(1)).html().split(': ')[1]}`
+          `Nº: ${creditCardNumber}, CVV2/VCV2: ${cvv}, Vence: ${expireDate}`
         );
       }
     });
