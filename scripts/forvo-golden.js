@@ -42,7 +42,7 @@ module.exports = function(robot) {
           });
 
           const limiteResultados = (resultados.length > 10) ? 5 : resultados.length;
-          const plural = resultados.length > 1 ? ['n','s'] : ['',''];
+          const plural = resultados.length > 1 ? ['s','s'] : ['',''];
           const resume = 'Encontrado' + plural[0] + ' '+ resultQty + ' resultado' + plural[1] + ':';
           const links = resultados.slice(0, limiteResultados).map((result, index) => `${index + 1}: ${result}`).join('\n');
           const more = resultados.length > limiteResultados ? `\n<${url}|Ver más resultados>` : '';
