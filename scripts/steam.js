@@ -18,7 +18,6 @@
 
 const cheerio = require('cheerio');
 const got = require('got');
-const sanitize = require('sanitize-html');
 
 module.exports = (robot) => {
 
