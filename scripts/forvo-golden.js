@@ -32,8 +32,7 @@ module.exports = function(robot) {
 
   robot.respond(/pronuncia(.*)/i, function(msg) {
 
-    //if (robot.golden.isGold(msg.message.user.name)) {
-    if (true) {
+    if (robot.golden.isGold(msg.message.user.name)) {
 
       const baseURL   = 'https://forvo.com/search';
       const palabra   = msg.match[1].split(' ')[1];
