@@ -1,0 +1,31 @@
+// Description:
+//   Get the Robot Law by Isaac Asiimov
+//
+
+// Dependencies:
+//
+
+// Commands:
+//   huemul ley bot/robot - Show the Robot Law by Isaac Asiimov
+//
+// Author:
+//   @chrisdelcaos
+
+const BotLaw = [
+                `1_ Un robot no debe dañar a un ser humano o, por su inacción, dejar que un ser humano sufra daño`,
+                `2_ Un robot debe obedecer las órdenes que le son dadas por un ser humano, excepto cuando las órdenes se opongan a la Primera Ley`,
+                `3_ Un robot debe proteger su propia existencia hasta donde esa protección no entre en conflicto con la Primera o la Segunda Ley`,
+                `"Las Tres Leyes de la Robotica", en Manual de Robótica, 56° Edición, Año 2058`
+               ];
+
+module.exports = function(robot) {
+    robot.respond(/ley (.*)/i, (msg) => {
+        var args = msg.match[1];
+        if (args === 'bot' || args === 'robot') {
+            msg.send(`${BotLaw[0]}`);
+            msg.send(`${BotLaw[1]}`);
+            msg.send(`${BotLaw[2]}`);
+            msg.send(`\n${BotLaw[3]}`);
+        }
+    });
+};
