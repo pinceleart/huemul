@@ -10,19 +10,44 @@
 // Author:
 //   @jorgeepunan
 
-var cheerio = require('cheerio');
+const cheerio = require('cheerio');
+const DEFAULT_LANGUAGE = 'español';
+const LANGUAGES = {
+  'español': 'es',
+  'ingles': 'en',
+  'ruso': 'ru',
+  'frances': 'fr',
+  'aleman': 'de',
+  'italiano': 'it'
+};
+
+var detectLanguage = function(phrase) {
+  const languageDetected = Object.keys(LANGUAGES).filter(
+    language => phrase.indexOf(`en ${language}`) !== -1
+  );
+  return languageDetected.length > 0 ? languageDetected[0] : false;
+};
 
 module.exports = function(robot) {
 
   robot.respond(/pronuncia(.*)/i, function(msg) {
 
-    if (robot.golden.isGold(msg.message.user.name)) {
+    //if (robot.golden.isGold(msg.message.user.name)) {
+    if (true) {
 
-      const baseURL   = 'https://forvo.com/search/';
+      const baseURL   = 'https://forvo.com/search';
       const palabra   = msg.match[1].split(' ')[1];
-      const url       = `${baseURL}${palabra}/es/`;
+      const language  = detectLanguage(msg.match[1]);
 
-      msg.send('Buscando pronunciación a *' + palabra + '*... :loading:');
+      if (language && !LANGUAGES[language]) {
+        msg.send(`No se hablar ${language} :retard:... Intenta con otro idioma`);
+        return;
+      }
+      // Set spanish as default language
+      const languageId  = LANGUAGES[language] || LANGUAGES[DEFAULT_LANGUAGE];
+      const url       = `${baseURL}/${palabra}/${languageId}/`;
+
+      msg.send(`Buscando pronunciación a *${palabra}* en ${language || DEFAULT_LANGUAGE}... :loading`);
 
       robot.http(url).get()(function(err, res, body) {
 
