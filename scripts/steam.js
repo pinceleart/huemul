@@ -4,7 +4,6 @@
 
 // Dependencies:
 //   "cheerio": "latest"
-//   "got": "latest"
 //   "sanitize-html": "latest"
 //
 
@@ -26,12 +25,9 @@ module.exports = (robot) => {
     var args = msg.match[1];
 
     robot.http('http://store.steampowered.com').get()(function(err, res, body) {
-
       if (err || res.statusCode !== 200) {
-
         msg.send('Actualmente Steam no responde!');
         return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
-
       }
 
       let $ = cheerio.load(body);
@@ -41,7 +37,6 @@ module.exports = (robot) => {
       let cookie = 'steamCountry=CL';
 
       robot.http(url).header("cookie", cookie).get()(function(err, res, body) {
-
         if (err || res.statusCode !== 200) {
           msg.send('Actualmente Steam no responde!');
           return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
