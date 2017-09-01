@@ -14,27 +14,40 @@
 // Author:
 //   @chrisdelcaos
 
+
 'use strict';
 
 const cheerio = require('cheerio');
-const got = require('got');
 
 module.exports = (robot) => {
 
   robot.respond(/steam (.*)/i, (msg) => {
+
     var args = msg.match[1];
 
-    got('http://store.steampowered.com').then((res) => {
-      var body = res.body;
-      if (res.statusCode !== 200) return msg.send('Actualmente Steam no responde!');
+    robot.http('http://store.steampowered.com').get()(function(err, res, body) {
+
+      if (err || res.statusCode !== 200) {
+
+        msg.send('Actualmente Steam no responde!');
+        return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
+
+      }
 
       let $ = cheerio.load(body);
       let idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id');
       let id = idAttr.substr(idAttr.length - 6);
       let url = `http://store.steampowered.com/api/appdetails/?appids=${id}`;
+      let cookie = 'steamCountry=CL';
 
-      got(url, { json: true }).then((res) => {
-        let game = res.body[id].data;
+      robot.http(url).header("cookie", cookie).get()(function(err, res, body) {
+
+        if (err || res.statusCode !== 200) {
+          msg.send('Actualmente Steam no responde!');
+          return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
+        }
+
+        let game = JSON.parse(body)[id].data;
         let name = game.name;
         let price = game.price_overview;
         let final = price.final / 100;
