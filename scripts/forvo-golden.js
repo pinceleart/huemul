@@ -44,7 +44,7 @@ module.exports = function(robot) {
       }
       // Set spanish as default language
       const languageId  = LANGUAGES[language] || LANGUAGES[DEFAULT_LANGUAGE];
-      const url       = `${baseURL}/${palabra}/${languageId}/`;
+      const url         = `${baseURL}/${encodeURIComponent(palabra)}/${languageId}/`;
 
       msg.send(`Buscando pronunciación a *${palabra}* en ${language || DEFAULT_LANGUAGE}... :loading`);
 
