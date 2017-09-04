@@ -34,7 +34,7 @@ module.exports = (robot) => {
       let idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id');
       let id = idAttr.substr(idAttr.length - 6);
       let url = `http://store.steampowered.com/api/appdetails/?appids=${id}`;
-      let cookie = 'steamCountry=CL';
+      let cookie = 'steamCountry=CL%7Cb8a8a3da46a6c324d177af2855ca3d9b;timezoneOffset=-10800,0;';
 
       robot.http(url).header("cookie", cookie).get()(function(err, res, body) {
         if (err || res.statusCode !== 200) {
