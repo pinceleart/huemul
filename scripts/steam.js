@@ -12,18 +12,27 @@
 // Author:
 //   @chrisdelcaos
 
+
 'use strict';
 
 const cheerio = require('cheerio');
 
 module.exports = (robot) => {
 
+
   robot.respond(/steam(.*)/i, (msg) => {
     const args = msg.match[1].split(' ')[1];
 
     if (args === 'daily') {
 
-      robot.http('http://store.steampowered.com').get()(function(err, res, body) {
+      let $ = cheerio.load(body);
+      let idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id');
+      let id = idAttr.substr(idAttr.length - 6);
+      let url = `http://store.steampowered.com/api/appdetails/?appids=${id}`;
+      let cookie = 'steamCountry=CL';
+
+      robot.http(url).header("cookie", cookie).get()(function(err, res, body) {
+
         if (err || res.statusCode !== 200) {
           msg.send('Actualmente _Steam_ no responde.');
           return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
