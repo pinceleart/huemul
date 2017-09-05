@@ -22,7 +22,7 @@ module.exports = (robot) => {
 
   robot.respond(/steam (.*)/i, (msg) => {
 
-    var args = msg.match[1];
+    const args = msg.match[1];
 
     robot.http('http://store.steampowered.com').get()(function(err, res, body) {
       if (err || res.statusCode !== 200) {
@@ -30,10 +30,10 @@ module.exports = (robot) => {
         return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
       }
 
-      let $ = cheerio.load(body);
-      let idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id');
-      let id = idAttr.substr(idAttr.length - 6);
-      let url = `http://store.steampowered.com/api/appdetails/?appids=${id}`;
+      const $ = cheerio.load(body);
+      const idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id');
+      const id = idAttr.substr(idAttr.length - 6);
+      const url = `http://store.steampowered.com/api/appdetails/?appids=${id}`;
 
       robot.http(url).get()(function(err, res, body) {
         if (err || res.statusCode !== 200) {
