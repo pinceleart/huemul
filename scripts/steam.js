@@ -34,9 +34,8 @@ module.exports = (robot) => {
       let idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id');
       let id = idAttr.substr(idAttr.length - 6);
       let url = `http://store.steampowered.com/api/appdetails/?appids=${id}`;
-      let cookie = 'steamCountry=CL%7Cb8a8a3da46a6c324d177af2855ca3d9b;timezoneOffset=-10800,0;';
 
-      robot.http(url).header("cookie", cookie).get()(function(err, res, body) {
+      robot.http(url).get()(function(err, res, body) {
         if (err || res.statusCode !== 200) {
           msg.send('Actualmente Steam no responde!');
           return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
@@ -51,7 +50,7 @@ module.exports = (robot) => {
 
          if (args === 'daily') {
             msg.send(`https://store.steampowered.com/app/${id}`);
-            msg.send(`Oferta del dia: ${name}, a solo $CLP ${final}. Valor original $CLP ${initial}, eso es un -${discount}%!`);
+            msg.send(`Oferta del dia: ${name}, a solo $USD ${final}. Valor original $USD ${initial}, eso es un -${discount}%!`);
         }
 
       });
