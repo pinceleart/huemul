@@ -46,7 +46,7 @@ module.exports = function(robot) {
       const languageId  = LANGUAGES[language] || LANGUAGES[DEFAULT_LANGUAGE];
       const url         = `${baseURL}/${encodeURIComponent(palabra)}/${languageId}/`;
 
-      msg.send(`Buscando pronunciación a *${palabra}* en ${language || DEFAULT_LANGUAGE}... :loading`);
+      msg.send(`Buscando pronunciación a *${palabra}* en ${language || DEFAULT_LANGUAGE}... :loading:`);
 
       robot.http(url).get()(function(err, res, body) {
 
