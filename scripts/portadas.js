@@ -35,6 +35,7 @@ const listaPortadas = () => {
     (el)? pais (uruguay|uru|uy)
   *Brasil:*
     (o)? globo
+    folha
   *Colombia:*
     (el)? tiempo
   *Mexico:*
@@ -226,6 +227,10 @@ module.exports = robot => {
       },
       globo: {
         url: 'http://img.kiosko.net/#DATE#/br/br_oglobo.750.jpg',
+        noSlashes: false
+      },
+      folha: {
+        url: 'http://img.kiosko.net/#DATE#/br/br_folha_spaulo.750.jpg',
         noSlashes: false
       },
       tiempo: {
