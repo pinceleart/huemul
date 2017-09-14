@@ -22,8 +22,8 @@ module.exports = robot => {
 
   robot.respond(/quozio (.+) dijo (.+)/i, res => {
     const query = {
-      q: res.match[1].trim(),
-      a: res.match[2].trim()
+      a: res.match[1].trim(),
+      q: res.match[2].trim()
     }
     if (query.q === '' || query.a === '') return
     robot.http('http://quozio.com/fetch/getQuoteRef.aspx').query(query).get()((err, response, body) => {
@@ -41,7 +41,7 @@ module.exports = robot => {
       try {
         const data = JSON.parse(body)
         const theme = getRandomTheme()
-        res.send(`https://d3kvsdrdan3wbb.cloudfront.net/img/${data.ref}/${theme}/${query.q}.jpg`)
+        res.send(`https://d3kvsdrdan3wbb.cloudfront.net/img/${data.ref}/${theme}/${encodeURIComponent(query.q)}.jpg`)
       } catch (err) {
         robot.emit('error', err, res)
         return res.reply(`ocurrió el siguiente error: ${err.message}`)
