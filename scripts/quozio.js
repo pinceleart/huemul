@@ -36,7 +36,7 @@ module.exports = robot => {
         errMessage = `Wrong status code ${response.statusCode}`
       }
       if (errMessage) {
-        return res.reply(`ocurrio el siguiente error: ${errMessage}`)
+        return res.reply(`ocurrió el siguiente error: ${errMessage}`)
       }
       try {
         const data = JSON.parse(body)
@@ -44,7 +44,7 @@ module.exports = robot => {
         res.send(`https://d3kvsdrdan3wbb.cloudfront.net/img/${data.ref}/${theme}/${query.q}.jpg`)
       } catch (err) {
         robot.emit('error', err, res)
-        return res.reply(`ocurrio el siguiente error: ${err.message}`)
+        return res.reply(`ocurrió el siguiente error: ${err.message}`)
       }
     })
   })
