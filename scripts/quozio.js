@@ -26,10 +26,8 @@ module.exports = robot => {
       a: res.match[2].trim()
     }
     if (query.q === '' || query.a === '') return
-    console.log(query)
     robot.http('http://quozio.com/fetch/getQuoteRef.aspx').query(query).get()((err, response, body) => {
       let errMessage
-      console.log(err, response.statusCode, body)
       if (err) {
         robot.emit('error', err, res)
         errMessage = err.message
