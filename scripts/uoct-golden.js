@@ -16,7 +16,7 @@ module.exports = function (robot) {
 
   robot.respond(/uoct|taco|tr(aá)nsito/i, function (msg) {
 
-    if (robot.golden.isGold(msg.message.user.name)) {
+    //if (robot.golden.isGold(msg.message.user.name)) {
 
       const url   = 'http://www.uoct.cl/';
 
@@ -37,7 +37,7 @@ module.exports = function (robot) {
             const link = $(this).attr('href');
             const text = $(this).find('.caption').text();
 
-            resultados.push(`<${link}|${time}: ${text}>);
+            resultados.push(`<${link}|${time}: ${text}>`);
           });
 
           const limite  = (resultados.length > 10) ? 8 : resultados.length;
@@ -55,9 +55,9 @@ module.exports = function (robot) {
 
       });
 
-    } else {
-      msg.send('Esta funcionalidad es exclusiva para socios golden :monea: de devsChile. Dona en www.devschile.cl para participar de este selecto grupo :huemul-patitas: .')
-    }
+    //} else {
+    //  msg.send('Esta funcionalidad es exclusiva para socios golden :monea: de devsChile. Dona en www.devschile.cl para participar de este selecto grupo :huemul-patitas: .')
+    //}
   });
 
 };
