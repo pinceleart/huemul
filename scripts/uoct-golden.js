@@ -37,7 +37,7 @@ module.exports = function (robot) {
             const link = $(this).attr('href');
             const text = $(this).find('.caption').text();
 
-            resultados.push(`<${link}|${time}: ${text}>);
+            resultados.push(`<${link}|${time}: ${text}>`);
           });
 
           const limite  = (resultados.length > 10) ? 8 : resultados.length;
