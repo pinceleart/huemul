@@ -72,8 +72,8 @@ module.exports = (robot) => {
     const cant = msg.match[1].split(' ')[2];
 
     if (args == 'specials') {
-      if(!isNaN(cant)){ //console.log(cant);
-        if(cant <= 10){
+      if(!isNaN(cant)){
+        if(cant <= 5){
           getSpecials().then(data => {
             for (var i = 0; i < cant; i++) { 
               getPrice(data[i]).then(data => {
@@ -86,7 +86,7 @@ module.exports = (robot) => {
           });
         }
         else{
-          msg.send('Hermano, la cantidad de ofertas debe ser menor a 10!');
+          msg.send('hey!, la cantidad de ofertas debe ser menor o igual a 5!');
         }
       }
       else{
