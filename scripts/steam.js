@@ -11,7 +11,6 @@
 // Author:
 //   @chrisdelcaos
 
-
 'use strict';
 const cheerio = require('cheerio');
 
