@@ -39,7 +39,7 @@ module.exports = robot => {
         let show_name = data[0].show.name
         let ep_link = data[0].show._links.nextepisode
 
-        if (ep_link === null) {
+        if (!ep_link) {
           msg.send(show_name+" no tiene más fechas! :llora:")
         } 
         else {
