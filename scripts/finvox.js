@@ -19,7 +19,7 @@
 // Author:
 //   @jorgeepunan
 
-const CLP = require('numberToCLPFormater').numberToCLPFormater;
+const CLP = require('numbertoclpformater').numberToCLPFormater;
 const API_URL = process.env.API_URL || 'http://mindicador.cl/api/'
 const mensajes = [
   'Aunque te esfuerces, seguirás siendo pobre. :poop:',
