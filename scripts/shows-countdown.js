@@ -8,8 +8,8 @@
 //   None
 //
 // Commands:
-//   hubot countdown help
-//   hubot countdown <title>
+//   huemul countdown help
+//   huemul countdown <title>
 //
 // Author:
 //   @JoseMCO
