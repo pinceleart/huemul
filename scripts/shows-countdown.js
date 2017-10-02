@@ -17,8 +17,8 @@
 
 module.exports = robot => {
   robot.respond(/countdown(.*)/i, (msg) => {
-    const search = msg.match[1].toLowerCase().split(' ').join('%20')
-    if (search === '%20help' || !search) {
+    const search = escape(msg.match[1].toLowerCase())
+    if (search === '%20help' || search === 'undefined' || !search) {
       msg.send('Tení que darme el nombre de la serie po! (ej: huemul countdown mr robot)\n')
       return false
     }
@@ -36,8 +36,8 @@ module.exports = robot => {
       } 
       else {
 
-        let show_name = data[0].show.name
-        let ep_link = data[0].show._links.nextepisode
+        const show_name = data[0].show.name
+        const ep_link = data[0].show._links.nextepisode
 
         if (!ep_link) {
           msg.send(show_name+" no tiene más fechas! :llora:")
@@ -55,22 +55,22 @@ module.exports = robot => {
               msg.send("¿Seguro que ese es el nombre? ¡Tienes que elegir una serie que exista! :retard:")
             } 
             else {
-              let ep_name = data.name
-              let ep_date = data.airstamp
-              let ep_tag = +data.season+"x"+data.number
+              const ep_name = data.name
+              const ep_date = data.airstamp
+              const ep_tag = +data.season+"x"+data.number
 
-              let distance = new Date(ep_date) - new Date()
-              let _second = 1000
-              let _minute = _second * 60
-              let _hour = _minute * 60
-              let _day = _hour * 24
+              const distance = new Date(ep_date) - new Date()
+              const _second = 1000
+              const _minute = _second * 60
+              const _hour = _minute * 60
+              const _day = _hour * 24
 
-              let days = Math.floor(distance / _day)
-              let hours = Math.floor((distance % _day) / _hour)
-              let minutes = Math.floor((distance % _hour) / _minute)
-              let seconds = Math.floor((distance % _minute) / _second)
-              let count = days+"d "+hours+"h "+minutes+"m y "+seconds+"s :popcorn:"
-              let result = "El siguiente episodio de "+show_name+" ("+ep_tag+": "+ep_name+") se estrena en "+count
+              const days = Math.floor(distance / _day)
+              const hours = Math.floor((distance % _day) / _hour)
+              const minutes = Math.floor((distance % _hour) / _minute)
+              const seconds = Math.floor((distance % _minute) / _second)
+              const count = days+"d "+hours+"h "+minutes+"m y "+seconds+"s :popcorn:"
+              const result = "El siguiente episodio de "+show_name+" ("+ep_tag+": "+ep_name+") se estrena en "+count
 
               msg.send(result)
             }
