@@ -8,8 +8,8 @@
 //   None
 //
 // Commands:
-//   hubot cmc [cryptcurrency name]
-//   hubot coinmarketcap [cryptcurrency name]
+//   hubot cmc [cryptcurrency name|help]
+//   hubot coinmarketcap [cryptcurrency name|help]
 //
 // Author:
 //   @hectorpalmatellez
@@ -21,21 +21,22 @@ module.exports = function(robot) {
 
     robot.http(url).get()(function(err, res, body) {
       if (robot.golden.isGold(msg.message.user.name)) {
-        if (err || res.statusCode !== 200) {
-          msg.send('Moneda no encontrada.');
-        }
-        if (body.indexOf('<') > -1) {
-          msg.send('Intenta con otra criptomoneda');
+        if (currency === 'help') {
+          msg.send('Ejemplos de comando: \n * `huemul coinmarketcap bitcoin` \n * `huemul cmc htmlcoin`');
         } else {
-          res.setEncoding('utf-8');
-          const data = JSON.parse(body);
-          if (data) {
-            return (() => {
-              const priceCLP = Math.floor(data[0].price_clp * 100) / 100;
-              msg.send(`El precio de ${currency} en CLP es ${priceCLP}.`);
-            })();
+          if (err || res.statusCode !== 200) {
+            msg.send(`Moneda no encontrada. Para ejemplos usa \`${msg.match[1]} help\``);
           } else {
-            msg.send('ERROR');
+            res.setEncoding('utf-8');
+            const data = JSON.parse(body);
+            if (data) {
+              return (() => {
+                const priceCLP = Math.floor(data[0].price_clp * 100) / 100;
+                msg.send(`El precio de ${currency} en CLP es ${priceCLP}.`);
+              })();
+            } else {
+              msg.send('ERROR');
+            }
           }
         }
       } else {
