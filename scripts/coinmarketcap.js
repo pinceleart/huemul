@@ -22,8 +22,7 @@ module.exports = function(robot) {
     robot.http(url).get()(function(err, res, body) {
       if (robot.golden.isGold(msg.message.user.name)) {
         if (err || res.statusCode !== 200) {
-          msg.send('😢');
-          return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
+          msg.send('Moneda no encontrada.');
         }
         if (body.indexOf('<') > -1) {
           msg.send('Intenta con otra criptomoneda');
