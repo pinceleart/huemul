@@ -19,10 +19,10 @@ module.exports = robot => {
     let anuncios = robot.adapter.client.rtm.dataStore.getChannelByName('#anuncios');
     if (msg.message.room === anuncios.id) {
       robot.send({room: msg.message.user.id}, `¡Hola, *${msg.message.user.name}*! :wave: \n \
-Soy ${robot.name} el :robot: de este grupo y te doy la bienvenida a *devsChile*, la mejor comunidad chilena de desarrolladores y diseñadores web.\n\n \
+Soy ${robot.name} el :robot: de este grupo y te doy la bienvenida a *devsChile*, la mejor y más activa comunidad chilena de desarrolladores y diseñadores web.\n\n \
 \
 Entre los canales que te pueden interesar están: \n \
-- #frontend: web standards y frameworks de moda.\n \
+- #frontend: web standards, librerías y frameworks de moda.\n \
 - #backend: hardware, BD, devops y lenguajes compilados.\n \
 - #pegas: avisos de trabajo y conversación del mundo laboral.\n \
 - #cultura: películas, series, libros, exposiciones.\n \
@@ -31,6 +31,7 @@ Entre los canales que te pueden interesar están: \n \
 - #eventos-juntas: como humanos a veces nos juntamos y aquí lo organizamos, además de meetups y conferencias nerds.\n \
 - #moneas: criptomonedas, blockchain y demases.\n \
 - #mascotas: cuidado, tenencia responsable, tips y productos para mascotas.\n \
+- #política: discutan y agárrense en este canal para no manchar otro.\n \
 - #random: todo lo que no cabe en otros canales, o que puede ir en todos, va aquí. Generalmente el canal con más movimiento y para procrastinar.\n\n \
 \
 Te sugerimos presentarte en #comunidad y te daremos la bienvenida como corresponde. Para conocer mis comandos puedes enviarme un \`help\` por DM o decir \`huemul help\` en algún canal y te mostraré lo que puedo hacer.\n\n \
