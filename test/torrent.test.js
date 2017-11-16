@@ -11,8 +11,8 @@ test.beforeEach(t => {
 
 test.afterEach(t => t.context.room.destroy())
 
-test('Torrent de Mia Khalifa', async t => {
-  t.context.room.user.say('user', 'hubot torrent mia khalifa')
+test('Torrent de Titanic', async t => {
+  t.context.room.user.say('user', 'hubot torrent titanic')
   await sleep(5000)
 
   const user = t.context.room.messages[0]
@@ -20,10 +20,10 @@ test('Torrent de Mia Khalifa', async t => {
   const hubotMessage2 = t.context.room.messages[2]
 
   // test message of user
-  t.deepEqual(user, ['user', 'hubot torrent mia khalifa'])
+  t.deepEqual(user, ['user', 'hubot torrent titanic'])
 
   // test response messages of hubot
-  t.deepEqual(hubotMessage1, ['hubot', 'Esperando respuesta de Torrent Project... :clock830:'])
+  t.deepEqual(hubotMessage1, ['hubot', 'Esperando respuesta de YTS YIFY... :loading:'])
   t.is(hubotMessage2[0], 'hubot')
-  t.true(/Mia Khalifa/ig.test(hubotMessage2[1]))
+  t.true(/Titanic/ig.test(hubotMessage2[1]))
 })
