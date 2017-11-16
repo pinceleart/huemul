@@ -16,14 +16,12 @@ test('Torrent de Titanic', async t => {
   await sleep(5000)
 
   const user = t.context.room.messages[0]
-  const hubotMessage1 = t.context.room.messages[1]
-  const hubotMessage2 = t.context.room.messages[2]
+  const hubot = t.context.room.messages[1]
 
   // test message of user
   t.deepEqual(user, ['user', 'hubot torrent titanic'])
 
   // test response messages of hubot
-  t.deepEqual(hubotMessage1, ['hubot', 'Esperando respuesta de YTS YIFY... :loading:'])
-  t.is(hubotMessage2[0], 'hubot')
-  t.true(/Titanic/ig.test(hubotMessage2[1]))
+  t.is(hubot[0], 'hubot')
+  t.true(/Titanic/ig.test(hubot[1]))
 })
