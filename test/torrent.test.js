@@ -24,8 +24,8 @@ test('Torrent de Titanic', async t => {
 
   // test response messages of hubot
   const text = `Encontradas 2 coincidencias:
-<https://yts.ag/api/v2/movie/1|Titanic 1: año: 2001, rating: 5>
-<https://yts.ag/api/v2/movie/2|Titanic 2: año: 2001, rating: 5>
+<https://yts.ag/movie/titanic-1997|Titanic: año: 1997, rating: 7.8>
+<https://yts.ag/movie/titanic-1953|Titanic: año: 1953, rating: 7.2>
 Todos los resultados en *<https://yts.ag/browse-movies/titanic|yts.arg>*`
   t.deepEqual(hubotMessage2, ['hubot', text])
 })
