@@ -23,5 +23,5 @@ test('Torrent de Titanic', async t => {
 
   // test response messages of hubot
   t.is(hubot[0], 'hubot')
-  t.true(/Titanic/ig.test(hubot[1]))
+  t.true(/torrent de titanic/ig.test(hubot[1]))
 })

@@ -27,9 +27,16 @@ module.exports = function(robot) {
           data.data.movies.forEach(function (e) {
             movies.push('<' + e.url + '|' + e.title + ': año: ' + e.year + ', rating: ' + e.rating + '>');
           });
-          msg.send('Encontradas ' + data.data.movie_count + ' coincidencias:');
-          msg.send(movies.join('\n'));
-          msg.send('Todos los resultados en *<https://yts.ag/browse-movies/'+ busqueda.split(' ').join('+') + '|yts.arg>*');
+
+          var resultados = 'Encontradas ' + data.data.movie_count + ' coincidencias:';
+          var cierre = 'Todos los resultados en *<https://yts.ag/browse-movies/'+ busqueda.split(' ').join('+') + '|yts.arg>*';
+          var texto = resultados + '\n' + movies.join('\n') + '\n' + cierre;
+          if (robot.adapter.constructor.name === 'SlackBot') {
+            var options = {unfurl_links: false, as_user: true};
+            robot.adapter.client.web.chat.postMessage(msg.message.room, texto, options);
+          } else {
+            msg.send(texto);
+          }
         } else {
           msg.send('Nada encontrado con ' + busqueda + ', intenta con otra película.');
         }
