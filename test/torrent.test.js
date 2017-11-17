@@ -23,6 +23,9 @@ test('Torrent de Titanic', async t => {
   t.deepEqual(user, ['user', 'hubot torrent titanic'])
 
   // test response messages of hubot
-t.deepEqual(hubotMessage1, ['hubot', 'Esperando respuesta de YTS YIFY... :loading:'])
-  t.deepEqual(hubotMessage2, ['hubot', 'Encontradas 8 coincidencias'])
+  const text = `Encontradas 2 coincidencias:
+<https://yts.ag/api/v2/movie/1|Titanic 1: año: 2001, rating: 5>
+<https://yts.ag/api/v2/movie/2|Titanic 2: año: 2001, rating: 5>
+Todos los resultados en *<https://yts.ag/browse-movies/titanic|yts.arg>*`
+  t.deepEqual(hubotMessage2, ['hubot', text])
 })
