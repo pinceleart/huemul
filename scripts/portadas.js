@@ -231,11 +231,18 @@ const diarios = {
 }
 
 const formatDate = (date, noSlashes = false) => {
-  if (noSlashes) {
-    return date.format('YYYYMMDD')
-  } else {
-    return date.format('YYYY/MM/DD')
-  }
+  return noSlashes ? date.format('YYYYMMDD') : date.format('YYYY/MM/DD')
+}
+
+const sendPortadaDate = (res, date) => {
+  const portadaDate = moment(date).calendar(null, {
+    today: '[hoy]',
+    lastDay: '[de ayer]',
+    lastWeek: '[del] DD/MM/YYYY',
+    sameElse: '[del] DD/MM/YYYY'
+  })
+  // Solo se muestra la fecha de la portada si no es del dia actual
+  portadaDate.indexOf('hoy a las') === -1 ? res.send(`Esta portada es ${portadaDate}`) : undefined
 }
 
 const getPortada = (res, diario, cb) => {
@@ -264,14 +271,17 @@ const getPortada = (res, diario, cb) => {
               if (testUrl === endpointHxh) {
                 try {
                   testUrl = JSON.parse(body)[0].img
+                  const dateFromHxh = testUrl && testUrl.split('/')[4]
+                  dateFromHxh && sendPortadaDate(res, moment(dateFromHxh, 'DDMMYY').toDate())
                   callback(null, testUrl)
                 } catch (err) {
                   callback(err)
                 }
               } else {
+                sendPortadaDate(res, fecha)
                 callback(null, testUrl)
               }
-
+              break
             default:
               callback(new Error(`Status code is ${response.statusCode} with url ${testUrl}`))
               break
@@ -304,6 +314,8 @@ module.exports = robot => {
         if (err) return robot.emit('error', err, res)
         res.send(result)
       })
+    } else {
+      res.send('No conozco ese diario :retard:')
     }
   })
 }
