@@ -238,7 +238,8 @@ const formatDate = (date, noSlashes = false) => {
   }
 }
 
-const getPortada = (res, diario, daysPast, cb) => {
+const getPortada = (res, diario, cb) => {
+  let daysPast = 0;
   let ready = true
   let testUrl = 'No existe portada de este diario por los últimos 5 días.'
   whilst(
@@ -252,23 +253,28 @@ const getPortada = (res, diario, daysPast, cb) => {
         testUrl = diario.url.replace('#DATE#', formatDate(fecha, diario.noSlashes))
         res.http(testUrl).get()((err, response, body) => {
           if (err) return callback(err)
-          if (response.statusCode === 404) {
-            daysPast++
-            callback(null, testUrl)
-          } else if (response.statusCode === 200) {
-            ready = false
-            if (testUrl === endpointHxh) {
-              try {
-                testUrl = JSON.parse(body)[0].img
-                callback(null, testUrl)
-              } catch (err) {
-                callback(err)
-              }
-            } else {
+          switch (response.statusCode) {
+            case 404:
+              daysPast++
               callback(null, testUrl)
-            }
-          } else {
-            callback(new Error(`Status code is ${response.statusCode} with url ${testUrl}`))
+              break
+
+            case 200:
+              ready = false
+              if (testUrl === endpointHxh) {
+                try {
+                  testUrl = JSON.parse(body)[0].img
+                  callback(null, testUrl)
+                } catch (err) {
+                  callback(err)
+                }
+              } else {
+                callback(null, testUrl)
+              }
+
+            default:
+              callback(new Error(`Status code is ${response.statusCode} with url ${testUrl}`))
+              break
           }
         })
       }
@@ -294,7 +300,7 @@ module.exports = robot => {
     if (['lista', 'help'].includes(nombre)) {
       res.send(listaPortadas())
     } else if (nombre in diarios) {
-      getPortada(res, diarios[nombre], 0, (err, result) => {
+      getPortada(res, diarios[nombre], (err, result) => {
         if (err) return robot.emit('error', err, res)
         res.send(result)
       })
