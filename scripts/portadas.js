@@ -32,7 +32,7 @@ const listaPortadas = () => {
     (el)? mercurio
     (la)? cuarta
   *Uruguay:*
-    (el)? pais (uruguay|uru|uy)
+    (el)? pa(í|i)s (uruguay|uru|uy)
   *Brasil:*
     (o)? globo
     folha
@@ -47,7 +47,7 @@ const listaPortadas = () => {
   *Francia:*
     (le)? monde
   *España:*
-    (el)? pais
+    (el)? pa(í|i)s  (españa|es)
   *United Kingdom:*
     (the)? times
   *Italia:*
