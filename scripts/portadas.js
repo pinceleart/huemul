@@ -47,7 +47,7 @@ const listaPortadas = () => {
   *Francia:*
     (le)? monde
   *España:*
-    (el)? pa(í|i)s
+    (el)? pa(í|i)s  (españa|es)
   *United Kingdom:*
     (the)? times
   *Italia:*
