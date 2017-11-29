@@ -15,7 +15,7 @@ module.exports = function(robot) {
     msg.send('Esperando respuesta de YTS YIFY... :loading:');
 
     var busqueda = msg.match[1];
-    var api = 'https://yts.ag/api/v2/list_movies.json?limit=5&query_term=';
+    var api = 'https://yts.am/api/v2/list_movies.json?limit=5&query_term=';
     var url = api + busqueda.split(' ').join('+');
 
     robot.http(url).get()(function (error, response, body) {
