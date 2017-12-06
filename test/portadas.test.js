@@ -26,6 +26,7 @@ test.cb('Debe entregar la portada de la hoyxhoy', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'hubot portada hoyxhoy'],
+      ['hubot', 'Esta portada es del 21/06/2017'],      
       ['hubot', img]
     ])
     t.end()
