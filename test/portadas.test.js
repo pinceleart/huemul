@@ -32,3 +32,15 @@ test.cb('Debe entregar la portada de la hoyxhoy', t => {
     t.end()
   }, 500)
 })
+
+test.cb('Debe entregar la portada de la hoyxhoy incluso cuando se escribe en mayusculas', t => {
+  t.context.room.user.say('user', 'hubot portada HoyxHoy')
+  setTimeout(() => {
+    t.deepEqual(t.context.room.messages, [
+      ['user', 'hubot portada HoyxHoy'],
+      ['hubot', 'Esta portada es del 21/06/2017'],      
+      ['hubot', img]
+    ])
+    t.end()
+  }, 500)
+})
