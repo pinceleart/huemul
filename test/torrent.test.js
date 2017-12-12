@@ -13,7 +13,7 @@ test.beforeEach(t => {
 test.afterEach(t => t.context.room.destroy())
 
 test('Torrent de Titanic', async t => {
-  nock('https://yts.ag')
+  nock('https://yts.am')
     .get('/api/v2/list_movies.json')
     .query({limit: 5, query_term: 'titanic'})
     .reply(200, {
