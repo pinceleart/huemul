@@ -295,7 +295,7 @@ const getPortada = (res, diario, cb) => {
 
 module.exports = robot => {
   robot.respond(/portada (.*)/i, res => {
-    const nombre = res.match[1]
+    const nombre = res.match[1].toLowerCase()
       .replace(/^(las |la |el |le |the |o |il )/, '')
       .replace(/( de | del | de la )/, '').replace(/( )/g, '')
       .replace(/antofagasta$/, 'antofa')
