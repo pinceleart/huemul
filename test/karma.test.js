@@ -5,6 +5,7 @@ const test = require('ava')
 const Helper = require('hubot-test-helper')
 
 const helper = new Helper('../scripts/karma.js')
+const hubotHost = process.env.HEROKU_URL || process.env.HUBOT_URL || 'http://localhost:8080'
 
 test.beforeEach(t => {
   t.context.room = helper.createRoom({httpd: true})
@@ -182,7 +183,7 @@ test.cb.serial('Debe mostrar url', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'karma todos'],
-      ['hubot', 'Karma de todos: http://localhost:8080/hubot/karma/todos']
+      ['hubot', `Karma de todos: ${hubotHost}/hubot/karma/todos`]
     ])
     t.end()
   }, 500)
@@ -192,7 +193,7 @@ test.cb.serial('Debe mostrar puntaje y url', t => {
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', 'karma leonardo'],
-      ['hubot', 'l.eonardo tiene 0 puntos de karma. Más detalles en: http://localhost:8080/hubot/karma/log/leonardo']
+      ['hubot', `l.eonardo tiene 0 puntos de karma. Más detalles en: ${hubotHost}/hubot/karma/log/leonardo`]
     ])
     t.end()
   }, 500)
