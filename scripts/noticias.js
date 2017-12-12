@@ -22,35 +22,40 @@ module.exports = robot => robot.respond(/noticias (.*)/i, msg => {
     if (err) {
       robot.emit('error', err, msg);
     } else {
-      const {matches} = JSON.parse(body);
+      try {
+        const {matches} = JSON.parse(body);
 
-      // Filtrar noticias encontradas para eliminar repeticiones a partir del título.
-      const matchesUniq = matches.filter((n, index, self) => {
-        const {value: title} = n.fields.find(({field}) => field === 'og-title');
-        return (
-          self.findIndex(
-            ({fields}) =>
-              fields.find(({field}) => field === 'og-title').value === title
-          ) === index
-        );
-      });
+        // Filtrar noticias encontradas para eliminar repeticiones a partir del título.
+        const matchesUniq = matches.filter((n, index, self) => {
+          const {value: title} = n.fields.find(({field}) => field === 'og-title');
+          return (
+            self.findIndex(
+              ({fields}) =>
+                fields.find(({field}) => field === 'og-title').value === title
+            ) === index
+          );
+        });
 
-      // Truncate array
-      (matchesUniq.length > 5) && (matchesUniq.length = 5);
+        // Truncate array
+        (matchesUniq.length > 5) && (matchesUniq.length = 5);
 
-      const head = ':huemul: *News*';
-      const news = matchesUniq.map(({fields}, i) => {
-        const {value: date} = fields.find(({field}) => field === 'publishtime');
-        const {value: title} = fields.find(({field}) => field === 'og-title');
-        const {value: url} = fields.find(({field}) => field === 'og-url');
+        const head = ':huemul: *News*';
+        const news = matchesUniq.map(({fields}, i) => {
+          const {value: date} = fields.find(({field}) => field === 'publishtime');
+          const {value: title} = fields.find(({field}) => field === 'og-title');
+          const {value: url} = fields.find(({field}) => field === 'og-url');
 
-        return `${i + 1}: <${url}|${title}> (${moment(date).fromNow()})`;
-      }).join('\n');
+          return `${i + 1}: <${url}|${title}> (${moment(date).fromNow()})`;
+        }).join('\n');
 
-      if (news) {
-        msg.send(`${head}\n${news}\n<http://www.24horas.cl/search/|Sigue buscando en 24horas.cl>`);
-      } else {
-        msg.send(`${head}\nNo se han encontrado noticias sobre *${q}*.`);
+        if (news) {
+          msg.send(`${head}\n${news}\n<http://www.24horas.cl/search/|Sigue buscando en 24horas.cl>`);
+        } else {
+          msg.send(`${head}\nNo se han encontrado noticias sobre *${q}*.`);
+        }
+      } catch (err) {
+        robot.emit('error', err, msg)
+        return msg.reply('ocurrió un error con la búsqueda');
       }
     }
   });
