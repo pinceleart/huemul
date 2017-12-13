@@ -34,7 +34,7 @@ module.exports = function(robot) {
             if (data) {
               return (() => {
                 const priceCLP = CLP(data[0].price_clp, 'CLP$', true);
-                msg.send(`El precio de *${currency}* en coinmarketcap es ${priceCLP}.`);
+                msg.send(`1 *${currency}* está a ${priceCLP} según Coinmarketcap.`);
               })();
             } else {
               msg.send('ERROR');
