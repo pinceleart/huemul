@@ -56,7 +56,7 @@ module.exports = robot => {
     const url = 'http://api.orionx.io/graphql'
     const query = `{
       marketTradeHistory(marketCode: "${coinId}") {
-        prices
+        price
       }
     }`
 
