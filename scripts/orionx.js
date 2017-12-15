@@ -17,24 +17,10 @@
 // Author:
 //   @gmq
 
-const number = require('numbertoclpformater').numberToCLPFormater
+const { numberToCLPFormater } = require('numbertoclpformater')
 
 module.exports = robot => {
-  robot.respond(/orionx (.*)/i, msg => {
-    const coin = msg.match[1]
-    const coinId = getCoinId(coin)
-    msg.send('Consultando último valor con orionx... :clock5:')
-
-    getOrionxHistory(coinId, msg)
-      .then(lastResult => {
-        msg.send(`1 ${coin} está a ${number(lastResult, 'CLP $')} en orionx`)
-      })
-      .catch(err => {
-        msg.send(`Error al realizar la búsqueda.`)
-      })
-  })
-
-  function getCoinId(coin) {
+  const getCoinId = coin => {
     const coins = {
       bitcoin: 'BTCCLP',
       btc: 'BTCCLP',
@@ -52,28 +38,50 @@ module.exports = robot => {
     return coins[coin]
   }
 
-  function getOrionxHistory(coinId, msg) {
+  const getLastPrice = coinId => {
     const url = 'http://api.orionx.io/graphql'
     const query = `{
-      marketTradeHistory(marketCode: "${coinId}") {
-        price
+      market(code: "${coinId}") {
+        lastTrade {
+          price
+        }
       }
     }`
 
     return new Promise((resolve, reject) => {
-      msg.http(`${url}?query=${query}`).get()((err, res, body) => {
-        if (err) {
-          console.log(err)
-          reject(err)
+      robot.http(url).query({query: query}).get()((err, res, body) => {
+        if (err) return reject(err)
+        if (res.statusCode !== 200) {
+          return reject(new Error(`Bad statusCode: ${res.statusCode}`))
         }
-
-        const json = JSON.parse(body)
-        if (json.data && json.data.marketTradeHistory && json.data.marketTradeHistory[0]) {
-          resolve(json.data.marketTradeHistory[0].price)
-        } else {
-          reject()
+        try {
+          const json = JSON.parse(body)
+          if (json.data && json.data.market && json.data.market.lastTrade) {
+            resolve(json.data.market.lastTrade.price)
+          } else {
+            resolve(null)
+          }
+        } catch (err) {
+          reject(err)
         }
       })
     })
   }
+
+  robot.respond(/orionx (.*)/i, msg => {
+    const coin = msg.match[1]
+    const coinId = getCoinId(coin)
+    if (!coinId) return msg.send('Moneda invalida o no disponible')
+    msg.send('Consultando último valor con orionx... :clock5:')
+
+    getLastPrice(coinId, msg)
+      .then(price => {
+        if (!price) return msg.send(`Precio no encontrado`)
+        msg.send(`1 ${coin} está a ${numberToCLPFormater(price, 'CLP $')} en orionx`)
+      })
+      .catch(err => {
+        robot.emit('error', err, msg)
+        msg.send(`Error al realizar la búsqueda.`)
+      })
+  })
 }
