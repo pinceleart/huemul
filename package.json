@@ -47,6 +47,7 @@
     "hubot-diagnostics": "0.0.2",
     "hubot-diceware": "^2.0.1",
     "hubot-dokku-hook": "0.0.1",
+    "hubot-earthimpact": "^0.0.1",
     "hubot-emoji-creator": "0.1.0",
     "hubot-google-images": "^0.2.7",
     "hubot-help-private": "^1.0.1",

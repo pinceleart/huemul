@@ -43,5 +43,6 @@
   "hubot-travis-ci-hook",
   "hubot-tweets",
   "hubot-wikipedia-lang",
-  "hubot-youtube"
+  "hubot-youtube",
+  "hubot-earthimpact"
 ]
