@@ -81,7 +81,7 @@
     "hubot-wikipedia-lang": "^1.0.2",
     "hubot-youtube": "^1.0.2",
     "jquery": "^3.2.1",
-    "mathjs": "^3.14.2",
+    "mathjs": "^3.18.0",
     "moment": "^2.18.1",
     "moment-business-days": "1.0.6",
     "moment-countdown": "0.0.3",
