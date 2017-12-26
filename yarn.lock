@@ -2276,6 +2276,12 @@ hubot-caniuse@^1.0.3:
     lodash "^3.3.1"
     request "^2.51.0"
 
+hubot-chaucha@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/hubot-chaucha/-/hubot-chaucha-0.0.1.tgz#8053b38cdfc5a1dbddaa04c205fbf5fb73dc3b92"
+  dependencies:
+    numbertoclpformater "^1.0.0"
+
 hubot-chilexpress@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/hubot-chilexpress/-/hubot-chilexpress-0.0.1.tgz#a7633fa9418cdad4ff7eeac5428920d0ce2b7a8b"
