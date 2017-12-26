@@ -44,5 +44,6 @@
   "hubot-tweets",
   "hubot-wikipedia-lang",
   "hubot-youtube",
-  "hubot-earthimpact"
+  "hubot-earthimpact",
+  "hubot-chaucha"
 ]
