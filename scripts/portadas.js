@@ -12,7 +12,7 @@
 //   @rotvulpix
 
 const moment = require('moment')
-const {whilst} = require('async')
+const { whilst } = require('async')
 
 const endpointHxh = 'http://www.hoyxhoy.cl/endpoints/for-soy.php?action=get-latest&size=550'
 
@@ -31,6 +31,7 @@ const listaPortadas = () => {
     lun
     (el)? mercurio
     (la)? cuarta
+    (el)? tip(o|ó)grafo (de rancagua)?
   *Uruguay:*
     (el)? pa(í|i)s (uruguay|uru|uy)
   *Brasil:*
@@ -56,6 +57,10 @@ const listaPortadas = () => {
 }
 
 const diarios = {
+  tipografo: {
+    url: 'http://img.kiosko.net/#DATE#/cl/cl_tipografo.750.jpg',
+    noSlashes: false
+  },
   lun: {
     url: 'http://img.kiosko.net/#DATE#/cl/cl_ultimas_noticias.750.jpg',
     noSlashes: false
@@ -246,7 +251,7 @@ const sendPortadaDate = (res, date) => {
 }
 
 const getPortada = (res, diario, cb) => {
-  let daysPast = 0;
+  let daysPast = 0
   let ready = true
   let testUrl = 'No existe portada de este diario por los últimos 5 días.'
   whilst(
@@ -295,9 +300,11 @@ const getPortada = (res, diario, cb) => {
 
 module.exports = robot => {
   robot.respond(/portada (.*)/i, res => {
-    const nombre = res.match[1].toLowerCase()
+    const nombre = res.match[1]
+      .toLowerCase()
       .replace(/^(las |la |el |le |the |o |il )/, '')
-      .replace(/( de | del | de la )/, '').replace(/( )/g, '')
+      .replace(/( de | del | de la )/, '')
+      .replace(/( )/g, '')
       .replace(/antofagasta$/, 'antofa')
       .replace(/valpara(?:í|i)so$/, 'valpo')
       .replace(/líder/, 'lider')
@@ -306,6 +313,8 @@ module.exports = robot => {
       .replace(/chillán$/, 'chillan')
       .replace(/losríos$/, 'losrios')
       .replace(/chiloé$/, 'chiloe')
+      .replace(/tipógrafo$/, 'tipografo')
+      .replace(/rancagua$/, '')
 
     if (['lista', 'help'].includes(nombre)) {
       res.send(listaPortadas())
