@@ -44,6 +44,10 @@ module.exports = robot => {
       robot.logger.warning('The ORIONX_APIKEY environment variable not set.')
       return false
     }
+    if (!process.env.ORIONX_SECRET_KEY) {
+      robot.logger.warning('The ORIONX_SECRET_KEY environment variable not set.')
+      return false
+    }
     return true
   }
 
@@ -70,7 +74,7 @@ module.exports = robot => {
         .header(
           'X-ORIONX-SIGNATURE',
           crypto
-            .createHmac('sha256', process.env.ORIONX_APIKEY)
+            .createHmac('sha256', process.env.ORIONX_SECRET_KEY)
             .update(`${timestamp}${postData}`)
             .digest('hex')
         )
@@ -96,7 +100,7 @@ module.exports = robot => {
 
   robot.respond(/orionx (.*)/i, msg => {
     if (!checkApiKey()) {
-      return msg.send('Falta definir la variable ORIONX_APIKEY')
+      return msg.send('Falta definir la variable ORIONX_APIKEY o ORIONX_SECRET_KEY')
     }
     const coin = msg.match[1].toLowerCase()
     const coinId = getCoinId(coin)
