@@ -5,14 +5,16 @@
 //   numberToCLPFormater
 //
 // Configuration:
-//   None
+//   ORIONX_APIKEY, ORIONX_SECRET_KEY
 //
 // Commands:
 //   hubot orionx bitcoin | btc
 //   hubot orionx ethereum | eth
+//   hubot orionx litecoin | ltc
 //   hubot orionx bitcoin-cash | bch
 //   hubot orionx dash
 //   hubot orionx chaucha | cha
+//   hubot orionx ripple | xrp
 //
 // Author:
 //   @gmq
@@ -33,7 +35,9 @@ module.exports = robot => {
       'bitcoin-cash': 'BCHCLP',
       bch: 'BCHCLP',
       cha: 'CHACLP',
-      chaucha: 'CHACLP'
+      chaucha: 'CHACLP',
+      ripple: 'XRPCLP',
+      xrp: 'XRPCLP'
     }
 
     return coins[coin]
