@@ -13,6 +13,7 @@ test.beforeEach(t => {
 test.afterEach(t => t.context.room.destroy())
 
 test('orionx valid', async t => {
+  process.env.ORIONX_ENDPOINT = 'http://api.orionx.io/graphql'
   process.env.ORIONX_APIKEY = '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb'
   process.env.ORIONX_SECRET_KEY = 'B7EWrck6QaJ8mPa5jYCqKNaagKiHDtq9LT'
   nock('http://api.orionx.io', {
@@ -20,7 +21,7 @@ test('orionx valid', async t => {
       'Content-Type': 'application/json',
       'X-ORIONX-TIMESTAMP': timestamp => /^\d{10}\.\d+$/.test(timestamp),
       'X-ORIONX-APIKEY': '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb',
-      'X-ORIONX-SIGNATURE': signature => /^\w{64}$/.test(signature)
+      'X-ORIONX-SIGNATURE': signature => /^\w{128}$/.test(signature)
     }
   })
     .post('/graphql', {
@@ -51,6 +52,7 @@ test('orionx valid', async t => {
 })
 
 test('orionx not price', async t => {
+  process.env.ORIONX_ENDPOINT = 'http://api.orionx.io/graphql'
   process.env.ORIONX_APIKEY = '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb'
   process.env.ORIONX_SECRET_KEY = 'B7EWrck6QaJ8mPa5jYCqKNaagKiHDtq9LT'
   nock('http://api.orionx.io', {
@@ -58,7 +60,7 @@ test('orionx not price', async t => {
       'Content-Type': 'application/json',
       'X-ORIONX-TIMESTAMP': timestamp => /^\d{10}\.\d+$/.test(timestamp),
       'X-ORIONX-APIKEY': '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb',
-      'X-ORIONX-SIGNATURE': signature => /^\w{64}$/.test(signature)
+      'X-ORIONX-SIGNATURE': signature => /^\w{128}$/.test(signature)
     }
   })
     .post('/graphql', {
@@ -81,6 +83,7 @@ test('orionx not price', async t => {
 })
 
 test('orionx json error', async t => {
+  process.env.ORIONX_ENDPOINT = 'http://api.orionx.io/graphql'
   process.env.ORIONX_APIKEY = '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb'
   process.env.ORIONX_SECRET_KEY = 'B7EWrck6QaJ8mPa5jYCqKNaagKiHDtq9LT'
   nock('http://api.orionx.io', {
@@ -88,7 +91,7 @@ test('orionx json error', async t => {
       'Content-Type': 'application/json',
       'X-ORIONX-TIMESTAMP': timestamp => /^\d{10}\.\d+$/.test(timestamp),
       'X-ORIONX-APIKEY': '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb',
-      'X-ORIONX-SIGNATURE': signature => /^\w{64}$/.test(signature)
+      'X-ORIONX-SIGNATURE': signature => /^\w{128}$/.test(signature)
     }
   })
     .post('/graphql', {
@@ -111,6 +114,7 @@ test('orionx json error', async t => {
 })
 
 test('orionx server error', async t => {
+  process.env.ORIONX_ENDPOINT = 'http://api.orionx.io/graphql'
   process.env.ORIONX_APIKEY = '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb'
   process.env.ORIONX_SECRET_KEY = 'B7EWrck6QaJ8mPa5jYCqKNaagKiHDtq9LT'
   nock('http://api.orionx.io', {
@@ -118,7 +122,7 @@ test('orionx server error', async t => {
       'Content-Type': 'application/json',
       'X-ORIONX-TIMESTAMP': timestamp => /^\d{10}\.\d+$/.test(timestamp),
       'X-ORIONX-APIKEY': '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb',
-      'X-ORIONX-SIGNATURE': signature => /^\w{64}$/.test(signature)
+      'X-ORIONX-SIGNATURE': signature => /^\w{128}$/.test(signature)
     }
   })
     .post('/graphql', {
@@ -141,6 +145,7 @@ test('orionx server error', async t => {
 })
 
 test('orionx invalid coin', async t => {
+  process.env.ORIONX_ENDPOINT = 'http://api.orionx.io/graphql'
   process.env.ORIONX_APIKEY = '5WGDN4rD3Eqpz9tnMQuqyRCfqZUP4ccJsb'
   process.env.ORIONX_SECRET_KEY = 'B7EWrck6QaJ8mPa5jYCqKNaagKiHDtq9LT'
   t.context.room.user.say('user', 'hubot orionx huemul')

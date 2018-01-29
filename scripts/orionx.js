@@ -5,7 +5,7 @@
 //   numberToCLPFormater
 //
 // Configuration:
-//   ORIONX_APIKEY, ORIONX_SECRET_KEY
+//   ORIONX_APIKEY, ORIONX_SECRET_KEY, ORIONX_ENDPOINT
 //
 // Commands:
 //   hubot orionx bitcoin | btc
@@ -58,7 +58,7 @@ module.exports = robot => {
   checkApiKey()
 
   const getLastPrice = coinId => {
-    const url = 'http://api.orionx.io/graphql'
+    const url = process.env.ORIONX_ENDPOINT || 'http://api.orionx.io/graphql'
     const query = `{
       market(code: "${coinId}") {
         lastTrade {
@@ -78,7 +78,7 @@ module.exports = robot => {
         .header(
           'X-ORIONX-SIGNATURE',
           crypto
-            .createHmac('sha256', process.env.ORIONX_SECRET_KEY)
+            .createHmac('sha512', process.env.ORIONX_SECRET_KEY)
             .update(`${timestamp}${postData}`)
             .digest('hex')
         )
