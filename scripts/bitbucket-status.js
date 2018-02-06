@@ -13,6 +13,8 @@
 // Author:
 //   @raerpo
 
+const moment = require('moment')
+
 module.exports = robot => {
   robot.respond(/bitbucket status$/i, msg => {
     robot.http('https://bqlf8qjztdtr.statuspage.io/api/v2/status.json').get()((err, res, body) => {
@@ -21,7 +23,7 @@ module.exports = robot => {
       }
       const { page: { updated_at }, status: { description } } = JSON.parse(body)
       const updatedDate = new Date(updated_at)
-      msg.send(`:bitbucket: ${description} _(${updated_at.toLocaleString()})_`)
+      msg.send(`:bitbucket: ${description} (Actualizado: ${moment(updatedDate).fromNow()})`)
     })
   })
 }
