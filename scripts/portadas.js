@@ -236,6 +236,24 @@ const diarios = {
   }
 }
 
+const revistas = [
+  'caras',
+  "harper's bazaar",
+  'vanidades',
+  'cosmopolitan',
+  'womens health',
+  'tu it girl',
+  'national geographic',
+  'condorito',
+  'condorito de oro',
+  'coné',
+  'muy interesante',
+  'muy interesante jr',
+  'club nintendo',
+  'ser padres',
+  "men's health"
+]
+
 const formatDate = (date, noSlashes = false) => {
   return noSlashes ? date.format('YYYYMMDD') : date.format('YYYY/MM/DD')
 }
@@ -322,55 +340,66 @@ const getFullCoverMagazineImage = (imageURL = '') => {
 const getMagazineCover = (res, magazineName) => {
   const FAIL_ERROR_MESSAGE = "Magazines script it's failing"
   const magazines = []
-  res.http('https://www.televisa.cl/revistas').get()((err, response, body) => {
-    if (err) throw FAIL_ERROR_MESSAGE
-    const $ = cheerio.load(body)
-    $('.tienda_producto').each((index, element) => {
-      const magazine = {}
-      // I know it's an awful selector but currently it's the only way to get the magazine name
-      const name = $(element).find('span.size14.width100.mt10')
-      const image = $(element).find('img')
-      if (!name || !image) return
-      magazine.name = name.text().toLowerCase()
-      magazine.image = getFullCoverMagazineImage(image.attr('src'))
-      magazines.push(magazine)
+  return new Promise((resolve, reject) => {
+    res.http('https://www.televisa.cl/revistas').get()((err, response, body) => {
+      if (err) throw FAIL_ERROR_MESSAGE
+      const $ = cheerio.load(body)
+      $('.tienda_producto').each((index, element) => {
+        const magazine = {}
+        // I know it's an awful selector but currently it's the only way to get the magazine name
+        const name = $(element).find('span.size14.width100.mt10')
+        const image = $(element).find('img')
+        if (!name || !image) return
+        magazine.name = name.text().toLowerCase()
+        magazine.image = getFullCoverMagazineImage(image.attr('src'))
+        magazines.push(magazine)
+      })
+      const magazineImage = magazines.find(magazine => magazine.name === magazineName)
+      resolve(magazineImage)
     })
-    console.log(magazines)
   })
 }
 
 module.exports = robot => {
   robot.respond(/portada (.*)/i, res => {
     getMagazineCover(res)
-    // const nombre = res.match[1]
-    //   .toLowerCase()
-    //   .replace(/^(las |la |el |le |the |o |il )/, '')
-    //   .replace(/( de | del | de la )/, '')
-    //   .replace(/( )/g, '')
-    //   .replace(/antofagasta$/, 'antofa')
-    //   .replace(/valpara(?:í|i)so$/, 'valpo')
-    //   .replace(/líder/, 'lider')
-    //   .replace(/concepci(?:ó|o)n$/, 'conce')
-    //   .replace(/crónica/, 'cronica')
-    //   .replace(/chillán$/, 'chillan')
-    //   .replace(/losríos$/, 'losrios')
-    //   .replace(/chiloé$/, 'chiloe')
-    //   .replace(/tipógrafo$/, 'tipografo')
-    //   .replace(/rancagua$/, '')
+    const nombre = res.match[1]
+      .toLowerCase()
+      .replace(/^(las |la |el |le |the |o |il )/, '')
+      .replace(/( de | del | de la )/, '')
+      .replace(/( )/g, '')
+      .replace(/antofagasta$/, 'antofa')
+      .replace(/valpara(?:í|i)so$/, 'valpo')
+      .replace(/líder/, 'lider')
+      .replace(/concepci(?:ó|o)n$/, 'conce')
+      .replace(/crónica/, 'cronica')
+      .replace(/chillán$/, 'chillan')
+      .replace(/losríos$/, 'losrios')
+      .replace(/chiloé$/, 'chiloe')
+      .replace(/tipógrafo$/, 'tipografo')
+      .replace(/rancagua$/, '')
 
-    // if (['lista', 'help'].includes(nombre)) {
-    //   res.send(listaPortadas())
-    // } else if (nombre in diarios) {
-    //   getPortada(res, diarios[nombre])
-    //     .then(result => {
-    //       if (!result) return res.send('No hay portada disponible')
-    //       res.send(result)
-    //     })
-    //     .catch(err => {
-    //       robot.emit('error', err, res)
-    //     })
-    // } else {
-    //   res.send('No conozco ese diario :retard:')
-    // }
+    if (['lista', 'help'].includes(nombre)) {
+      res.send(listaPortadas())
+    } else if (nombre in diarios) {
+      getPortada(res, diarios[nombre])
+        .then(result => {
+          if (!result) return res.send('No hay portada disponible')
+          res.send(result)
+        })
+        .catch(err => {
+          robot.emit('error', err, res)
+        })
+    } else if (revistas.includes(nombre)) {
+      getMagazineCover(res, nombre)
+        .then(result => {
+          res.send(result.image)
+        })
+        .catch(err => {
+          robot.emit('error', err, res)
+        })
+    } else {
+      res.send('No conozco ese diario o revista :retard:')
+    }
   })
 }
