@@ -30,6 +30,18 @@ const listaPortadas = () => {
     cr(ó|o)nica chill(á|a)n
     (hoyxhoy|hxh)
     lun
+    (club)? nintendo
+    (harper's)? bazaar
+    vanidades
+    cosmo(politan)?
+    condorito
+    condorito de oro
+    national geographic
+    muy interesante
+    muy interesante jr
+    tu
+    ser padres
+    con(e|é)
     (el)? mercurio
     (la)? cuarta
     (el)? tip(o|ó)grafo (de rancagua)?
