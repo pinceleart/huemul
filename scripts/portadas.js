@@ -13,6 +13,7 @@
 
 const moment = require('moment')
 const whilst = require('whilst')
+const cheerio = require('cheerio')
 
 const endpointHxh = 'http://www.hoyxhoy.cl/endpoints/for-soy.php?action=get-latest&size=550'
 
@@ -298,37 +299,78 @@ const getPortada = (res, diario) => {
   )
 }
 
+/**
+ * @description televisa.cl load their images to a proxy endpoint in order to
+ * resize images. The image path is like this: resize.php?src=../../img_miniatura/20180126130752000000.png&h=360&w=262&q=99
+ * This function convert that path into a absolute URL image like this: http://televisa.cl/img_miniatura/20180126130752000000.png
+ * @param  {string} imageURL
+ */
+const getFullCoverMagazineImage = (imageURL = '') => {
+  const splitStrings = ['resize.php?src=../../img_miniatura/', '.']
+  if (imageURL.indexOf(splitStrings[0]) === -1 || imageURL.indexOf(splitStrings[1]) === -1) {
+    throw 'Unexpected magazine imageURL'
+  }
+  // TODO: Improve this by using regex
+  const imageId = imageURL.split(splitStrings[0])[1].split(splitStrings[1])[0]
+  return `http://televisa.cl/img_miniatura/${imageId}.png`
+}
+
+/**
+ * @param  {any} res: Hubot res object
+ * @param  {string} magazineName: Name of the magazine
+ */
+const getMagazineCover = (res, magazineName) => {
+  const FAIL_ERROR_MESSAGE = "Magazines script it's failing"
+  const magazines = []
+  res.http('https://www.televisa.cl/revistas').get()((err, response, body) => {
+    if (err) throw FAIL_ERROR_MESSAGE
+    const $ = cheerio.load(body)
+    $('.tienda_producto').each((index, element) => {
+      const magazine = {}
+      // I know it's an awful selector but currently it's the only way to get the magazine name
+      const name = $(element).find('span.size14.width100.mt10')
+      const image = $(element).find('img')
+      if (!name || !image) return
+      magazine.name = name.text().toLowerCase()
+      magazine.image = getFullCoverMagazineImage(image.attr('src'))
+      magazines.push(magazine)
+    })
+    console.log(magazines)
+  })
+}
+
 module.exports = robot => {
   robot.respond(/portada (.*)/i, res => {
-    const nombre = res.match[1]
-      .toLowerCase()
-      .replace(/^(las |la |el |le |the |o |il )/, '')
-      .replace(/( de | del | de la )/, '')
-      .replace(/( )/g, '')
-      .replace(/antofagasta$/, 'antofa')
-      .replace(/valpara(?:í|i)so$/, 'valpo')
-      .replace(/líder/, 'lider')
-      .replace(/concepci(?:ó|o)n$/, 'conce')
-      .replace(/crónica/, 'cronica')
-      .replace(/chillán$/, 'chillan')
-      .replace(/losríos$/, 'losrios')
-      .replace(/chiloé$/, 'chiloe')
-      .replace(/tipógrafo$/, 'tipografo')
-      .replace(/rancagua$/, '')
+    getMagazineCover(res)
+    // const nombre = res.match[1]
+    //   .toLowerCase()
+    //   .replace(/^(las |la |el |le |the |o |il )/, '')
+    //   .replace(/( de | del | de la )/, '')
+    //   .replace(/( )/g, '')
+    //   .replace(/antofagasta$/, 'antofa')
+    //   .replace(/valpara(?:í|i)so$/, 'valpo')
+    //   .replace(/líder/, 'lider')
+    //   .replace(/concepci(?:ó|o)n$/, 'conce')
+    //   .replace(/crónica/, 'cronica')
+    //   .replace(/chillán$/, 'chillan')
+    //   .replace(/losríos$/, 'losrios')
+    //   .replace(/chiloé$/, 'chiloe')
+    //   .replace(/tipógrafo$/, 'tipografo')
+    //   .replace(/rancagua$/, '')
 
-    if (['lista', 'help'].includes(nombre)) {
-      res.send(listaPortadas())
-    } else if (nombre in diarios) {
-      getPortada(res, diarios[nombre])
-        .then(result => {
-          if (!result) return res.send('No hay portada disponible')
-          res.send(result)
-        })
-        .catch(err => {
-          robot.emit('error', err, res)
-        })
-    } else {
-      res.send('No conozco ese diario :retard:')
-    }
+    // if (['lista', 'help'].includes(nombre)) {
+    //   res.send(listaPortadas())
+    // } else if (nombre in diarios) {
+    //   getPortada(res, diarios[nombre])
+    //     .then(result => {
+    //       if (!result) return res.send('No hay portada disponible')
+    //       res.send(result)
+    //     })
+    //     .catch(err => {
+    //       robot.emit('error', err, res)
+    //     })
+    // } else {
+    //   res.send('No conozco ese diario :retard:')
+    // }
   })
 }
