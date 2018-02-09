@@ -21,9 +21,14 @@ module.exports = robot => {
       if (err || res.statusCode !== 200) {
         return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
       }
-      const { page: { updated_at }, status: { description } } = JSON.parse(body)
-      const updatedDate = new Date(updated_at)
-      msg.send(`:bitbucket: ${description} (Actualizado: ${moment(updatedDate).fromNow()})`)
+      try {
+        const { page: { updated_at }, status: { description } } = JSON.parse(body)
+        const updatedDate = new Date(updated_at)
+        msg.send(`:bitbucket: ${description} (Actualizado: ${moment(updatedDate).fromNow()})`)
+      } catch (error) {
+        const errorMessage = 'Bitbucket status api failed to be parse'
+        return robot.emit('error', new Error(errorMessage), errorMessage)
+      }
     })
   })
 }
