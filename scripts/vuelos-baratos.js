@@ -1,24 +1,19 @@
 const puppeteer = require('puppeteer')
 
 // Description:
-//   Show current GitHub status and messages
+//   Show the cheapest flight to a city from Santiago, Chile using despegar.com
 //
 // Dependencies:
-//   None
+//   Pupepeteer
 //
 // Configuration:
 //   None
 //
 // Commands:
-//   hubot github status - Returns the last human communication, status, and timestamp.
-//   hubot github status resume - Returns the current system status and timestamp.
-//   hubot github status all - Returns the most recent human communications with status and timestamp.
+//   hubot vuelo barato a valdivia - Returns the cheapest price to Valdivia from Santiago
 //
 // Author:
-//   voke
-//
-// Modified by:
-//   @jorgeepunan
+//   @raerpo_
 
 // I want to keep the city list small. If you want to include more cities you can do it here:
 const cityCodes = {
