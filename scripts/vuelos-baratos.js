@@ -53,14 +53,23 @@ const cityCodes = {
 }
 
 module.exports = robot => {
-  robot.respond(/vuelo barato$/i, msg => {
+  robot.respond(/vuelo barato a (.*)/i, msg => {
+    const city = msg.match[1].toLowerCase()
+    const cityExist = typeof cityCodes[city] !== 'undefined'
+    if (!cityExist) return msg.send('No conozco esa ciudad :retard:')
+    const cityCode = cityCodes[city]
+    msg.send(`Buscando el vuelo más barato :airplane_departure: :loading:`)
     ;(async () => {
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
       page.setViewport({ width: 1280, height: 1000 })
-      await page.goto('https://www.despegar.cl/vuelos/scl/nyc/', { waitUntil: 'networkidle2' })
+      await page.goto(`https://www.despegar.cl/vuelos/scl/${cityCode}/`, { waitUntil: 'networkidle2' })
       const price = await page.evaluate(() => document.querySelector('#alerts .price-amount').textContent)
-      msg.send(price)
+      if (!price) {
+        msg.send(`No encontré ningún vuelo para ${city} :sadhuemul:`)
+      }
+      msg.send(`Encontré vuelos desde: CLP ${price}`)
+      msg.send(`Se puede comprar aquí: https://www.despegar.cl/vuelos/scl/${cityCode}/`)
       await browser.close()
     })()
   })
