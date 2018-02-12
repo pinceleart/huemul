@@ -5,19 +5,22 @@
 //   numberToCLPFormater
 //
 // Configuration:
-//   None
+//   ORIONX_APIKEY, ORIONX_SECRET_KEY, ORIONX_ENDPOINT
 //
 // Commands:
 //   hubot orionx bitcoin | btc
 //   hubot orionx ethereum | eth
+//   hubot orionx litecoin | ltc
 //   hubot orionx bitcoin-cash | bch
 //   hubot orionx dash
 //   hubot orionx chaucha | cha
+//   hubot orionx ripple | xrp
 //
 // Author:
 //   @gmq
 
 const { numberToCLPFormater } = require('numbertoclpformater')
+const crypto = require('crypto')
 
 module.exports = robot => {
   const getCoinId = coin => {
@@ -32,14 +35,30 @@ module.exports = robot => {
       'bitcoin-cash': 'BCHCLP',
       bch: 'BCHCLP',
       cha: 'CHACLP',
-      chaucha: 'CHACLP'
+      chaucha: 'CHACLP',
+      ripple: 'XRPCLP',
+      xrp: 'XRPCLP'
     }
 
     return coins[coin]
   }
 
+  const checkApiKey = () => {
+    if (!process.env.ORIONX_APIKEY) {
+      robot.logger.warning('The ORIONX_APIKEY environment variable not set.')
+      return false
+    }
+    if (!process.env.ORIONX_SECRET_KEY) {
+      robot.logger.warning('The ORIONX_SECRET_KEY environment variable not set.')
+      return false
+    }
+    return true
+  }
+
+  checkApiKey()
+
   const getLastPrice = coinId => {
-    const url = 'http://api.orionx.io/graphql'
+    const url = process.env.ORIONX_ENDPOINT || 'http://api.orionx.io/graphql'
     const query = `{
       market(code: "${coinId}") {
         lastTrade {
@@ -49,10 +68,22 @@ module.exports = robot => {
     }`
 
     return new Promise((resolve, reject) => {
+      const timestamp = new Date().getTime() / 1000
+      const postData = JSON.stringify({ query })
       robot
         .http(url)
         .header('Content-Type', 'application/json')
-        .post(JSON.stringify({ query }))((err, res, body) => {
+        .header('X-ORIONX-TIMESTAMP', timestamp)
+        .header('X-ORIONX-APIKEY', process.env.ORIONX_APIKEY)
+        .header(
+          'X-ORIONX-SIGNATURE',
+          crypto
+            .createHmac('sha512', process.env.ORIONX_SECRET_KEY)
+            .update(`${timestamp}${postData}`)
+            .digest('hex')
+        )
+        .header('Content-Length', postData.length)
+        .post(postData)((err, res, body) => {
         if (err) return reject(err)
         if (res.statusCode !== 200) {
           return reject(new Error(`Bad statusCode: ${res.statusCode}`))
@@ -72,6 +103,9 @@ module.exports = robot => {
   }
 
   robot.respond(/orionx (.*)/i, msg => {
+    if (!checkApiKey()) {
+      return msg.send('Falta definir la variable ORIONX_APIKEY o ORIONX_SECRET_KEY')
+    }
     const coin = msg.match[1].toLowerCase()
     const coinId = getCoinId(coin)
     if (!coinId) return msg.send('Moneda inválida o no disponible')
