@@ -2,7 +2,7 @@
 //   Muestra las portadas de hoy de diversos diarios de Chile.
 //
 // Dependencies:
-//   moment
+//   moment, whilst
 //
 // Configuration:
 //   hubot portada <diario>
@@ -12,7 +12,8 @@
 //   @rotvulpix
 
 const moment = require('moment')
-const { whilst } = require('async')
+const whilst = require('whilst')
+const cheerio = require('cheerio')
 
 const endpointHxh = 'http://www.hoyxhoy.cl/endpoints/for-soy.php?action=get-latest&size=550'
 
@@ -29,6 +30,18 @@ const listaPortadas = () => {
     cr(ó|o)nica chill(á|a)n
     (hoyxhoy|hxh)
     lun
+    (club)? nintendo
+    (harper's)? bazaar
+    vanidades
+    cosmo(politan)?
+    condorito
+    condorito de oro
+    national geographic
+    muy interesante
+    muy interesante jr
+    tu
+    ser padres
+    con(e|é)
     (el)? mercurio
     (la)? cuarta
     (el)? tip(o|ó)grafo (de rancagua)?
@@ -235,6 +248,72 @@ const diarios = {
   }
 }
 
+const MAGAZINES_EXPECTED_NAMES = {
+  nintendo: 'club nintendo',
+  harper: "harper's bazaar",
+  vanidades: 'vanidades',
+  cosmo: 'cosmopolitan',
+  womensHealth: 'womens health',
+  tu: 'tu it girl',
+  national: 'national geographic',
+  condorito: 'condorito',
+  condoritoOro: 'condorito de oro',
+  cone: 'coné',
+  muy: 'muy interesante',
+  muyJr: 'muy interesante jr',
+  serPadres: 'ser padres',
+  men: "men's health"
+}
+
+// In here we should put the possible magazine spellings with its
+// correct name
+const MAGAZINES_DICTIONARY = [
+  { ['club nintendo']: MAGAZINES_EXPECTED_NAMES.nintendo },
+  { ['clubnintendo']: MAGAZINES_EXPECTED_NAMES.nintendo },
+  { ['nintendo']: MAGAZINES_EXPECTED_NAMES.nintendo },
+  { ["harper's bazaar"]: MAGAZINES_EXPECTED_NAMES.harper },
+  { ["harper'sbazaar"]: MAGAZINES_EXPECTED_NAMES.harper },
+  { ['harpers bazaar']: MAGAZINES_EXPECTED_NAMES.harper },
+  { ['harpersbazaar']: MAGAZINES_EXPECTED_NAMES.harper },
+  { ['harper']: MAGAZINES_EXPECTED_NAMES.harper },
+  { ['harpers']: MAGAZINES_EXPECTED_NAMES.harper },
+  { ['bazaar']: MAGAZINES_EXPECTED_NAMES.harper },
+  { ['vanidades']: MAGAZINES_EXPECTED_NAMES.vanidades },
+  { ['vanidad']: MAGAZINES_EXPECTED_NAMES.vanidades },
+  { ['cosmopolitan']: MAGAZINES_EXPECTED_NAMES.cosmo },
+  { ['cosmo']: MAGAZINES_EXPECTED_NAMES.cosmo },
+  { ['womenshealth']: MAGAZINES_EXPECTED_NAMES.womensHealth },
+  { ['womens health']: MAGAZINES_EXPECTED_NAMES.womensHealth },
+  { ['womens']: MAGAZINES_EXPECTED_NAMES.womensHealth },
+  { ['women']: MAGAZINES_EXPECTED_NAMES.womensHealth },
+  { ['tu']: MAGAZINES_EXPECTED_NAMES.tu },
+  { ['tú']: MAGAZINES_EXPECTED_NAMES.tu },
+  { ['nationalgeographic']: MAGAZINES_EXPECTED_NAMES.national },
+  { ['national geographic']: MAGAZINES_EXPECTED_NAMES.national },
+  { ['national']: MAGAZINES_EXPECTED_NAMES.national },
+  { ['geographic']: MAGAZINES_EXPECTED_NAMES.national },
+  { ['natgeo']: MAGAZINES_EXPECTED_NAMES.national },
+  { ['geo']: MAGAZINES_EXPECTED_NAMES.national },
+  { ['condorito']: MAGAZINES_EXPECTED_NAMES.condorito },
+  { ['condoritooro']: MAGAZINES_EXPECTED_NAMES.condoritoOro },
+  { ['condoritodeoro']: MAGAZINES_EXPECTED_NAMES.condoritoOro },
+  { ['oro']: MAGAZINES_EXPECTED_NAMES.condoritoOro },
+  { ['cone']: MAGAZINES_EXPECTED_NAMES.cone },
+  { ['coné']: MAGAZINES_EXPECTED_NAMES.cone },
+  { ['muy interesante']: MAGAZINES_EXPECTED_NAMES.muy },
+  { ['muyinteresante']: MAGAZINES_EXPECTED_NAMES.muy },
+  { ['interesante']: MAGAZINES_EXPECTED_NAMES.muy },
+  { ['muy interesante jr']: MAGAZINES_EXPECTED_NAMES.muyJr },
+  { ['muyinteresantejr']: MAGAZINES_EXPECTED_NAMES.muyJr },
+  { ['ser padres']: MAGAZINES_EXPECTED_NAMES.serPadres },
+  { ['serpadres']: MAGAZINES_EXPECTED_NAMES.serPadres },
+  { ["men's health"]: MAGAZINES_EXPECTED_NAMES.men },
+  { ["men'shealth"]: MAGAZINES_EXPECTED_NAMES.men },
+  { ['mens health']: MAGAZINES_EXPECTED_NAMES.men },
+  { ['menshealth']: MAGAZINES_EXPECTED_NAMES.men },
+  { ['men']: MAGAZINES_EXPECTED_NAMES.men }
+]
+
 const formatDate = (date, noSlashes = false) => {
   return noSlashes ? date.format('YYYYMMDD') : date.format('YYYY/MM/DD')
 }
@@ -250,56 +329,110 @@ const sendPortadaDate = (res, date) => {
   portadaDate.indexOf('hoy a las') === -1 ? res.send(`Esta portada es ${portadaDate}`) : undefined
 }
 
-const getPortada = (res, diario, cb) => {
+const getPortada = (res, diario) => {
   let daysPast = 0
   let ready = true
   let testUrl = 'No existe portada de este diario por los últimos 5 días.'
-  whilst(
+  return whilst(
     () => ready,
-    callback => {
+    () => {
       if (daysPast > 5) {
         ready = false
-        callback(null)
+        Promise.resolve()
       } else {
         const fecha = moment().subtract(daysPast, 'days')
         testUrl = diario.url.replace('#DATE#', formatDate(fecha, diario.noSlashes))
-        res.http(testUrl).get()((err, response, body) => {
-          if (err) return callback(err)
-          switch (response.statusCode) {
-            case 404:
-              daysPast++
-              callback(null, testUrl)
-              break
-
-            case 200:
-              ready = false
-              if (testUrl === endpointHxh) {
-                try {
-                  testUrl = JSON.parse(body)[0].img
-                  const dateFromHxh = testUrl && testUrl.split('/')[4]
-                  dateFromHxh && sendPortadaDate(res, moment(dateFromHxh, 'DDMMYY').toDate())
-                  callback(null, testUrl)
-                } catch (err) {
-                  callback(err)
+        return new Promise((resolve, reject) => {
+          res.http(testUrl).get()((err, response, body) => {
+            if (err) return reject(err)
+            switch (response.statusCode) {
+              case 404:
+                daysPast++
+                resolve(testUrl)
+                break
+              case 200:
+                ready = false
+                if (testUrl === endpointHxh) {
+                  try {
+                    testUrl = JSON.parse(body)[0].img
+                    const dateFromHxh = testUrl && testUrl.split('/')[4]
+                    dateFromHxh && sendPortadaDate(res, moment(dateFromHxh, 'DDMMYY').toDate())
+                    resolve(testUrl)
+                  } catch (err) {
+                    reject(err)
+                  }
+                } else {
+                  sendPortadaDate(res, fecha)
+                  resolve(testUrl)
                 }
-              } else {
-                sendPortadaDate(res, fecha)
-                callback(null, testUrl)
-              }
-              break
-            default:
-              callback(new Error(`Status code is ${response.statusCode} with url ${testUrl}`))
-              break
-          }
+                break
+              default:
+                resolve()
+                break
+            }
+          })
         })
       }
-    },
-    err => cb(err, testUrl)
+    }
   )
+}
+
+/** Tries to find the correct magazine name based on magazines array
+ * @description
+ * @param  {string} magazineName
+ */
+const normalizeMagazineName = (magazineName, magazineList) => {
+  const magazineObject = magazineList.find(magazine => Object.keys(magazine)[0] === magazineName)
+  if (!magazineObject) return null
+  return magazineObject[magazineName]
+}
+
+/**
+ * @description televisa.cl load their images to a proxy endpoint in order to
+ * resize images. The image path is like this: resize.php?src=../../img_miniatura/20180126130752000000.png&h=360&w=262&q=99
+ * This function convert that path into a absolute URL image like this: http://televisa.cl/img_miniatura/20180126130752000000.png
+ * @param  {string} imageURL
+ */
+const getFullCoverMagazineImage = (imageURL = '') => {
+  const splitStrings = ['resize.php?src=../../img_miniatura/', '.']
+  if (imageURL.indexOf(splitStrings[0]) === -1 || imageURL.indexOf(splitStrings[1]) === -1) {
+    throw 'Unexpected magazine imageURL'
+  }
+  // TODO: Improve this by using regex
+  const imageId = imageURL.split(splitStrings[0])[1].split(splitStrings[1])[0]
+  return `http://televisa.cl/img_miniatura/${imageId}.png`
+}
+
+/**
+ * @param  {any} res: Hubot res object
+ * @param  {string} magazineName: Name of the magazine
+ */
+const getMagazineCover = (res, magazineName) => {
+  const FAIL_ERROR_MESSAGE = "Magazines script it's failing"
+  const magazines = []
+  return new Promise((resolve, reject) => {
+    res.http('https://www.televisa.cl/revistas').get()((err, response, body) => {
+      if (err) throw FAIL_ERROR_MESSAGE
+      const $ = cheerio.load(body)
+      $('.tienda_producto').each((index, element) => {
+        const magazine = {}
+        // I know it's an awful selector but currently it's the only way to get the magazine name
+        const name = $(element).find('span.size14.width100.mt10')
+        const image = $(element).find('img')
+        if (!name || !image) return
+        magazine.name = name.text().toLowerCase()
+        magazine.image = getFullCoverMagazineImage(image.attr('src'))
+        magazines.push(magazine)
+      })
+      const magazineImage = magazines.find(magazine => magazine.name === magazineName)
+      resolve(magazineImage)
+    })
+  })
 }
 
 module.exports = robot => {
   robot.respond(/portada (.*)/i, res => {
+    getMagazineCover(res)
     const nombre = res.match[1]
       .toLowerCase()
       .replace(/^(las |la |el |le |the |o |il )/, '')
@@ -319,12 +452,24 @@ module.exports = robot => {
     if (['lista', 'help'].includes(nombre)) {
       res.send(listaPortadas())
     } else if (nombre in diarios) {
-      getPortada(res, diarios[nombre], (err, result) => {
-        if (err) return robot.emit('error', err, res)
-        res.send(result)
-      })
+      getPortada(res, diarios[nombre])
+        .then(result => {
+          if (!result) return res.send('No hay portada disponible')
+          res.send(result)
+        })
+        .catch(err => {
+          robot.emit('error', err, res)
+        })
+    } else if (normalizeMagazineName(nombre, MAGAZINES_DICTIONARY)) {
+      getMagazineCover(res, normalizeMagazineName(nombre, MAGAZINES_DICTIONARY))
+        .then(result => {
+          res.send(result.image)
+        })
+        .catch(err => {
+          robot.emit('error', err, res)
+        })
     } else {
-      res.send('No conozco ese diario :retard:')
+      res.send('No conozco ese diario o revista :retard:')
     }
   })
 }
