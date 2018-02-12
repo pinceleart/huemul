@@ -53,7 +53,7 @@ module.exports = robot => {
     const cityExist = typeof cityCodes[city] !== 'undefined'
     if (!cityExist) return msg.send('No conozco esa ciudad :retard:')
     const cityCode = cityCodes[city]
-    msg.send(`Buscando el vuelo más barato para ${city} :airplane_departure: :loading:`)
+    msg.send(`Buscando el vuelo más barato para ${city} desde Santigo :airplane_departure: :loading:`)
     ;(async () => {
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
@@ -61,7 +61,7 @@ module.exports = robot => {
       await page.goto(`https://www.despegar.cl/vuelos/scl/${cityCode}/`, { waitUntil: 'networkidle2' })
       const price = await page.evaluate(() => document.querySelector('#alerts .price-amount').textContent)
       if (!price) {
-        msg.send(`No encontré ningún vuelo para ${city} :sadhuemul:`)
+        msg.send(`No encontré ningún vuelo para ${city} desde Santiago :sadhuemul:`)
       }
       msg.send(`Encontré vuelos desde: CLP ${price}`)
       msg.send(`Se puede comprar aquí: https://www.despegar.cl/vuelos/scl/${cityCode}/`)
