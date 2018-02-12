@@ -58,7 +58,7 @@ module.exports = robot => {
     const cityExist = typeof cityCodes[city] !== 'undefined'
     if (!cityExist) return msg.send('No conozco esa ciudad :retard:')
     const cityCode = cityCodes[city]
-    msg.send(`Buscando el vuelo más barato :airplane_departure: :loading:`)
+    msg.send(`Buscando el vuelo más barato para ${city} :airplane_departure: :loading:`)
     ;(async () => {
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
