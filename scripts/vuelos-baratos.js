@@ -20,10 +20,39 @@ const puppeteer = require('puppeteer')
 // Modified by:
 //   @jorgeepunan
 
-module.exports = robot => {
-  // NOTE: messages contains new lines for some reason.
-  let formatString = string => decodeURIComponent(string.replace(/(\n)/gm, ' '))
+// I want to keep the city list small. If you want to include more cities you can do it here:
+const cityCodes = {
+  // Chile
+  osorno: 'ZOS',
+  concepcion: 'CCP',
+  iquique: 'IQQ',
+  antofagasta: 'ANF',
+  arica: 'ARI',
+  coquimbo: 'COW',
+  castro: 'WCA',
+  temuco: 'ZCO',
+  'isla de pascua': 'IPC',
+  valdivia: 'ZAL',
+  'punta arenas': 'PUQ',
+  'puerto aisen': 'WPA',
+  balmaceda: 'BBA',
+  'puerto montt': 'PMC',
+  // Colombia
+  bogota: 'BOG',
+  medellin: 'EOH',
+  'san andres': 'ADZ',
+  // Argentina
+  'buenos aires': 'BUE',
+  mendoza: 'MDZ',
+  // USA
+  'new york': 'NYC',
+  // Europa
+  madrid: 'mad',
+  roma: 'rom',
+  paris: 'par'
+}
 
+module.exports = robot => {
   robot.respond(/vuelo barato$/i, msg => {
     ;(async () => {
       const browser = await puppeteer.launch()
