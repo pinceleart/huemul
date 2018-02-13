@@ -28,6 +28,9 @@ const cityCodes = {
   temuco: 'ZCO',
   'isla de pascua': 'IPC',
   valdivia: 'ZAL',
+  'la serena': 'lsc',
+  serena: 'lsc',
+  calama: 'cjc',
   'punta arenas': 'PUQ',
   'puerto aisen': 'WPA',
   balmaceda: 'BBA',
@@ -79,7 +82,8 @@ module.exports = robot => {
       .replace('ó', 'o')
       .replace('ú', 'u')
     const cityExist = typeof cityCodes[city] !== 'undefined'
-    if (!cityExist) return msg.send('No conozco esa ciudad :retard:')
+    if (!cityExist)
+      return msg.send('Aún no se como buscar vuelos para esa ciudad pero @raerpo_ me puede enseñar :retard:')
     const cityCode = cityCodes[city]
     msg.send(`Buscando el vuelo más barato para ${city} desde Santigo :airplane_departure: :loading:`)
     ;(async () => {
@@ -91,7 +95,7 @@ module.exports = robot => {
       if (!price) {
         msg.send(`No encontré ningún vuelo para ${city} desde Santiago :sadhuemul:`)
       }
-      msg.send(`Encontré vuelos desde: CLP ${price}`)
+      msg.send(`Encontré vuelos desde CLP ${price}`)
       msg.send(`Se puede comprar aquí: https://www.despegar.cl/vuelos/scl/${cityCode}/`)
       await browser.close()
     })()
