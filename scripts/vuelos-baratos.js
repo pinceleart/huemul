@@ -70,7 +70,14 @@ const cityCodes = {
 
 module.exports = robot => {
   robot.respond(/vuelo barato a (.*)/i, msg => {
-    const city = msg.match[1].toLowerCase()
+    // Normalize city name
+    const city = msg.match[1]
+      .toLowerCase()
+      .replace('á', 'a')
+      .replace('é', 'e')
+      .replace('í', 'i')
+      .replace('ó', 'o')
+      .replace('ú', 'u')
     const cityExist = typeof cityCodes[city] !== 'undefined'
     if (!cityExist) return msg.send('No conozco esa ciudad :retard:')
     const cityCode = cityCodes[city]
