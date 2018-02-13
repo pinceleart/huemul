@@ -1,19 +1,19 @@
-const puppeteer = require('puppeteer')
-
 // Description:
 //   Show the cheapest flight to a city from Santiago, Chile using despegar.com
 //
 // Dependencies:
-//   Pupepeteer
+//   puppeteer
 //
 // Configuration:
 //   None
 //
 // Commands:
-//   hubot vuelo barato a valdivia - Returns the cheapest price to Valdivia from Santiago
+//   hubot vuelo barato a [ciudad] - Returns the cheapest price to [ciudad] from Santiago
 //
 // Author:
 //   @raerpo_
+
+const puppeteer = require('puppeteer')
 
 // I want to keep the city list small. If you want to include more cities you can do it here:
 const cityCodes = {
