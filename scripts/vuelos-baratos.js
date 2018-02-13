@@ -32,7 +32,7 @@ const cityCodes = {
   serena: 'lsc',
   calama: 'cjc',
   'punta arenas': 'PUQ',
-  'puerto aisen': 'WPA',
+  'puerto aysen': 'WPA',
   balmaceda: 'BBA',
   'puerto montt': 'PMC',
   // Colombia
@@ -82,11 +82,12 @@ module.exports = robot => {
       .replace('ó', 'o')
       .replace('ú', 'u')
       .replace('ñ', 'n')
+      .replace('ã', 'a')
     const cityExist = typeof cityCodes[city] !== 'undefined'
     if (!cityExist)
       return msg.send('Aún no se como buscar vuelos para esa ciudad pero @raerpo_ me puede enseñar :retard:')
     const cityCode = cityCodes[city]
-    msg.send(`Buscando el vuelo más barato para ${city} desde Santigo :airplane_departure: :loading:`)
+    msg.send(`Buscando el vuelo más barato para ${msg.match[1]} desde Santigo :airplane_departure: :loading:`)
     ;(async () => {
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
