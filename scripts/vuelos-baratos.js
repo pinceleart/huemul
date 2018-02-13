@@ -81,6 +81,7 @@ module.exports = robot => {
       .replace('í', 'i')
       .replace('ó', 'o')
       .replace('ú', 'u')
+      .replace('ñ', 'n')
     const cityExist = typeof cityCodes[city] !== 'undefined'
     if (!cityExist)
       return msg.send('Aún no se como buscar vuelos para esa ciudad pero @raerpo_ me puede enseñar :retard:')
