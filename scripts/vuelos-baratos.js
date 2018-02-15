@@ -25,7 +25,7 @@ module.exports = robot => {
       .replace('ú', 'u')
       .replace('ñ', 'n')
       .replace('ã', 'a')
-    msg.send(`Buscando el vuelo más barato para ${msg.match[1]} desde Santigo :airplane_departure: :loading:`)
+    msg.send(`Buscando el vuelo más barato para ${msg.match[1]} desde Santiago :airplane_departure: :loading:`)
     robot.http(`https://huemul-airlines.herokuapp.com/city/${city}`).get()((err, res, body) => {
       if (err || res.statusCode !== 200) {
         return robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
@@ -33,8 +33,9 @@ module.exports = robot => {
       let json = JSON.parse(body)
       if (json.error) {
         msg.send(json.error)
+        return
       }
-      msg.send(`Encontré vuelos desde CLP ${json.price}`)
+      msg.send(`Encontré vuelos a ${msg.match[1]} desde CLP ${json.price}`)
       msg.send(`Se puede comprar aquí: ${json.url}`)
     })
   })
