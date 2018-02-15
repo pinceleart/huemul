@@ -33,6 +33,7 @@ module.exports = robot => {
       let json = JSON.parse(body)
       if (json.error) {
         msg.send(json.error)
+        return
       }
       msg.send(`Encontré vuelos desde CLP ${json.price}`)
       msg.send(`Se puede comprar aquí: ${json.url}`)
