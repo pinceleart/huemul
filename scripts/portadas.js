@@ -29,6 +29,7 @@ const listaPortadas = () => {
     (el)? diario (de)? atacama
     cr(ó|o)nica chill(á|a)n
     (hoyxhoy|hxh)
+    (la)? segunda
     lun
     (club)? nintendo
     (harper's)? bazaar
@@ -70,6 +71,10 @@ const listaPortadas = () => {
 }
 
 const diarios = {
+  segunda: {
+    url: 'http://img.kiosko.net/#DATE#/cl/cl_segunda.750.jpg',
+    noSlashes: false
+  },
   tipografo: {
     url: 'http://img.kiosko.net/#DATE#/cl/cl_tipografo.750.jpg',
     noSlashes: false
