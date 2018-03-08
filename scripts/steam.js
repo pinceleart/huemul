@@ -11,7 +11,7 @@
 //   hubot steam help - Show available command list.
 
 // Author:
-//   @cvicuna
+//   @christopher
 
 'use strict'
 const cheerio = require('cheerio')
@@ -60,21 +60,6 @@ module.exports = robot => {
         const $ = cheerio.load(body)
         const idAttr = $('.dailydeal_desc .dailydeal_countdown').attr('id')
         resolve(idAttr.substr(idAttr.length - 6))
-      })
-    })
-  }
-
-  const getSpecials = count => {
-    return new Promise((resolve, reject) => {
-      getBody('http://store.steampowered.com/search/?specials=1').then(body => {
-        const $ = cheerio.load(body)
-        let games = $('.search_result_row')
-          .slice(0, count)
-          .map(function() {
-            return $(this).attr('data-ds-appid')
-          })
-          .get()
-        resolve(games)
       })
     })
   }
