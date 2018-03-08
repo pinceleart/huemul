@@ -64,21 +64,6 @@ module.exports = robot => {
     })
   }
 
-  const getSpecials = count => {
-    return new Promise((resolve, reject) => {
-      getBody('http://store.steampowered.com/search/?specials=1').then(body => {
-        const $ = cheerio.load(body)
-        let games = $('.search_result_row')
-          .slice(0, count)
-          .map(function() {
-            return $(this).attr('data-ds-appid')
-          })
-          .get()
-        resolve(games)
-      })
-    })
-  }
-
   const getPrice = id => {
     const cookie = 'steamCountry=CL%7Cb8a8a3da46a6c324d177af2855ca3d9b;timezoneOffset=-10800,0;'
     const uri = `http://store.steampowered.com/api/appdetails/?appids=${id}&cc=CL`
