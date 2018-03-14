@@ -17,8 +17,8 @@
 const cheerio = require('cheerio')
 const commands = [
   `Comandos de Steam:`,
-  '`arturito steam daily` - Muestra la oferta del día.',
-  '`arturito steam [Nombre Juego]` - Muestra información básica de un juego.'
+  '`huemul steam daily` - Muestra la oferta del día.',
+  '`huemul steam [Nombre Juego]` - Muestra información básica de un juego.'
 ]
 
 module.exports = robot => {
