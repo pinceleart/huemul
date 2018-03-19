@@ -89,7 +89,7 @@ module.exports = robot => {
 
   const getDesc = id => {
     const cookie = 'steamCountry=CL%7Cb8a8a3da46a6c324d177af2855ca3d9b;timezoneOffset=-10800,0;'
-    const uri = `http://store.steampowered.com/api/appdetails/?appids=${id}&cc=CL`
+    var uri = `http://store.steampowered.com/api/appdetails/?appids=${id}&cc=CL`
     return new Promise((resolve, reject) => {
       const data = getBody(uri, { key: 'cookie', value: cookie }).then(body => {
         const game = JSON.parse(body)[id].data
@@ -106,21 +106,23 @@ module.exports = robot => {
           //Important!
           const dev = game.developers
           const discount = price.discount_percent
+          uri = `https://store.steampowered.com/app/${id}`
+
           return {
-            name: name,
-            price: price,
-            final: final,
-            discount: discount,
-            uri: `https://store.steampowered.com/app/${id}`,
-            desc: desc,
-            dev: dev,
-            meta: meta,
-            type: type
+            name,
+            price,
+            final,
+            discount,
+            uri,
+            desc,
+            dev,
+            meta,
+            type
           }
         } else {
           const type = game.type
           return {
-            type: type
+            type
           }
         }
       })
