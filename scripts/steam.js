@@ -135,9 +135,9 @@ module.exports = robot => {
     }
   }
 
-  const onError = (err, msg) => {
+  const onError = (err, msg, text) => {
     if (err === 404) {
-      msg.send('No se encontró la oferta del día, revisaste los especiales?')
+      msg.send(text)
     } else {
       msg.send('Actualmente _Steam_ no responde.')
       robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
@@ -163,7 +163,7 @@ module.exports = robot => {
             msg.message.room
           )
         })
-        .catch(err => onError(err, msg))
+        .catch(err => onError(err, msg, 'No se encontró la oferta del día, revisaste los especiales?'))
     }
     getGameDesc(full)
       .then(getDesc)
@@ -189,6 +189,6 @@ module.exports = robot => {
         fields.splice(1, 0, `Valor: $CLP *${price}*${discount}`)
         msg.send(fields.join('\n'))
       })
-      .catch(err => onError(err, msg))
+      .catch(err => onError(err, msg, '¡Cuek!, no encontré el juego'))
   })
 }
