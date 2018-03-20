@@ -89,23 +89,41 @@ module.exports = robot => {
 
   const getDesc = id => {
     const cookie = 'steamCountry=CL%7Cb8a8a3da46a6c324d177af2855ca3d9b;timezoneOffset=-10800,0;'
-    const uri = `http://store.steampowered.com/api/appdetails/?appids=${id}&cc=CL`
+    var uri = `http://store.steampowered.com/api/appdetails/?appids=${id}&cc=CL`
     return new Promise((resolve, reject) => {
       const data = getBody(uri, { key: 'cookie', value: cookie }).then(body => {
         const game = JSON.parse(body)[id].data
-        const desc = game.short_description
-        const name = game.name
-        const price = game.price_overview
-        const final = price.final / 100
-        const initial = price.initial / 100
-        const discount = price.discount_percent
-        return {
-          name: name,
-          final: final,
-          initial: initial,
-          discount: discount,
-          uri: `https://store.steampowered.com/app/${id}`,
-          desc: desc
+        if (game.type === 'game') {
+          const type = game.type
+          const desc = game.short_description
+          const name = game.name
+          //sugar
+          const meta = !game.metacritic ? 0 : game.metacritic.score
+          //price process
+          const itsfree = game.is_free
+          const price = itsfree ? 0 : game.price_overview
+          const final = price.final / 100
+          //Important!
+          const dev = game.developers
+          const discount = price.discount_percent
+          uri = `https://store.steampowered.com/app/${id}`
+
+          return {
+            name,
+            price,
+            final,
+            discount,
+            uri,
+            desc,
+            dev,
+            meta,
+            type
+          }
+        } else {
+          const type = game.type
+          return {
+            type
+          }
         }
       })
       resolve(data)
@@ -144,30 +162,42 @@ module.exports = robot => {
             } else {
               msg.send('Actualmente _Steam_ no responde.')
               robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
-              s
             }
           })
       } else {
         getGameDesc(full)
           .then(getDesc)
           .then(data => {
-            if (data.initial > data.final) {
-              msg.send(
-                `Nombre del Juego: ${data.name}\nValor: $CLP *${data.final}* (*%${data.discount}* Off)\nDescripción: ${
-                  data.desc
-                } <${data.uri}|Ver más>`
-              )
+            let tipo = data.type
+            if (data.type !== 'game') {
+              msg.send(`¡Cuek!, no encontré el juego`)
             } else {
-              msg.send(
-                `Nombre del Juego: ${data.name}\nValor: $CLP *${data.initial}*\nDescripción: ${data.desc} <${
-                  data.uri
-                }|Ver más>`
-              )
+              let meta = data.meta === 0 ? 'No Registra' : data.meta
+              if (data.discount > 0) {
+                msg.send(
+                  `Nombre del Juego: *${data.name}*\nValor: $CLP *${data.final}* (%${
+                    data.discount
+                  } Off)\nDesarrollador: *${data.dev}*\nMetacritic: *${meta}*\nDescripción: ${data.desc} <${
+                    data.uri
+                  }|Ver más>`
+                )
+              } else {
+                let price = data.price == 0 ? 'Free-To-Play' : data.final
+                msg.send(
+                  `Nombre del Juego: *${data.name}*\nValor: $CLP *${price}*\nDesarrollador: *${
+                    data.dev
+                  }*\nMetacritic: *${meta}*\nDescripción: ${data.desc} <${data.uri}|Ver más>`
+                )
+              }
             }
           })
           .catch(err => {
-            msg.send('Actualmente _Steam_ no responde.')
-            robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
+            if (err == 404) {
+              msg.send('¡Cuek!, no encontré el juego')
+            } else {
+              msg.send('¡Cuek!, no encontré el juego')
+              robot.emit('error', err || new Error(`Status code ${res.statusCode}`), msg)
+            }
           })
       }
     } else {
