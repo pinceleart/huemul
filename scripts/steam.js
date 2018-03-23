@@ -15,6 +15,8 @@
 
 'use strict'
 const cheerio = require('cheerio')
+const { numberToCLPFormater } = require('numbertoclpformater')
+
 const commands = [
   `Comandos de Steam:`,
   '`huemul steam daily` - Muestra la oferta del día.',
@@ -157,8 +159,8 @@ module.exports = robot => {
         .then(getPrice)
         .then(data => {
           sendMessage(
-            `¡Lorea la oferta del día!: *${data.name}*, a sólo $CLP *${data.final}*. Valor original $CLP *${
-              data.initial
+            `¡Lorea la oferta del día!: *${data.name}*, a sólo *${numberToCLPFormater(data.final, 'CLP $')}*. Valor original *${
+              numberToCLPFormater(data.initial, 'CLP $')
             }*, eso es un -*${data.discount}*%! <${data.uri}|Ver más>`,
             msg.message.room
           )
@@ -186,7 +188,7 @@ module.exports = robot => {
         } else {
           price = data.price === 0 ? 'Free-To-Play' : data.final
         }
-        fields.splice(1, 0, `Valor: $CLP *${price}*${discount}`)
+        fields.splice(1, 0, `Valor: *${numberToCLPFormater(price, 'CLP $')}*${discount}`)
         msg.send(fields.join('\n'))
       })
       .catch(err => onError(err, msg, '¡Cuek!, no encontré el juego'))
