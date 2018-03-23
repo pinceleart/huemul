@@ -15,6 +15,8 @@
 
 'use strict'
 const cheerio = require('cheerio')
+const { numberToCLPFormater } = require('numbertoclpformater')
+
 const commands = [
   `Comandos de Steam:`,
   '`huemul steam daily` - Muestra la oferta del día.',
@@ -150,9 +152,8 @@ module.exports = robot => {
           .then(getPrice)
           .then(data => {
             sendMessage(
-              `¡Lorea la oferta del día!: *${data.name}*, a sólo $CLP *${data.final}*. Valor original $CLP *${
-                data.initial
-              }*, eso es un -*${data.discount}*%! <${data.uri}|Ver más>`,
+              `¡Lorea la oferta del día!: *${data.name}*, a sólo *${numberToCLPFormater(data.final, 'CLP $')}*. Valor original *${numberToCLPFormater(
+                data.initial, 'CLP $')}*, eso es un *-${data.discount}%*! <${data.uri}|Ver más>`,
               msg.message.room
             )
           })
@@ -175,7 +176,7 @@ module.exports = robot => {
               let meta = data.meta === 0 ? 'No Registra' : data.meta
               if (data.discount > 0) {
                 msg.send(
-                  `Nombre del Juego: *${data.name}*\nValor: $CLP *${data.final}* (%${
+                  `Nombre del Juego: *${data.name}*\nValor: *${numberToCLPFormater(data.final, 'CLP $')}* (%${
                     data.discount
                   } Off)\nDesarrollador: *${data.dev}*\nMetacritic: *${meta}*\nDescripción: ${data.desc} <${
                     data.uri
@@ -184,7 +185,7 @@ module.exports = robot => {
               } else {
                 let price = data.price == 0 ? 'Free-To-Play' : data.final
                 msg.send(
-                  `Nombre del Juego: *${data.name}*\nValor: $CLP *${price}*\nDesarrollador: *${
+                  `Nombre del Juego: *${data.name}*\nValor: *${numberToCLPFormater(price, 'CLP $')}*\nDesarrollador: *${
                     data.dev
                   }*\nMetacritic: *${meta}*\nDescripción: ${data.desc} <${data.uri}|Ver más>`
                 )
