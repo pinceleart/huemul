@@ -155,7 +155,6 @@ module.exports = robot => {
           return response.send(`¡No abuses! Intenta en ${limit} minutos.`)
         }
         const modifyingKarma = op === '++' ? 1 : -1
-        targetUser.karma += modifyingKarma
         const karmaLog = robot.brain.get('karmaLog') || []
         karmaLog.push({
           name: thisUser.name,
@@ -168,9 +167,14 @@ module.exports = robot => {
         })
         robot.brain.set('karmaLog', karmaLog)
         robot.brain.save()
-        response.send(`${getCleanName(targetUser.name)} ahora tiene ${targetUser.karma} puntos de karma.`)
+        response.send(`${getCleanName(targetUser.name)} ahora tiene ${getUserKarma(targetUser.id)} puntos de karma.`)
       })
       .catch(err => robot.emit('error', err, response))
+  }
+
+  const getUserKarma = userId => {
+    const karmaLog = robot.brain.get('karmaLog') || []
+    return karmaLog.filter(item => item.targetId === userId).reduce((prev, curr) => prev + curr.karma, 0)
   }
 
   const removeURLFromTokens = (tokens, message) => {
@@ -213,15 +217,14 @@ module.exports = robot => {
       const resetCommand = targetToken.toLowerCase().split(' ')[1]
       if (!resetCommand) return
       if (['todos', 'all'].includes(resetCommand)) {
-        const users = robot.brain.users()
-        Object.keys(users).forEach(k => {
-          users[k].karma = 0
-        })
+        robot.brain.set('karmaLog', [])
         response.send('Todo el mundo ha quedado libre de toda bendición o pecado.')
         robot.brain.save()
       } else {
         userForToken(resetCommand, response).then(targetUser => {
-          targetUser.karma = 0
+          const karmaLog = robot.brain.get('karmaLog') || []
+          const filteredKarmaLog = karmaLog.filter(item => item.targetId !== targetUser.id)
+          robot.brain.set('karmaLog', filteredKarmaLog)
           response.send(`${getCleanName(targetUser.name)} ha quedado libre de toda bendición o pecado.`)
           robot.brain.save()
         })
@@ -239,11 +242,19 @@ module.exports = robot => {
   })
 
   robot.router.get(`/${robot.name}/karma/todos`, (req, res) => {
-    const users = robot.brain.users()
-    const list = Object.keys(users)
-      .sort()
-      .filter(id => users[id].karma)
-      .map(id => [users[id].karma || 0, `<strong>${users[id].name}</strong>`])
+    const karmaLog = robot.brain.get('karmaLog') || []
+    const usersKarma = {}
+
+    karmaLog.forEach(item => {
+      usersKarma[item.targetId] = usersKarma[item.targetId] || 0
+      usersKarma[item.targetId] = usersKarma[item.targetId] + item.karma
+    })
+
+    const list = Object.keys(usersKarma)
+      .filter(userId => usersKarma[userId])
+      .map(userId => {
+        return [usersKarma[userId], `<strong>${robot.brain.userForId(userId).name}</strong>`]
+      })
       .sort((line1, line2) => {
         if (line1[0] < line2[0]) {
           return 1
