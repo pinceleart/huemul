@@ -69,9 +69,6 @@ module.exports = robot => {
       let user
       if (users.length === 1) {
         user = users[0]
-        if (typeof user.karma === 'undefined' || user.karma === null) {
-          user.karma = 0
-        }
       } else if (users.length > 1) {
         robot.messageRoom(
           `@${response.message.user.name}`,
