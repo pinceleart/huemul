@@ -206,9 +206,9 @@ module.exports = robot => {
       userForToken(targetToken, response).then(targetUser => {
         if (!targetUser) return
         response.send(
-          `${getCleanName(targetUser.name)} tiene ${
-            targetUser.karma
-          } puntos de karma. Más detalles en: ${hubotWebSite}/karma/log/${targetUser.name}`
+          `${getCleanName(targetUser.name)} tiene ${getUserKarma(
+            targetUser.id
+          )} puntos de karma. Más detalles en: ${hubotWebSite}/karma/log/${targetUser.name}`
         )
       })
     }
