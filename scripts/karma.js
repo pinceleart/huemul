@@ -34,38 +34,6 @@ module.exports = robot => {
       const localUsers = robot.brain.users()
       const user1 = users.members.find(x => x.name === token)
       if (!user1) return
-      const user2 = localUsers[user1.id]
-      if (typeof user2 === 'undefined' || user2 === null) {
-        localUsers[user1.id] = {
-          id: user1.id,
-          name: user1.name,
-          real_name: user1.real_name,
-          email_address: user1.profile.email,
-          slack: {
-            id: user1.id,
-            team_id: user1.team_id,
-            name: user1.name,
-            deleted: user1.deleted,
-            status: user1.status,
-            color: user1.color,
-            real_name: user1.real_name,
-            tz: user1.tz,
-            tz_label: user1.tz_label,
-            tz_offset: user1.tz_offset,
-            profile: user1.profile,
-            is_admin: user1.is_admin,
-            is_owner: user1.is_owner,
-            is_primary_owner: user1.is_primary_owner,
-            is_restricted: user1.is_restricted,
-            is_ultra_restricted: user1.is_ultra_restricted,
-            is_bot: user1.is_bot,
-            presence: 'active'
-          },
-          room: 'random',
-          karma: 0
-        }
-        robot.brain.save()
-      }
       return localUsers[user1.id]
     })
   }
@@ -101,9 +69,6 @@ module.exports = robot => {
       let user
       if (users.length === 1) {
         user = users[0]
-        if (typeof user.karma === 'undefined' || user.karma === null) {
-          user.karma = 0
-        }
       } else if (users.length > 1) {
         robot.messageRoom(
           `@${response.message.user.name}`,
@@ -155,7 +120,6 @@ module.exports = robot => {
           return response.send(`¡No abuses! Intenta en ${limit} minutos.`)
         }
         const modifyingKarma = op === '++' ? 1 : -1
-        targetUser.karma += modifyingKarma
         const karmaLog = robot.brain.get('karmaLog') || []
         karmaLog.push({
           name: thisUser.name,
@@ -168,9 +132,19 @@ module.exports = robot => {
         })
         robot.brain.set('karmaLog', karmaLog)
         robot.brain.save()
-        response.send(`${getCleanName(targetUser.name)} ahora tiene ${targetUser.karma} puntos de karma.`)
+        response.send(`${getCleanName(targetUser.name)} ahora tiene ${getUserKarma(targetUser.id)} puntos de karma.`)
       })
       .catch(err => robot.emit('error', err, response))
+  }
+
+  const getUserKarma = userId => {
+    const karmaLog = robot.brain.get('karmaLog') || []
+    return karmaLog.reduce((prev, curr) => {
+      if (curr.targetId === userId) {
+        prev += curr.karma
+      }
+      return prev
+    }, 0)
   }
 
   const removeURLFromTokens = (tokens, message) => {
@@ -213,15 +187,14 @@ module.exports = robot => {
       const resetCommand = targetToken.toLowerCase().split(' ')[1]
       if (!resetCommand) return
       if (['todos', 'all'].includes(resetCommand)) {
-        const users = robot.brain.users()
-        Object.keys(users).forEach(k => {
-          users[k].karma = 0
-        })
+        robot.brain.set('karmaLog', [])
         response.send('Todo el mundo ha quedado libre de toda bendición o pecado.')
         robot.brain.save()
       } else {
         userForToken(resetCommand, response).then(targetUser => {
-          targetUser.karma = 0
+          const karmaLog = robot.brain.get('karmaLog') || []
+          const filteredKarmaLog = karmaLog.filter(item => item.targetId !== targetUser.id)
+          robot.brain.set('karmaLog', filteredKarmaLog)
           response.send(`${getCleanName(targetUser.name)} ha quedado libre de toda bendición o pecado.`)
           robot.brain.save()
         })
@@ -230,20 +203,28 @@ module.exports = robot => {
       userForToken(targetToken, response).then(targetUser => {
         if (!targetUser) return
         response.send(
-          `${getCleanName(targetUser.name)} tiene ${
-            targetUser.karma
-          } puntos de karma. Más detalles en: ${hubotWebSite}/karma/log/${targetUser.name}`
+          `${getCleanName(targetUser.name)} tiene ${getUserKarma(
+            targetUser.id
+          )} puntos de karma. Más detalles en: ${hubotWebSite}/karma/log/${targetUser.name}`
         )
       })
     }
   })
 
   robot.router.get(`/${robot.name}/karma/todos`, (req, res) => {
-    const users = robot.brain.users()
-    const list = Object.keys(users)
-      .sort()
-      .filter(id => users[id].karma)
-      .map(id => [users[id].karma || 0, `<strong>${users[id].name}</strong>`])
+    const karmaLog = robot.brain.get('karmaLog') || []
+    const usersKarma = {}
+
+    karmaLog.forEach(item => {
+      usersKarma[item.targetId] = usersKarma[item.targetId] || 0
+      usersKarma[item.targetId] = usersKarma[item.targetId] + item.karma
+    })
+
+    const list = Object.keys(usersKarma)
+      .filter(userId => usersKarma[userId])
+      .map(userId => {
+        return [usersKarma[userId], `<strong>${robot.brain.userForId(userId).name}</strong>`]
+      })
       .sort((line1, line2) => {
         if (line1[0] < line2[0]) {
           return 1

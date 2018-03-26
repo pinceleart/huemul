@@ -8,7 +8,7 @@ const helper = new Helper('../scripts/karma.js')
 const hubotHost = process.env.HEROKU_URL || process.env.HUBOT_URL || 'http://localhost:8080'
 
 test.beforeEach(t => {
-  t.context.room = helper.createRoom({ httpd: true })
+  t.context.room = helper.createRoom({ httpd: false })
   t.context.room.robot.golden = {
     isGold: () => false
   }
@@ -54,8 +54,7 @@ test.beforeEach(t => {
   })
   t.context.room.robot.brain.userForId('cata', {
     name: 'cata',
-    id: 4,
-    karma: -99
+    id: 4
   })
   t.context.room.robot.brain.userForId('dukuo', {
     name: 'dukuo',
@@ -75,26 +74,63 @@ test.beforeEach(t => {
 
   t.context.room.robot.brain.set('karmaLimits', karmaLimits)
 
-  t.context.room.robot.brain.data._private['karmaLog'] = [
+  const karmaLog = [
     {
       name: 'jorgeepunan',
-      karma: '-1',
+      karma: -1,
       targetName: 'cata',
+      targetId: 4,
+      date: '2016-07-29T15:01:30.633Z',
+      msg: 'cata--'
+    },
+    {
+      name: 'jorgeepunan',
+      karma: -1,
+      targetName: 'cata',
+      targetId: 4,
+      date: '2016-07-29T15:01:30.633Z',
+      msg: 'cata--'
+    },
+    {
+      name: 'jorgeepunan',
+      karma: -1,
+      targetName: 'cata',
+      targetId: 4,
+      date: '2016-07-29T15:01:30.633Z',
+      msg: 'cata--'
+    },
+    {
+      name: 'jorgeepunan',
+      karma: -1,
+      targetName: 'cata',
+      targetId: 4,
+      date: '2016-07-29T15:01:30.633Z',
+      msg: 'cata--'
+    },
+    {
+      name: 'jorgeepunan',
+      karma: -1,
+      targetName: 'cata',
+      targetId: 4,
       date: '2016-07-29T15:01:30.633Z',
       msg: 'cata--'
     }
   ]
+
+  t.context.room.robot.brain.set('karmaLog', karmaLog)
 })
+
 test.afterEach(t => {
   t.context.room.destroy()
 })
+
 test.cb.serial('Debe añadir karma con @ y comas después del user', t => {
   t.context.room.user.say('user', '@dukuo++, cata++')
   setTimeout(() => {
     t.deepEqual(t.context.room.messages, [
       ['user', '@dukuo++, cata++'],
       ['hubot', 'd.ukuo ahora tiene 1 puntos de karma.'],
-      ['hubot', 'c.ata ahora tiene -98 puntos de karma.']
+      ['hubot', 'c.ata ahora tiene -4 puntos de karma.']
     ])
     t.end()
   }, 500)
@@ -143,7 +179,7 @@ test.cb.serial('Aplica karma sólo a 5 usuarios', t => {
       ['hubot', 'j.orgeepunan ahora tiene -1 puntos de karma.'],
       ['hubot', 'h.ector ahora tiene 1 puntos de karma.'],
       ['hubot', 'd.ukuo ahora tiene 1 puntos de karma.'],
-      ['hubot', 'c.ata ahora tiene -100 puntos de karma.']
+      ['hubot', 'c.ata ahora tiene -6 puntos de karma.']
     ])
     t.end()
   }, 500)
