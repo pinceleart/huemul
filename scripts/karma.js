@@ -211,52 +211,33 @@ module.exports = robot => {
     }
   })
 
-  /**
-   * Implementación de Arra.prototype.reduce para usar en Map.
-   * Fork de https://github.com/Tyler-Murphy/set-helpers/blob/master/functions/reduce.js
-   * @param {Map} map Objeto Map para implementar el reduce
-   * @param {Function} reducer Función reducer a aplicar en cada par de elementos
-   * @param {*} initialValue Valor inicial del reduce
-   * @return {*} Valor a retornar
-   */
-  const reduce = (map, reducer, initialValue) => {
-    const mapValues = map.entries()
-    let reducedValue = initialValue !== undefined ? initialValue : mapValues.next().value
-    for (let value of mapValues) {
-      reducedValue = reducer(reducedValue, value, map)
-    }
-    return reducedValue
-  }
-
   robot.router.get(`/${robot.name}/karma/todos`, (req, res) => {
     const karmaLog = robot.brain.get('karmaLog') || []
-    const karmaByUsers = karmaLog
+    const karmaByUsers = Array.from(
+      karmaLog
+        // Suma el karma por usuarios
+        .reduce((acc, { karma, targetId }) => {
+          acc.set(targetId, (acc.get(targetId) || 0) + karma)
+          return acc
+        }, new Map())
+    )
       // Ordena de mayor a menor el karma
       .sort((a, b) => {
-        if (a.karma < b.karma) {
+        if (a[1] < b[1]) {
           return 1
-        } else if (a.karma > b.karma) {
+        } else if (a[1] > b[1]) {
           return -1
         } else {
           return 0
         }
       })
-      // Suma el karma por usuarios
-      .reduce((acc, { karma, targetId }) => {
-        acc.set(targetId, (acc.get(targetId) || 0) + karma)
-        return acc
-      }, new Map())
-    // Transform el karma a li. Deja fuera a los usuarios con karma 0
-    const liKarma = reduce(
-      karmaByUsers,
-      (acc, [targetId, karma]) => {
+      // Transform el karma a li. Deja fuera a los usuarios con karma 0
+      .reduce((acc, [targetId, karma]) => {
         if (karma !== 0) {
           acc += `<li>${karma} <strong>${robot.brain.userForId(targetId).name}</strong></li>`
         }
         return acc
-      },
-      ''
-    )
+      }, '')
     res.setHeader('content-type', 'text/html')
     res.end(theme('Karma Todos', 'Listado de karma de usuarios devsChile', liKarma))
   })
