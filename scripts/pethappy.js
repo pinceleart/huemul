@@ -20,7 +20,12 @@ module.exports = function(robot) {
     var mainUrl = 'https://www.pethappy.cl';
     var url = mainUrl + '/search/' + search.replace(' ', '%20');
 
-    msg.robot.http(url).get()(function(err, res, body){
+    robot.http(url).get()(function(err, res, body){
+      if (err || res.statusCode !== 200) {
+        robot.emit('error', err || new Error(`Status code is ${res.statusCode}`), msg);
+        msg.reply(':happyto: mato el server, preguntar por INBOX a :pinceleart:')
+        return
+      }
       var $ = cheerio.load(body);
       var results = [];
 
@@ -30,12 +35,17 @@ module.exports = function(robot) {
         var $productName = $(this).find('h1 a').text();
         var $productUrl = $(this).find('.comprar a').attr('href');
         var $productPrice = $(this).find('.precio').text().trim();
-        results.push($productName + ' → ' + mainUrl + $productUrl + ' (_' + $productPrice + '_)');
+        results.push(' - ' + $productName + ': ' + '_' + $productPrice + '_\n  ' + mainUrl + $productUrl );
       });
 
       if (results.length > 0) {
-        for (var i = 0; i<results.length; i++) {
-          msg.send(results[i]);
+        var text = results.join('\n');
+
+        if (robot.adapter.constructor.name === 'SlackBot') {
+          var options = {unfurl_links: false, as_user: true};
+          robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+        } else {
+          msg.send(text);
         }
       } else {
         msg.send('No hay de lo que buscas, habla con :pinceleart:');

@@ -1,9 +1,7 @@
 // Description:
-//   Search torrents from torrentproject.se
+//   Search torrents from yts.ag
 //
 //  Dependencies:
-//    cheerio
-//    cloudscraper
 //
 // Commands:
 //   hubot torrent <query>
@@ -11,47 +9,38 @@
 // Author:
 //   @jorgeepunan
 
-var cheerio = require('cheerio');
-var cloudscraper = require('cloudscraper');
-
 module.exports = function(robot) {
   robot.respond(/torrent (.*)/i, function(msg) {
 
-    msg.send('Esperando respuesta de Torrent Project... :clock830:');
+    msg.send('Esperando respuesta de YTS YIFY... :loading:');
 
     var busqueda = msg.match[1];
-    var domain = 'https://torrentproject.se/';
-    var url = domain + '?t=' + busqueda.split(' ').join('+');
+    var api = 'https://yts.am/api/v2/list_movies.json?limit=5&query_term=';
+    var url = api + busqueda.split(' ').join('+');
 
-    cloudscraper.get(url, function(error, response, body) {
-      if (error) {
-        console.log('Ocurrió un error :(');
-      } else {
-        var $ = cheerio.load(body);
-        var resultados = [];
+    robot.http(url).get()(function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var data = JSON.parse(body);
 
-        $('#similarfiles > div:not(.gac_bb)').each(function() {
-          var title = $(this).find('a').text();
-          var link = $(this).find('a').attr('href');
+        if (data.data.movie_count > 0) {
+          var movies = [];
+          data.data.movies.forEach(function (e) {
+            movies.push('<' + e.url + '|' + e.title + ': año: ' + e.year + ', rating: ' + e.rating + '>');
+          });
 
-          resultados.push( title + ' | ' + domain + link );
-        });
-
-        if(resultados.length > 0) {
-          var limiteResultados = (resultados.length > 4) ? 3 : resultados.length;
-          var plural = resultados.length > 1 ? ['n','s'] : ['',''];
-          msg.send('Se ha'+plural[0]+' encontrado '+ resultados.length + ' resultado'+plural[1]);
-          for (var i=0; i < limiteResultados; i++) {
-            var conteo = i + 1;
-            msg.send(conteo + ': ' + resultados[i]);
-          }
-          if(resultados.length > limiteResultados) {
-            msg.send('Otros resultados en: '+ url);
+          var resultados = 'Encontradas ' + data.data.movie_count + ' coincidencias:';
+          var cierre = 'Todos los resultados en *<https://yts.ag/browse-movies/'+ busqueda.split(' ').join('+') + '|yts.arg>*';
+          var texto = resultados + '\n' + movies.join('\n') + '\n' + cierre;
+          if (robot.adapter.constructor.name === 'SlackBot') {
+            var options = {unfurl_links: false, as_user: true};
+            robot.adapter.client.web.chat.postMessage(msg.message.room, texto, options);
+          } else {
+            msg.send(texto);
           }
         } else {
-          msg.send('No se han encontrado resultados sobre '+ busqueda);
+          msg.send('Nada encontrado con ' + busqueda + ', intenta con otra película.');
         }
-
+        
       }
     });
 

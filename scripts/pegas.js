@@ -10,6 +10,7 @@
 // Author:
 //   @jorgeepunan
 
+var querystring = require('querystring');
 var cheerio = require('cheerio');
 
 module.exports = function(robot) {
@@ -20,16 +21,20 @@ module.exports = function(robot) {
 
     var busqueda = msg.match[2];
     var domain = 'https://www.getonbrd.cl/empleos-';
-    var url = domain + busqueda.split(' ').join('%20');
+    var url = domain + querystring.escape(busqueda);
 
-    msg.robot.http(url).get()(function(err, res, body) {
-
+    robot.http(url).get()(function(err, res, body) {
+      if (err || res.statusCode !== 200) {
+        robot.emit('error', err || new Error(`Status code is ${res.statusCode}`), msg);
+        msg.reply(':gob: tiene problemas en el servidor')
+        return
+      }
       var $ = cheerio.load(body);
       var resultados = [];
 
       $('.job-list .job').each(function() {
-        var title = $(this).find('a').attr('title');
-        var link = $(this).find('a').attr('href');
+        var title = $(this).find('h4').text().replace(/\n|\r/g, ' ');
+        var link = 'https://www.getonbrd.cl' + $(this).find('a').attr('href');
 
         resultados.push( '<' + link + '|' + title + '>' );
       });
@@ -45,7 +50,12 @@ module.exports = function(robot) {
         if(resultados.length > limiteResultados) {
           text += 'Otros resultados en: <'+ url + '|getonbrd>\n';
         }
-        msg.send(text);
+        if (robot.adapter.constructor.name === 'SlackBot') {
+          var options = {unfurl_links: false, as_user: true};
+          robot.adapter.client.web.chat.postMessage(msg.message.room, text, options);
+        } else {
+          msg.send(text);
+        }
       } else {
         msg.send('No se han encontrado resultados sobre '+ busqueda);
       }
